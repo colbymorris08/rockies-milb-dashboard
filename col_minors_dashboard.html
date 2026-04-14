@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COL Minor League Dashboard 2026</title>
+<style>
+  :root {
+    --purple: #33006F;
+    --silver: #C4CED4;
+    --black: #0a0a0a;
+    --white: #f5f5f0;
+    --accent: #8B5CF6;
+    --good: #22c55e;
+    --warn: #f59e0b;
+    --bad: #ef4444;
+    --mid: #94a3b8;
+    --bg: #0f0f18;
+    --card: #16161f;
+    --border: #252535;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Courier New', monospace;
+    min-height: 100vh;
+  }
+  header {
+    padding: 24px 32px 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+  }
+  .logo {
+    width: 44px; height: 44px;
+    background: var(--purple);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 900; color: var(--silver);
+    letter-spacing: -1px;
+  }
+  .header-text h1 { font-size: 18px; font-weight: 700; letter-spacing: 0.1em; color: var(--white); }
+  .header-text p { font-size: 11px; color: var(--mid); margin-top: 2px; letter-spacing: 0.05em; }
+  .tab-bar {
+    display: flex;
+    gap: 2px;
+    padding: 16px 32px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab-group { display: flex; flex-direction: column; }
+  .tab-group-label {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    padding: 0 10px 4px;
+    text-transform: uppercase;
+  }
+  .tabs { display: flex; gap: 2px; }
+  .tab {
+    padding: 7px 14px;
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.06em;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--mid);
+    cursor: pointer;
+    border-radius: 4px 4px 0 0;
+    transition: all 0.15s;
+    text-transform: uppercase;
+  }
+  .tab:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+  .tab.active {
+    color: var(--accent);
+    background: var(--card);
+    border-color: var(--border);
+    border-bottom-color: var(--card);
+  }
+  .tab-separator { width: 1px; background: var(--border); margin: 0 8px; align-self: stretch; }
+  .content { padding: 24px 32px; }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--mid);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead th {
+    text-align: left;
+    padding: 8px 10px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+  thead th:hover { color: var(--white); }
+  thead th.sorted { color: var(--accent); }
+  tbody tr {
+    border-bottom: 1px solid rgba(37,37,53,0.5);
+    transition: background 0.1s;
+  }
+  tbody tr:hover { background: rgba(139,92,246,0.06); }
+  tbody td {
+    padding: 8px 10px;
+    color: var(--white);
+    white-space: nowrap;
+  }
+  .player-name { font-weight: 700; letter-spacing: 0.02em; }
+  .team-tag {
+    display: inline-block;
+    font-size: 9px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    background: rgba(139,92,246,0.15);
+    color: var(--accent);
+    margin-left: 6px;
+    letter-spacing: 0.05em;
+  }
+  .stat-cell { font-family: 'Courier New', monospace; text-align: right; }
+  .good { color: var(--good); }
+  .warn { color: var(--warn); }
+  .bad { color: var(--bad); }
+  .neutral { color: var(--white); }
+  .bar-cell { min-width: 80px; }
+  .bar-wrap { display: flex; align-items: center; gap: 6px; }
+  .bar-bg { flex: 1; height: 3px; background: var(--border); border-radius: 2px; }
+  .bar-fill { height: 100%; border-radius: 2px; }
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 0;
+    gap: 16px;
+  }
+  .loading-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+  .loading-dots { display: flex; gap: 6px; }
+  .loading-label { font-size: 11px; color: var(--mid); letter-spacing: 0.1em; }
+  @keyframes pulse { 0%,100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1); } }
+  .error-box {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 8px;
+    padding: 20px;
+    color: #fca5a5;
+    font-size: 12px;
+    line-height: 1.6;
+    margin-top: 20px;
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+  }
+  .pill.green { background: rgba(34,197,94,0.12); color: #4ade80; }
+  .pill.yellow { background: rgba(245,158,11,0.12); color: #fbbf24; }
+  .pill.red { background: rgba(239,68,68,0.12); color: #f87171; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .legend {
+    display: flex; gap: 16px;
+    font-size: 10px; color: var(--mid);
+    margin-bottom: 12px;
+    letter-spacing: 0.05em;
+  }
+  .legend span { display: flex; align-items: center; gap: 4px; }
+  .legend-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .data-note {
+    font-size: 10px; color: var(--mid);
+    margin-top: 12px; letter-spacing: 0.03em;
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">COL</div>
+  <div class="header-text">
+    <h1>COLORADO ROCKIES — MINOR LEAGUE 2026</h1>
+    <p>LIVE DATA · FANGRAPHS · ALL LEVELS · QUALIFIED PITCHERS & HITTERS</p>
+  </div>
+</header>
+
+<div class="tab-bar">
+  <div class="tab-group">
+    <div class="tab-group-label">⚾ Pitching</div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('p-zone')">Zone Control</button>
+      <button class="tab" onclick="switchTab('p-stuff')">Stuff</button>
+      <button class="tab" onclick="switchTab('p-coors')">Coors Contact</button>
+    </div>
+  </div>
+  <div class="tab-separator"></div>
+  <div class="tab-group">
+    <div class="tab-group-label">🏏 Hitting</div>
+    <div class="tabs">
+      <button class="tab" onclick="switchTab('h-zone')">Zone Control</button>
+      <button class="tab" onclick="switchTab('h-results')">Results</button>
+      <button class="tab" onclick="switchTab('h-coors')">Coors</button>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div id="loading" class="loading">
+    <div class="loading-dots">
+      <div class="loading-dot"></div>
+      <div class="loading-dot"></div>
+      <div class="loading-dot"></div>
+    </div>
+    <div class="loading-label">FETCHING FANGRAPHS DATA...</div>
+  </div>
+
+  <div id="panels" style="display:none">
+    <!-- PITCHING TABS -->
+    <div id="tab-p-zone" class="tab-panel active">
+      <div class="legend">
+        <span><div class="legend-dot" style="background:var(--good)"></div> Elite (top 25%)</span>
+        <span><div class="legend-dot" style="background:var(--warn)"></div> Average</span>
+        <span><div class="legend-dot" style="background:var(--bad)"></div> Concerning (bot 25%)</span>
+      </div>
+      <div class="section-label">Pitching — Zone Control</div>
+      <table id="tbl-p-zone">
+        <thead>
+          <tr>
+            <th onclick="sortTable('tbl-p-zone',0)">Name</th>
+            <th onclick="sortTable('tbl-p-zone',1)">Level</th>
+            <th onclick="sortTable('tbl-p-zone',2)">IP</th>
+            <th onclick="sortTable('tbl-p-zone',3)">Strike%</th>
+            <th onclick="sortTable('tbl-p-zone',4)">K%</th>
+            <th onclick="sortTable('tbl-p-zone',5)">BB%</th>
+            <th onclick="sortTable('tbl-p-zone',6)">K-BB%</th>
+            <th onclick="sortTable('tbl-p-zone',7)">K:BB</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="tab-p-stuff" class="tab-panel">
+      <div class="section-label">Pitching — Stuff Indicators</div>
+      <table id="tbl-p-stuff">
+        <thead>
+          <tr>
+            <th onclick="sortTable('tbl-p-stuff',0)">Name</th>
+            <th onclick="sortTable('tbl-p-stuff',1)">Level</th>
+            <th onclick="sortTable('tbl-p-stuff',2)">IP</th>
+            <th onclick="sortTable('tbl-p-stuff',3)">BABIP</th>
+            <th onclick="sortTable('tbl-p-stuff',4)">SwStr%</th>
+            <th onclick="sortTable('tbl-p-stuff',5)">K%</th>
+            <th onclick="sortTable('tbl-p-stuff',6)">ERA</th>
+            <th onclick="sortTable('tbl-p-stuff',7)">FIP</th>
+            <th onclick="sortTable('tbl-p-stuff',8)">xFIP</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="tab-p-coors" class="tab-panel">
+      <div class="section-label">Pitching — Coors Contact Profile</div>
+      <div class="legend">
+        <span><div class="legend-dot" style="background:var(--good)"></div> High GB% / Low IFFB% = Coors-ready</span>
+        <span><div class="legend-dot" style="background:var(--bad)"></div> Fly ball heavy = Coors risk</span>
+      </div>
+      <table id="tbl-p-coors">
+        <thead>
+          <tr>
+            <th onclick="sortTable('tbl-p-coors',0)">Name</th>
+            <th onclick="sortTable('tbl-p-coors',1)">Level</th>
+            <th onclick="sortTable('tbl-p-coors',2)">IP</th>
+            <th onclick="sortTable('tbl-p-coors',3)">GB%</th>
+            <th onclick="sortTable('tbl-p-coors',4)">IFFB%</th>
+            <th onclick="sortTable('tbl-p-coors',5)">FB%</th>
+            <th onclick="sortTable('tbl-p-coors',6)">HR/FB</th>
+            <th onclick="sortTable('tbl-p-coors',7)">BABIP</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- HITTING TABS -->
+    <div id="tab-h-zone" class="tab-panel">
+      <div class="section-label">Hitting — Zone Control / Plate Discipline</div>
+      <table id="tbl-h-zone">
+        <thead>
+          <tr>
+            <th onclick="sortTable('tbl-h-zone',0)">Name</th>
+            <th onclick="sortTable('tbl-h-zone',1)">Level</th>
+            <th onclick="sortTable('tbl-h-zone',2)">PA</th>
+            <th onclick="sortTable('tbl-h-zone',3)">BB%</th>
+            <th onclick="sortTable('tbl-h-zone',4)">K%</th>
+            <th onclick="sortTable('tbl-h-zone',5)">BB%-K%</th>
+            <th onclick="sortTable('tbl-h-zone',6)">BB/K</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="tab-h-results" class="tab-panel">
+      <div class="section-label">Hitting — Production Results</div>
+      <table id="tbl-h-results">
+        <thead>
+          <tr>
+            <th onclick="sortTable('tbl-h-results',0)">Name</th>
+            <th onclick="sortTable('tbl-h-results',1)">Level</th>
+            <th onclick="sortTable('tbl-h-results',2)">PA</th>
+            <th onclick="sortTable('tbl-h-results',3)">AVG</th>
+            <th onclick="sortTable('tbl-h-results',4)">ISO</th>
+            <th onclick="sortTable('tbl-h-results',5)">wRC+</th>
+            <th onclick="sortTable('tbl-h-results',6)">wOBA</th>
+            <th onclick="sortTable('tbl-h-results',7)">BABIP</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="tab-h-coors" class="tab-panel">
+      <div class="section-label">Hitting — Coors Contact Profile</div>
+      <div class="legend">
+        <span><div class="legend-dot" style="background:var(--good)"></div> Low K%, High LD% = Coors BABIP boost candidate</span>
+        <span><div class="legend-dot" style="background:var(--bad)"></div> High K%, Low GB% = misfit for Coors</span>
+      </div>
+      <table id="tbl-h-coors">
+        <thead>
+          <tr>
+            <th onclick="sortTable('tbl-h-coors',0)">Name</th>
+            <th onclick="sortTable('tbl-h-coors',1)">Level</th>
+            <th onclick="sortTable('tbl-h-coors',2)">PA</th>
+            <th onclick="sortTable('tbl-h-coors',3)">SwStr%</th>
+            <th onclick="sortTable('tbl-h-coors',4)">K%</th>
+            <th onclick="sortTable('tbl-h-coors',5)">GB%</th>
+            <th onclick="sortTable('tbl-h-coors',6)">LD%</th>
+            <th onclick="sortTable('tbl-h-coors',7)">FB%</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const BASE = 'https://www.fangraphs.com/api/leaders/minor-league/data';
+const COMMON = 'pos=all&level=0&lg=2,4,5,6,7,8,9,10,11,14,12,13,15,16,17,18,30,32&qual=n&season=2026&seasonEnd=2026&org=19&ind=0&splitTeam=false&players=';
+const LOCAL_CACHE = 'col_minors_cache.json';
+
+const LEVEL_MAP = {2:'AAA',4:'AAA',5:'AA',6:'AA',7:'AA',8:'A',9:'A',10:'A',11:'A+',13:'A+',14:'A+',16:'CPX',17:'CPX',18:'CPX',30:'DSL',32:'DSL'};
+
+let pitchAdv={}, pitchBB={}, pitchInfo={}, batAdv={}, batBB={}, batInfo={};
+let currentTab = 'p-zone';
+
+async function fg(stats, type) {
+  const directUrl = `${BASE}?${COMMON}&stats=${stats}&type=${type}`;
+  const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(directUrl)}`;
+
+  // Try direct first (works in some browser/network contexts), then proxy fallback.
+  const attempts = [
+    { label: 'direct', url: directUrl },
+    { label: 'proxy', url: proxyUrl },
+  ];
+
+  let lastErr = null;
+  for (const a of attempts) {
+    try {
+      const r = await fetch(a.url, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+      });
+      if (!r.ok) throw new Error(`${a.label} HTTP ${r.status}`);
+      const txt = await r.text();
+      try {
+        return JSON.parse(txt);
+      } catch {
+        throw new Error(`${a.label} returned non-JSON response`);
+      }
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr || new Error('Unknown fetch failure');
+}
+
+function indexBy(rows, keyFn) {
+  const m = {};
+  for (const r of rows) {
+    const k = keyFn(r);
+    if (!k) continue;
+    m[k] = r;
+  }
+  return m;
+}
+
+function getId(r) {
+  return (
+    r?.playerid ??
+    r?.PlayerId ??
+    r?.playerID ??
+    r?.player_id ??
+    r?.id ??
+    r?.playerids ??
+    r?.minormasterid ??
+    r?.xMLBAMID ??
+    null
+  );
+}
+
+function rowKey(r) {
+  const id = getId(r);
+  const lg = r?.lg ?? r?.Lg ?? r?.leagueid ?? r?.League ?? '';
+  const team =
+    r?.teamid ??
+    r?.TeamId ??
+    r?.team ??
+    r?.playerTeamId ??
+    r?.TeamName ??
+    r?.Team ??
+    '';
+  const name = r?.PlayerName ?? r?.Name ?? r?.name ?? '';
+  // Use level/team context so same player at multiple levels does not collapse.
+  return id != null && id !== '' ? `${id}|${lg}|${team}` : `${name}|${lg}|${team}`;
+}
+
+function stripHtml(s) {
+  if (s == null) return '';
+  return String(s).replace(/<[^>]*>/g, '').trim();
+}
+
+function parseLevel(r) {
+  // FanGraphs payload often has Team like "... Rockies (AAA) ..."
+  const teamRaw = stripHtml(r?.Team ?? r?.team ?? '');
+  const m = teamRaw.match(/\((AAA|AA|A\+|A|Rk|CPX|DSL|FCL|ACL)\)/i);
+  if (m) return m[1].toUpperCase();
+  return (
+    LEVEL_MAP[r?.lg] ||
+    r?.teamLevel ||
+    r?.TeamName ||
+    '—'
+  );
+}
+
+function pct(v) {
+  if (v == null) return '—';
+  return (v * 100).toFixed(1) + '%';
+}
+function dec(v, d=3) {
+  if (v == null) return '—';
+  return Number(v).toFixed(d);
+}
+function num(v) {
+  if (v == null) return '—';
+  return Math.round(v);
+}
+
+function rateClass(val, goodHigh, threshGood, threshBad) {
+  if (val == null) return 'neutral';
+  if (goodHigh) return val >= threshGood ? 'good' : val <= threshBad ? 'bad' : 'neutral';
+  return val <= threshGood ? 'good' : val >= threshBad ? 'bad' : 'neutral';
+}
+
+function barCell(val, min, max, color) {
+  if (val == null) return '<td class="stat-cell">—</td>';
+  const pct = Math.max(0, Math.min(100, ((val - min)/(max - min))*100));
+  return `<td class="stat-cell bar-cell">
+    <div class="bar-wrap">
+      <span>${typeof val === 'number' && val < 1 ? (val*100).toFixed(1)+'%' : val.toFixed ? val.toFixed(1) : val}</span>
+      <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div>
+    </div>
+  </td>`;
+}
+
+function teamToLevel(teamId, lgId) {
+  return LEVEL_MAP[lgId] || 'MiLB';
+}
+
+function buildPitchRows() {
+  const players = Object.values(pitchAdv);
+  const rows = players.map(p => {
+    const key = rowKey(p);
+    const bb = pitchBB[key] || {};
+    const inf = pitchInfo[key] || {};
+    const id = getId(p);
+    const name = stripHtml(p.PlayerName || p.Name || p.name || '—');
+    const level = parseLevel(p);
+    const ip = p.IP || p.ip || '—';
+    return {
+      name, level, ip,
+      kpct: p['K%'] ?? p.kpct,
+      bbpct: p['BB%'] ?? p.bbpct,
+      kbb: p['K-BB%'] ?? p['K_BB'],
+      kbbRatio: p['K/BB'] ?? p.kbb,
+      babip: p.BABIP ?? p.babip,
+      swstr: inf['SwStr%'] ?? inf.swstr ?? p['SwStr%'],
+      zone: inf['Zone%'] ?? inf.zone ?? p['Zone%'],
+      strikes: p.Strikes ?? inf.Strikes ?? p.strikes ?? inf.strikes,
+      balls: p.Balls ?? inf.Balls ?? p.balls ?? inf.balls,
+      era: p.ERA ?? p.era,
+      fip: p.FIP ?? p.fip,
+      gbpct: bb['GB%'] ?? bb.gbpct,
+      iffbpct: bb['IFFB%'] ?? bb.iffbpct,
+      fbpct: bb['FB%'] ?? bb.fbpct,
+      hrfb: bb['HR/FB'] ?? bb.hrfb,
+      playerid: id
+    };
+  });
+  return rows;
+}
+
+function buildBatRows() {
+  const players = Object.values(batAdv);
+  return players.map(p => {
+    const key = rowKey(p);
+    const bb = batBB[key] || {};
+    const inf = batInfo[key] || {};
+    const id = getId(p);
+    const name = stripHtml(p.PlayerName || p.Name || p.name || '—');
+    const level = parseLevel(p);
+    return {
+      name, level,
+      pa: p.PA ?? p.pa,
+      avg: p.AVG ?? p.avg,
+      iso: p.ISO ?? p.iso,
+      wrc: p['wRC+'] ?? p.wrc_plus,
+      woba: p.wOBA ?? p.woba,
+      babip: p.BABIP ?? p.babip,
+      kpct: p['K%'] ?? p.kpct,
+      bbpct: p['BB%'] ?? p.bbpct,
+      bbk: p['BB/K'] ?? p.bbk,
+      swstr: inf['SwStr%'] ?? inf.swstr ?? p['SwStr%'],
+      gbpct: bb['GB%'] ?? bb.gbpct,
+      ldpct: bb['LD%'] ?? bb.ldpct,
+      fbpct: bb['FB%'] ?? bb.fbpct,
+      playerid: id
+    };
+  });
+}
+
+function renderPZone(rows) {
+  const tbody = document.querySelector('#tbl-p-zone tbody');
+  tbody.innerHTML = rows.sort((a,b)=>(b.kbb??-99)-(a.kbb??-99)).map(p => {
+    const kpct = p.kpct != null ? p.kpct*100 : null;
+    const bbpct = p.bbpct != null ? p.bbpct*100 : null;
+    const kbb = p.kbb != null ? p.kbb*100 : null;
+    const strikePct = (p.strikes != null && p.balls != null && (Number(p.strikes) + Number(p.balls)) > 0)
+      ? (Number(p.strikes) / (Number(p.strikes) + Number(p.balls))) * 100
+      : null;
+    return `<tr>
+      <td class="player-name">${p.name}<span class="team-tag">${p.level}</span></td>
+      <td class="stat-cell">${p.level}</td>
+      <td class="stat-cell">${p.ip}</td>
+      <td class="stat-cell ${rateClass(strikePct,true,64,58)}">${strikePct!=null?strikePct.toFixed(1)+'%':'—'}</td>
+      <td class="stat-cell ${rateClass(kpct,true,28,18)}">${kpct!=null?kpct.toFixed(1)+'%':'—'}</td>
+      <td class="stat-cell ${rateClass(bbpct,false,6,12)}">${bbpct!=null?bbpct.toFixed(1)+'%':'—'}</td>
+      <td class="stat-cell ${rateClass(kbb,true,18,8)}">${kbb!=null?kbb.toFixed(1)+'%':'—'}</td>
+      <td class="stat-cell ${rateClass(p.kbbRatio,true,3,1.5)}">${p.kbbRatio!=null?Number(p.kbbRatio).toFixed(2):'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderPStuff(rows) {
+  const tbody = document.querySelector('#tbl-p-stuff tbody');
+  tbody.innerHTML = rows.sort((a,b)=>(b.swstr??0)-(a.swstr??0)).map(p => {
+    const swstr = p.swstr != null ? p.swstr*100 : null;
+    const kpct = p.kpct != null ? p.kpct*100 : null;
+    return `<tr>
+      <td class="player-name">${p.name}<span class="team-tag">${p.level}</span></td>
+      <td class="stat-cell">${p.level}</td>
+      <td class="stat-cell">${p.ip}</td>
+      <td class="stat-cell ${rateClass(p.babip,false,0.27,0.34)}">${p.babip!=null?Number(p.babip).toFixed(3):'—'}</td>
+      <td class="stat-cell ${rateClass(swstr,true,13,8)}">${swstr!=null?swstr.toFixed(1)+'%':'—'}</td>
+      <td class="stat-cell ${rateClass(kpct,true,28,18)}">${kpct!=null?kpct.toFixed(1)+'%':'—'}</td>
+      <td class="stat-cell ${rateClass(p.era,false,3.0,5.0)}">${p.era!=null?Number(p.era).toFixed(2):'—'}</td>
+      <td class="stat-cell ${rateClass(p.fip,false,3.0,5.0)}">${p.fip!=null?Number(p.fip).toFixed(2):'—'}</td>
+      <td class="stat-cell ${rateClass(p.xfip,false,3.2,5.2)}">${p.xfip!=null?Number(p.xfip).toFixed(2):'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderPCoors(rows) {
+  const tbody = document.querySelector('#tbl-p-coors tbody');
+  tbody.innerHTML = rows.sort((a,b)=>(b.gbpct??0)-(a.gbpct??0)).map(p => {
+    const gb = p.gbpct != null ? p.gbpct*100 : null;
+    const iffb = p.iffbpct != null ? p.iffbpct*100 : null;
+    const fb = p.fbpct != null ? p.fbpct*100 : null;
+    const hrfb = p.hrfb != null ? p.hrfb*100 : null;
+    return `<tr>
+      <td class="player-name">${p.name}<span class="team-tag">${p.level}</span></td>
+      <td class="stat-cell">${p.level}</td>
+      <td class="stat-cell">${p.ip}</td>
+      <td class="stat-cell ${rateClass(gb,true,50,38)}">${gb!=null?gb.toFixed(1)+'%':'—'}</td>
+      <td class="stat-cell ${rateClass(iffb,true,15,8)}">${iffb!=null?iffb.toFixed(1)+'%':'—'}</td>
+      <td class="stat-cell ${rateClass(fb,false,32,45)}">${fb!=null?fb.toFixed(1)+'%':'—'}</td>
+      <td class="stat-cell ${rateClass(hrfb,false,8,15)}">${hrfb!=null?hrfb.toFixed(1)+'%':'—'}</td>
+      <td class="stat-cell">${p.babip!=null?Number(p.babip).toFixed(3):'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderHZone(rows) {
+  const tbody = document.querySelector('#tbl-h-zone tbody');
+  tbody.innerHTML = rows.sort((a,b)=>{
+    const da = (a.bbpct??0)-(a.kpct??0);
+    const db = (b.bbpct??0)-(b.kpct??0);
+    return db-da;
+  }).map(p => {
+    const bb = p.bbpct!=null?p.bbpct*100:null;
+    const k = p.kpct!=null?p.kpct*100:null;
+    const net = bb!=null&&k!=null?bb-k:null;
+    return `<tr>
+      <td class="player-name">${p.name}<span class="team-tag">${p.level}</span></td>
+      <td class="stat-cell">${p.level}</td>
+      <td class="stat-cell">${p.pa??'—'}</td>
+      <td class="stat-cell ${rateClass(bb,true,12,7)}">${bb!=null?bb.toFixed(1)+'%':'—'}</td>
+      <td class="stat-cell ${rateClass(k,false,18,28)}">${k!=null?k.toFixed(1)+'%':'—'}</td>
+      <td class="stat-cell ${rateClass(net,true,0,-8)}">${net!=null?net.toFixed(1)+'%':'—'}</td>
+      <td class="stat-cell ${rateClass(p.bbk,true,0.6,0.3)}">${p.bbk!=null?Number(p.bbk).toFixed(2):'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderHResults(rows) {
+  const tbody = document.querySelector('#tbl-h-results tbody');
+  tbody.innerHTML = rows.sort((a,b)=>(b.wrc??0)-(a.wrc??0)).map(p => {
+    return `<tr>
+      <td class="player-name">${p.name}<span class="team-tag">${p.level}</span></td>
+      <td class="stat-cell">${p.level}</td>
+      <td class="stat-cell">${p.pa??'—'}</td>
+      <td class="stat-cell ${rateClass(p.avg,true,0.28,0.22)}">${p.avg!=null?Number(p.avg).toFixed(3):'—'}</td>
+      <td class="stat-cell ${rateClass(p.iso,true,0.18,0.10)}">${p.iso!=null?Number(p.iso).toFixed(3):'—'}</td>
+      <td class="stat-cell ${rateClass(p.wrc,true,120,90)}">${p.wrc!=null?Math.round(p.wrc):'—'}</td>
+      <td class="stat-cell ${rateClass(p.woba,true,0.360,0.300)}">${p.woba!=null?Number(p.woba).toFixed(3):'—'}</td>
+      <td class="stat-cell">${p.babip!=null?Number(p.babip).toFixed(3):'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderHCoors(rows) {
+  const tbody = document.querySelector('#tbl-h-coors tbody');
+  tbody.innerHTML = rows.sort((a,b)=>(a.kpct??99)-(b.kpct??99)).map(p => {
+    const k = p.kpct!=null?p.kpct*100:null;
+    const sw = p.swstr!=null?p.swstr*100:null;
+    const gb = p.gbpct!=null?p.gbpct*100:null;
+    const ld = p.ldpct!=null?p.ldpct*100:null;
+    const fb = p.fbpct!=null?p.fbpct*100:null;
+    return `<tr>
+      <td class="player-name">${p.name}<span class="team-tag">${p.level}</span></td>
+      <td class="stat-cell">${p.level}</td>
+      <td class="stat-cell">${p.pa??'—'}</td>
+      <td class="stat-cell ${rateClass(sw,false,9,14)}">${sw!=null?sw.toFixed(1)+'%':'—'}</td>
+      <td class="stat-cell ${rateClass(k,false,18,28)}">${k!=null?k.toFixed(1)+'%':'—'}</td>
+      <td class="stat-cell ${rateClass(gb,false,42,52)}">${gb!=null?gb.toFixed(1)+'%':'—'}</td>
+      <td class="stat-cell ${rateClass(ld,true,24,18)}">${ld!=null?ld.toFixed(1)+'%':'—'}</td>
+      <td class="stat-cell ${rateClass(fb,true,42,30)}">${fb!=null?fb.toFixed(1)+'%':'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderAll() {
+  const pr = buildPitchRows();
+  const br = buildBatRows();
+  renderPZone(pr);
+  renderPStuff(pr);
+  renderPCoors(pr);
+  renderHZone(br);
+  renderHResults(br);
+  renderHCoors(br);
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('panels').style.display = 'block';
+}
+
+function showError(msg) {
+  document.getElementById('loading').innerHTML = `
+    <div class="error-box">
+      <strong style="color:#fca5a5">⚠ Data fetch failed</strong><br><br>
+      ${msg}<br><br>
+      Likely cause: FanGraphs cross-origin blocking from this browser session.<br>
+      Try one of these:<br>
+      1) Hard refresh and retry<br>
+      2) Serve this file via local HTTP (<code style="color:#a78bfa;font-size:11px">python3 -m http.server</code>) and open <code style="color:#a78bfa;font-size:11px">http://localhost:8000</code><br>
+      3) Build local cache once (API route): <code style="color:#a78bfa;font-size:11px">python3 build_col_minors_cache.py</code><br>
+      4) If API is blocked, export FanGraphs CSVs and run: <code style="color:#a78bfa;font-size:11px">python3 build_col_minors_cache_from_csv.py --dir /path/to/csvs</code><br>
+      5) Use a browser profile without strict extensions/adblock/VPN proxy on this page
+    </div>`;
+}
+
+function parsePayload(payload) {
+  return payload?.data || payload || [];
+}
+
+function hydrateFromPayloads(pa1, pa2, pa4, ba1, ba2, ba4) {
+  const rawAdv = parsePayload(pa1);
+  const rawBB  = parsePayload(pa2);
+  const rawInf = parsePayload(pa4);
+  const rawBatAdv = parsePayload(ba1);
+  const rawBatBB  = parsePayload(ba2);
+  const rawBatInf = parsePayload(ba4);
+
+  pitchAdv  = indexBy(rawAdv, rowKey);
+  pitchBB   = indexBy(rawBB,  rowKey);
+  pitchInfo = indexBy(rawInf, rowKey);
+  batAdv    = indexBy(rawBatAdv, rowKey);
+  batBB     = indexBy(rawBatBB,  rowKey);
+  batInfo   = indexBy(rawBatInf, rowKey);
+}
+
+async function tryLoadLocalCache() {
+  const r = await fetch(`${LOCAL_CACHE}?t=${Date.now()}`);
+  if (!r.ok) throw new Error(`Local cache HTTP ${r.status}`);
+  const cache = await r.json();
+  if (!cache || !cache.payloads) throw new Error('Local cache missing payloads');
+  const p = cache.payloads;
+  hydrateFromPayloads(p.pa1, p.pa2, p.pa4, p.ba1, p.ba2, p.ba4);
+}
+
+async function loadData() {
+  try {
+    // First choice: local cache file (no CORS issues).
+    await tryLoadLocalCache();
+    renderAll();
+    return;
+  } catch (_) {
+    // Cache not present/stale: fall through to live API attempts.
+  }
+
+  try {
+    const [pa1, pa2, pa4, ba1, ba2, ba4] = await Promise.all([
+      fg('pit', 1), fg('pit', 2), fg('pit', 4),
+      fg('bat', 1), fg('bat', 2), fg('bat', 4)
+    ]);
+    hydrateFromPayloads(pa1, pa2, pa4, ba1, ba2, ba4);
+    renderAll();
+  } catch(e) {
+    showError(`Error: ${e.message}<br><br>Live fetch failed. Use local cache mode for reliability.`);
+  }
+}
+
+function switchTab(name) {
+  currentTab = name;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+  const map = {
+    'p-zone':0, 'p-stuff':1, 'p-coors':2,
+    'h-zone':3, 'h-results':4, 'h-coors':5
+  };
+  document.querySelectorAll('.tab')[map[name]]?.classList.add('active');
+  document.getElementById(`tab-${name}`)?.classList.add('active');
+}
+
+let sortState = {};
+function sortTable(tblId, col) {
+  const tbl = document.getElementById(tblId);
+  const tbody = tbl.querySelector('tbody');
+  const rows = Array.from(tbody.rows);
+  const key = tblId + col;
+  sortState[key] = !sortState[key];
+  const asc = sortState[key];
+  rows.sort((a, b) => {
+    const av = a.cells[col].textContent.replace('%','').trim();
+    const bv = b.cells[col].textContent.replace('%','').trim();
+    const an = parseFloat(av);
+    const bn = parseFloat(bv);
+    if (!isNaN(an) && !isNaN(bn)) return asc ? an-bn : bn-an;
+    return asc ? av.localeCompare(bv) : bv.localeCompare(av);
+  });
+  tbl.querySelectorAll('thead th').forEach((th,i) => th.classList.toggle('sorted', i===col));
+  rows.forEach(r => tbody.appendChild(r));
+}
+
+loadData();
+</script>
+</body>
+</html>
