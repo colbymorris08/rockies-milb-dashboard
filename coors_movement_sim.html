@@ -14,22 +14,18 @@
 body{background:var(--bg);color:var(--white);font-family:'Courier New',monospace;min-height:100vh;}
 
 /* EQUATION BAR */
-.eq-bar{
-  background:#0a0a14;border-bottom:1px solid #553380;
-  padding:8px 28px;display:flex;gap:24px;align-items:center;flex-wrap:wrap;
-}
-.eq-bar .eq-formula{font-size:11px;color:#c084fc;letter-spacing:.04em;}
-.eq-bar .eq-const{font-size:11px;color:var(--mid);}
-.eq-bar .eq-const span{color:var(--warn);}
-.eq-bar .eq-title{font-size:10px;color:#7766aa;letter-spacing:.1em;text-transform:uppercase;margin-right:4px;}
+.eq-bar{background:#09090f;border-bottom:1px solid #3d2070;padding:7px 28px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;}
+.eq-f{font-size:11px;color:#c084fc;letter-spacing:.03em;}
+.eq-c{font-size:11px;color:var(--mid);}
+.eq-c b{color:var(--warn);}
+.eq-tag{font-size:9px;color:#7766aa;letter-spacing:.12em;text-transform:uppercase;}
 
-header{display:flex;align-items:center;gap:14px;padding:16px 28px 14px;border-bottom:1px solid var(--border);}
+header{display:flex;align-items:center;gap:14px;padding:14px 28px 12px;border-bottom:1px solid var(--border);}
 .logo{width:40px;height:40px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:var(--silver);flex-shrink:0;}
 .htext h1{font-size:15px;font-weight:700;letter-spacing:.1em;}
 .htext p{font-size:10px;color:var(--mid);margin-top:2px;letter-spacing:.04em;}
 
-/* CONTROLS */
-.controls{display:flex;align-items:center;gap:10px;padding:12px 28px;border-bottom:1px solid var(--border);flex-wrap:wrap;background:#0d0d18;}
+.controls{display:flex;align-items:center;gap:10px;padding:11px 28px;border-bottom:1px solid var(--border);background:#0d0d18;flex-wrap:wrap;}
 .ctrl-label{font-size:10px;color:var(--mid);letter-spacing:.1em;text-transform:uppercase;}
 select{background:var(--card);color:var(--white);border:1px solid var(--b2);border-radius:4px;padding:7px 10px;font-family:'Courier New',monospace;font-size:12px;cursor:pointer;min-width:180px;}
 select:focus{outline:none;border-color:var(--accent);}
@@ -38,89 +34,84 @@ select:focus{outline:none;border-color:var(--accent);}
 .status.live{color:var(--good);}
 
 /* INTRO */
-.intro{padding:32px 28px;max-width:900px;}
-.intro h2{font-size:20px;font-weight:700;color:var(--white);margin-bottom:16px;letter-spacing:.04em;}
-.intro p{font-size:13px;color:var(--mid);line-height:1.8;margin-bottom:12px;}
-.intro-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:20px;}
-.intro-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;}
-.intro-card h3{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:8px;text-transform:uppercase;}
-.intro-card p{font-size:11px;color:var(--mid);line-height:1.7;}
-.intro-card .big-stat{font-size:28px;font-weight:700;color:var(--warn);margin:6px 0 4px;}
+.intro{padding:28px 28px;max-width:920px;}
+.intro h2{font-size:19px;font-weight:700;margin-bottom:14px;letter-spacing:.04em;}
+.intro p{font-size:13px;color:var(--mid);line-height:1.8;margin-bottom:10px;}
+.intro p b{color:var(--white);}
+.intro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px;}
+.ic{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;}
+.ic h3{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:8px;text-transform:uppercase;}
+.ic p{font-size:11px;color:var(--mid);line-height:1.7;}
+.ic .bs{font-size:26px;font-weight:700;color:var(--warn);margin:4px 0;}
+.formula-block{background:#09090f;border:1px solid #3d2070;border-radius:8px;padding:14px;margin-top:18px;font-size:11px;color:#c084fc;line-height:2;}
+.formula-block .note{color:var(--mid);font-size:11px;margin-top:8px;line-height:1.7;}
 
 /* MAIN */
 .main{display:grid;grid-template-columns:1fr 280px;min-height:calc(100vh - 170px);}
 .left{padding:20px 24px;border-right:1px solid var(--border);overflow:auto;}
-.right{padding:18px 16px;overflow-y:auto;}
-.section-label{font-size:10px;letter-spacing:.15em;color:var(--mid);text-transform:uppercase;margin-bottom:10px;}
-.plots{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
-.plot-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;}
-.plot-card.coors{border-color:#553380;}
-.pct{font-size:11px;font-weight:700;color:var(--white);margin-bottom:1px;}
-.psub{font-size:10px;color:var(--mid);margin-bottom:10px;}
-.plot-card.coors .pct{color:#c084fc;}
+.right{padding:16px;overflow-y:auto;}
+.sl{font-size:10px;letter-spacing:.15em;color:var(--mid);text-transform:uppercase;margin-bottom:10px;}
+.plots{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.pc{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:13px;}
+.pc.coors{border-color:#553380;}
+.pt{font-size:11px;font-weight:700;color:var(--white);margin-bottom:1px;}
+.pc.coors .pt{color:#c084fc;}
+.ps{font-size:10px;color:var(--mid);margin-bottom:9px;}
 svg.plot{display:block;width:100%;height:auto;}
-.legend-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.lr{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px;}
 .li{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--mid);}
-.ld{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.ld{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 
-/* TABLE */
 table{width:100%;border-collapse:collapse;font-size:11px;}
-thead th{text-align:left;padding:6px 8px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;}
+thead th{text-align:left;padding:6px 7px;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;}
 thead th:hover{color:var(--white);}
-tbody tr{border-bottom:1px solid rgba(37,37,53,.5);}
-tbody tr:hover{background:rgba(139,92,246,.06);}
-tbody td{padding:6px 8px;white-space:nowrap;}
+tbody tr{border-bottom:1px solid rgba(37,37,53,.4);}
+tbody tr:hover{background:rgba(139,92,246,.05);}
+tbody td{padding:6px 7px;white-space:nowrap;}
 .tt{display:inline-block;font-size:9px;padding:1px 5px;border-radius:3px;font-weight:700;}
 .neg{color:var(--bad);font-weight:700;}
 .pos{color:var(--good);font-weight:700;}
 .zer{color:var(--mid);}
 
-/* SIDEBAR */
-.phys-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;}
-.phys-title{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--accent);margin-bottom:8px;text-transform:uppercase;}
+.phc{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;}
+.pht{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--accent);margin-bottom:8px;text-transform:uppercase;}
 .pr{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(37,37,53,.6);font-size:11px;}
 .pr:last-child{border:none;}
 .pk{color:var(--mid);}
 .pv{color:var(--white);font-weight:700;}
 .pv.w{color:var(--warn);}
 .pv.b{color:var(--bad);}
-.pv.g{color:var(--good);}
-.eff-row{display:flex;align-items:center;gap:5px;margin:2px 0;}
+.er{display:flex;align-items:center;gap:5px;margin:2px 0;}
 .el{font-size:10px;color:var(--mid);width:68px;flex-shrink:0;}
 .et{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
 .ef{height:100%;border-radius:2px;}
-.ep{font-size:10px;color:var(--white);width:26px;text-align:right;}
-.ph{display:flex;flex-direction:column;align-items:center;justify-content:center;height:140px;gap:8px;color:var(--mid);font-size:11px;}
+.ep{font-size:10px;color:var(--white);width:28px;text-align:right;}
+.ph{display:flex;flex-direction:column;align-items:center;justify-content:center;height:160px;gap:8px;color:var(--mid);font-size:11px;}
 .dots{display:flex;gap:5px;}
 .dots span{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:dl 1.2s ease-in-out infinite;}
 .dots span:nth-child(2){animation-delay:.2s;}
 .dots span:nth-child(3){animation-delay:.4s;}
 @keyframes dl{0%,100%{opacity:.2;transform:scale(.8);}50%{opacity:1;transform:scale(1);}}
-@media(max-width:800px){
-  .main{grid-template-columns:1fr;}
-  .right{display:none;}
-  .plots{grid-template-columns:1fr;}
-  .intro-grid{grid-template-columns:1fr;}
-}
+@media(max-width:760px){.main{grid-template-columns:1fr;}.right{display:none;}.plots{grid-template-columns:1fr;}.intro-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 
 <!-- PERMANENT EQUATION BAR -->
 <div class="eq-bar">
-  <span class="eq-title">Model:</span>
-  <span class="eq-formula">pfx_coors = pfx × [1 − ε × (1 − ρ_coors/ρ₀ × τ)]</span>
-  <span class="eq-const">ρ ratio <span>0.853</span></span>
-  <span class="eq-const">flight τ <span>0.982</span></span>
-  <span class="eq-const">net aero <span>0.838×</span></span>
-  <span class="eq-const">ε = spin efficiency (gyro-excluded)</span>
+  <span class="eq-tag">Physics:</span>
+  <span class="eq-f">Δmove = ε × pfx × (1 − ρ_c/ρ₀ × τ²)  where  τ = t_coors/t_sl = f(velo, ext, ρ)</span>
+  <span class="eq-c">ρ_c/ρ₀ = <b>0.853</b></span>
+  <span class="eq-c">drag_loss_coors = <b>0.853 × drag_loss_sl</b></span>
+  <span class="eq-c">move ∝ ρ × t²  →  τ is <b>per-pitch</b></span>
+  <span class="eq-c">gyro spin → <b>unaffected</b></span>
 </div>
 
 <header>
   <div class="logo">COL</div>
   <div class="htext">
     <h1>COORS PITCH MOVEMENT SIMULATOR</h1>
-    <p>PITCHER'S PERSPECTIVE · STATCAST PROFILES → ALTITUDE-ADJUSTED MOVEMENT · 5,280 FT · SPIN-EFFICIENCY MODEL</p>
+    <p>PITCHER'S VIEW · STATCAST PROFILES → ALTITUDE-ADJUSTED MOVEMENT · VELOCITY + EXTENSION + SPIN MODEL · 5,280 FT</p>
   </div>
 </header>
 
@@ -135,25 +126,35 @@ tbody td{padding:6px 8px;white-space:nowrap;}
 
 <div id="introWrap">
 <div class="intro">
-  <h2>How Altitude Changes Pitch Movement at Coors Field</h2>
-  <p>At 5,280 feet, the air at Coors Field is approximately <strong style="color:var(--warn)">14.7% less dense</strong> than at sea level. This directly reduces the Magnus force that gives pitches their movement — but not all pitches equally. The effect depends on a pitch's <strong style="color:var(--accent)">spin efficiency</strong>: the fraction of total spin that generates lift (Magnus force) vs. spin that is purely gyroscopic.</p>
-  <p>Gyroscopic spin — where the spin axis points in the direction of travel — produces no Magnus force regardless of air density, and is therefore <strong style="color:var(--good)">altitude-independent</strong>. A cutter or gyro slider loses almost nothing at Coors. A four-seam fastball with near-pure backspin loses ~16% of its movement. The model also accounts for the fact that less drag means the ball arrives slightly faster (~1.8%), giving it even less time to accumulate movement.</p>
-  <p>Extension (release point distance) matters too — each extra foot of extension brings the release closer to the plate, reducing movement accumulation. All adjustments apply only to the Magnus-induced component, preserving gyroscopic movement untouched.</p>
+  <h2>How Altitude Reduces Pitch Movement at Coors Field</h2>
+  <p>At 5,280 feet, air density at Coors Field is <b>~14.7% lower</b> than at sea level. Magnus force — which drives all spin-induced pitch movement — scales directly with air density. But the reduction isn't uniform across pitches: it depends on three physics variables specific to each pitch.</p>
+  <p><b>1. Spin efficiency (ε):</b> Only the transverse (perpendicular) component of spin generates Magnus force. Gyroscopic spin — where the spin axis aligns with the ball's trajectory — produces zero Magnus force and is <b>altitude-independent</b>. Cutters and gyro sliders lose almost nothing at Coors. Four-seam fastballs with near-pure backspin lose the most.</p>
+  <p><b>2. Velocity:</b> Movement accumulates over time. Faster pitches spend less time in flight, so they accumulate less break — and less to lose. A 100 mph fastball is in the air ~0.36s; an 82 mph curve ~0.45s. The time-of-flight at Coors is also slightly shorter (less drag = ball decelerates less = arrives faster), so the combined effect is <b>movement ∝ ρ × t²</b> — computed per pitch, not as a flat correction.</p>
+  <p><b>3. Extension:</b> Release point distance reduces the effective flight distance (<b>d = 60.5 − ext</b>). More extension = shorter distance = less time = less movement — and proportionally less to lose at altitude. A pitcher releasing at 7.5ft extension loses slightly less absolute movement at Coors than one at 5.5ft.</p>
+
+  <div class="formula-block">
+    <div>t_sl = (60.5 − ext) / (v_avg_sl × 1.4667)  &nbsp;&nbsp; where v_avg_sl = velo − ½ × drag_loss_sl × (d/55)</div>
+    <div>t_coors = (60.5 − ext) / (v_avg_coors × 1.4667)  &nbsp;&nbsp; drag_loss_coors = 0.853 × drag_loss_sl</div>
+    <div>move_ratio = ρ_c/ρ₀ × (t_coors/t_sl)²</div>
+    <div>pfx_coors = pfx × [1 − ε × (1 − move_ratio)]  &nbsp;&nbsp; (gyro component ε unchanged)</div>
+    <div class="note">drag_loss_sl ≈ 9 mph per 55 ft (MLB average). Gyroscopic pitches (FC, gyro SL) have low ε → nearly unaffected. Magnus-dominant pitches (FF, CU) have high ε → maximum altitude reduction.</div>
+  </div>
+
   <div class="intro-grid">
-    <div class="intro-card">
-      <h3>Air Density</h3>
-      <div class="big-stat">85.3%</div>
-      <p>Of sea level density at Coors. Magnus force scales directly with ρ — the thinner air reduces spin-induced break proportionally.</p>
+    <div class="ic">
+      <h3>Air Density Effect</h3>
+      <div class="bs">85.3%</div>
+      <p>Of sea-level density at Coors. Magnus force ∝ ρ. This is the dominant term — velocity and extension corrections modify it by 1–3%.</p>
     </div>
-    <div class="intro-card">
+    <div class="ic">
+      <h3>Velocity Interaction</h3>
+      <div class="bs">−0.5%</div>
+      <p>Additional time-of-flight reduction at Coors (less drag → ball arrives ~0.5% faster). Small but real — and it varies by velo and extension per pitch.</p>
+    </div>
+    <div class="ic">
       <h3>Gyro Exception</h3>
-      <div class="big-stat">~0%</div>
-      <p>Movement loss for pure gyroscopic pitches. Spin axis aligned with trajectory = zero Magnus force = zero altitude effect. Cutters and gyro sliders are Coors-friendly.</p>
-    </div>
-    <div class="intro-card">
-      <h3>4-Seam Impact</h3>
-      <div class="big-stat">~16%</div>
-      <p>Movement reduction for elite 4-seam fastballs (97%+ spin efficiency). A 16" vertical break becomes ~13.5" — the difference between an elite and average riser.</p>
+      <div class="bs">~0%</div>
+      <p>Loss for pure gyroscopic pitches (low ε). Cutter, gyro slider, knuckleball are Coors-safe. Four-seamers (ε=97%) lose up to 16% of movement.</p>
     </div>
   </div>
 </div>
@@ -164,39 +165,92 @@ tbody td{padding:6px 8px;white-space:nowrap;}
     <div class="ph"><div class="dots"><span></span><span></span><span></span></div><span>SELECT PITCHER ABOVE</span></div>
   </div>
   <div class="right">
-    <div class="section-label">Physics Model</div>
-    <div class="phys-card">
-      <div class="phys-title">Altitude Constants</div>
+    <div class="sl">Physics Model</div>
+    <div class="phc">
+      <div class="pht">Constants</div>
       <div class="pr"><span class="pk">Coors altitude</span><span class="pv">5,280 ft</span></div>
-      <div class="pr"><span class="pk">ρ sea level</span><span class="pv">1.225 kg/m³</span></div>
-      <div class="pr"><span class="pk">ρ Coors</span><span class="pv">1.045 kg/m³</span></div>
-      <div class="pr"><span class="pk">Density ratio</span><span class="pv w">0.853×</span></div>
-      <div class="pr"><span class="pk">Flight time τ</span><span class="pv w">0.982×</span></div>
-      <div class="pr"><span class="pk">Net aero factor</span><span class="pv b">0.838×</span></div>
+      <div class="pr"><span class="pk">ρ_sl</span><span class="pv">1.225 kg/m³</span></div>
+      <div class="pr"><span class="pk">ρ_coors</span><span class="pv">1.045 kg/m³</span></div>
+      <div class="pr"><span class="pk">ρ ratio</span><span class="pv w">0.853×</span></div>
+      <div class="pr"><span class="pk">Drag loss (MLB avg)</span><span class="pv">~9 mph / 55ft</span></div>
+      <div class="pr"><span class="pk">Coors drag loss</span><span class="pv w">~7.7 mph / 55ft</span></div>
     </div>
-    <div class="phys-card">
-      <div class="phys-title">Spin Efficiency by Type</div>
+    <div class="phc">
+      <div class="pht">Spin Efficiency (ε)</div>
       <div id="effPanel"></div>
     </div>
-    <div class="phys-card" id="pitcherCard" style="display:none">
-      <div class="phys-title">Pitcher Summary</div>
+    <div class="phc" id="pitcherCard" style="display:none">
+      <div class="pht">Pitcher</div>
       <div id="pitcherCardContent"></div>
     </div>
   </div>
 </div>
 
 <script>
-/* ── PHYSICS ─────────────────────────────── */
-const RHO_R=0.8531,TAU=0.982,AERO=RHO_R*TAU;
-const SE={FF:.97,FA:.97,SI:.80,FT:.82,FC:.42,CH:.82,SC:.75,FS:.72,FO:.68,CU:.88,KC:.85,CS:.80,SL:.50,ST:.58,SV:.46,KN:.05};
+/* ── PHYSICS MODEL v2 ─────────────────────────────────────── */
+const RHO_SL = 1.225, RHO_C = 1.045;
+const RHO_RATIO = RHO_C / RHO_SL;          // 0.8531
+const DRAG_LOSS_SL = 9.0;                   // mph per 55ft at sea level (MLB average)
+const DRAG_LOSS_C  = DRAG_LOSS_SL * RHO_RATIO; // 7.68 mph at Coors
+const MPH_TO_FPS   = 5280 / 3600;           // 1.4667
+
+// Spin efficiency: fraction of total spin that is transverse (Magnus-generating)
+// Gyroscopic spin is excluded — it generates zero Magnus force, unaffected by altitude
+const SE = {
+  FF:.97,FA:.97,        // 4-seam: near-pure backspin → maximum altitude effect
+  SI:.80,FT:.82,        // sinker/2-seam: moderate gyro component
+  FC:.42,               // cutter: significant gyro → Coors-friendly
+  CH:.82,SC:.75,        // changeup families
+  FS:.72,FO:.68,        // splitter/forkball: moderate
+  CU:.88,KC:.85,CS:.80, // curveballs: mostly topspin (high transverse)
+  SL:.50,               // slider: mixed (varies widely)
+  ST:.58,               // sweeper: more transverse than traditional SL
+  SV:.46,               // slurve
+  KN:.05,               // knuckleball: essentially no organised spin
+};
+
+function computeFactor(type, velo, ext) {
+  const spinEff = SE[type] ?? 0.70;
+  const dist    = 60.5 - ext;               // feet from release to front of plate
+  const scaledDrag = dist / 55;             // scale drag loss to actual distance
+
+  // Average velocity over flight (approx: v_release - half the drag loss)
+  const vAvgSL = velo - (DRAG_LOSS_SL * scaledDrag) / 2;
+  const vAvgC  = velo - (DRAG_LOSS_C  * scaledDrag) / 2;
+
+  // Time of flight (seconds)
+  const tSL = dist / (vAvgSL * MPH_TO_FPS);
+  const tC  = dist / (vAvgC  * MPH_TO_FPS);
+
+  // Movement scales as Magnus_force × t²  ∝  ρ × v × ω × t²
+  // For same pitch (same v, ω): move_ratio = ρ_ratio × (tC/tSL)²
+  // Note: v in Magnus term also changes slightly, but effect is ~0.1% and we absorb it
+  const moveRatio = RHO_RATIO * Math.pow(tC / tSL, 2);
+
+  // Apply only to Magnus (transverse) component; gyro component is unchanged
+  const factor = 1 - spinEff * (1 - moveRatio);
+
+  return { factor: +factor.toFixed(5), spinEff, tSL: +tSL.toFixed(4), tC: +tC.toFixed(4), moveRatio: +moveRatio.toFixed(5) };
+}
+
+function adjustArsenal(pitches) {
+  return pitches.map(([type, velo, x, z, spin, ext, rh, use]) => {
+    const { factor, spinEff, tSL, tC, moveRatio } = computeFactor(type, velo, ext);
+    return { type, velo, x, z, spin, ext, rh, use,
+      name: pname(type), color: col(type),
+      cx: +(x * factor).toFixed(2),
+      cz: +(z * factor).toFixed(2),
+      factor, spinEff, tSL, tC, moveRatio };
+  });
+}
+
+/* ── COLORS / NAMES ───────────────────────── */
 const PC={FF:'#e63946',FA:'#e63946',SI:'#ff7f0e',FT:'#ff7f0e',FC:'#e377c2',CH:'#bcbd22',FS:'#17becf',FO:'#17becf',CU:'#4096ff',KC:'#4096ff',CS:'#4096ff',SL:'#9467bd',ST:'#8c564b',SV:'#7f7f7f',KN:'#2ca02c'};
 const PN={FF:'4-Seam',FA:'Fastball',SI:'Sinker',FT:'2-Seam',FC:'Cutter',CH:'Changeup',FS:'Splitter',FO:'Forkball',CU:'Curveball',KC:'Knuckle Curve',CS:'Slow Curve',SL:'Slider',ST:'Sweeper',SV:'Slurve',KN:'Knuckleball'};
 function col(t){return PC[t]||'#aaa';}
 function pname(t){return PN[t]||t;}
-function factor(type,ext=6.5){const e=SE[type]||.70,ea=1-Math.max(0,ext-6.5)*.015,mf=AERO*ea;return 1-e*(1-mf);}
-function adjust(pitches){return pitches.map(([t,v,x,z,sp,ex,rh,u])=>{const f=factor(t,ex);return{type:t,velo:v,x,z,spin:sp,ext:ex,rh,use:u,name:pname(t),color:col(t),cx:+(x*f).toFixed(2),cz:+(z*f).toFixed(2),factor:+f.toFixed(4),se:SE[t]||.70};});}
 
-/* ── DATA ─────────────────────────────────── */
+/* ── PITCHER DATA ─────────────────────────── */
 const PITCHERS = {
   'Gerrit Cole':{team:'NYY',throws:'R',pitches:[['FF',95.8,-5.1,16.2,2526,6.8,6.1,0.42], ['SL',88.9,3.4,3.2,2488,6.6,6.0,0.2], ['CH',88.0,-6.8,8.4,1714,6.7,6.0,0.14], ['KC',82.3,7.8,-13.1,2784,6.5,5.9,0.16], ['FC',91.8,1.2,10.8,2356,6.7,6.1,0.08]]},
   'Max Fried':{team:'NYY',throws:'L',pitches:[['FF',93.1,5.8,14.6,2312,6.5,5.7,0.4], ['SL',84.8,-4.2,2.8,2486,6.3,5.5,0.24], ['CH',84.2,9.8,5.4,1834,6.4,5.6,0.18], ['CU',77.4,-10.2,-11.4,2342,6.2,5.4,0.18]]},
@@ -373,143 +427,155 @@ const TEAMS=[
   {id:'TOR',name:'Toronto Blue Jays'},{id:'WSN',name:'Washington Nationals'},
 ];
 
-/* ── INIT ─────────────────────────────────── */
-window.onload=()=>{
-  const ts=document.getElementById('teamSel');
-  TEAMS.forEach(t=>ts.add(new Option(t.name,t.id)));
+window.onload = () => {
+  const ts = document.getElementById('teamSel');
+  TEAMS.forEach(t => ts.add(new Option(t.name, t.id)));
   renderEff();
 };
 
-function renderEff(){
-  const order=[['FF','4-Seam'],['SI','Sinker'],['CH','Changeup'],['FS','Splitter'],['CU','Curveball'],['SL','Slider'],['FC','Cutter'],['ST','Sweeper'],['KN','Knuckleball']];
-  document.getElementById('effPanel').innerHTML=order.map(([t,n])=>{
-    const e=SE[t]||.70,loss=Math.round(e*(1-AERO)*100);
-    return`<div class="eff-row"><span class="el" style="color:${col(t)}">${n}</span><div class="et"><div class="ef" style="width:${Math.round(e*100)}%;background:${col(t)};opacity:.85"></div></div><span class="ep">-${loss}%</span></div>`;
+function renderEff() {
+  const order = [['FF','4-Seam'],['SI','Sinker'],['CH','Changeup'],['FS','Splitter'],['CU','Curveball'],['SL','Slider'],['FC','Cutter'],['ST','Sweeper'],['KN','Knuckleball']];
+  // Show loss at typical velo (93 mph FF, 77 mph CU, etc)
+  const typVelo = {FF:95,SI:93,CH:86,FS:87,CU:79,SL:86,FC:90,ST:86,KN:72};
+  const typExt  = {FF:6.7,SI:6.5,CH:6.6,FS:6.5,CU:6.4,SL:6.5,FC:6.5,ST:6.5,KN:6.2};
+  document.getElementById('effPanel').innerHTML = order.map(([t,n]) => {
+    const v = typVelo[t]||90, ex = typExt[t]||6.5;
+    const { factor } = computeFactor(t, v, ex);
+    const loss = Math.round((1-factor)*100);
+    return `<div class="er"><span class="el" style="color:${col(t)}">${n}</span><div class="et"><div class="ef" style="width:${Math.round(SE[t]*100)}%;background:${col(t)};opacity:.8"></div></div><span class="ep">−${loss}%</span></div>`;
   }).join('');
 }
 
-function onTeam(){
-  const team=document.getElementById('teamSel').value;
-  const ps=document.getElementById('pitchSel');
-  ps.innerHTML='<option value="">— select pitcher —</option>';
-  if(!team)return;
-  const inTeam=Object.keys(PITCHERS).filter(n=>PITCHERS[n].team===team).sort();
-  if(!inTeam.length){document.getElementById('statusMsg').textContent='NO DATA FOR THIS TEAM';return;}
-  inTeam.forEach(n=>ps.add(new Option(n,n)));
-  document.getElementById('statusMsg').textContent=`${inTeam.length} PITCHERS AVAILABLE`;
-  document.getElementById('introWrap').style.display='none';
-  document.getElementById('mainWrap').style.display='grid';
+function onTeam() {
+  const team = document.getElementById('teamSel').value;
+  const ps = document.getElementById('pitchSel');
+  ps.innerHTML = '<option value="">— select pitcher —</option>';
+  if (!team) return;
+  const inTeam = Object.keys(PITCHERS).filter(n => PITCHERS[n].team === team).sort();
+  if (!inTeam.length) { document.getElementById('statusMsg').textContent='NO DATA'; return; }
+  inTeam.forEach(n => ps.add(new Option(n, n)));
+  document.getElementById('statusMsg').textContent = `${inTeam.length} PITCHERS AVAILABLE`;
+  document.getElementById('introWrap').style.display = 'none';
+  document.getElementById('mainWrap').style.display = 'grid';
 }
 
-function onPitcher(){
-  const name=document.getElementById('pitchSel').value;
-  if(!name||!PITCHERS[name])return;
-  render(name,PITCHERS[name]);
+function onPitcher() {
+  const name = document.getElementById('pitchSel').value;
+  if (!name || !PITCHERS[name]) return;
+  renderDash(name, PITCHERS[name]);
 }
 
-/* ── RENDER ───────────────────────────────── */
-function render(name,data){
-  const adj=adjust(data.pitches);
-  const avgExt=(adj.reduce((s,p)=>s+p.ext,0)/adj.length).toFixed(1);
-  const avgF=(adj.reduce((s,p)=>s+p.factor,0)/adj.length);
-  document.getElementById('pitcherCard').style.display='block';
-  document.getElementById('pitcherCardContent').innerHTML=
+function renderDash(name, data) {
+  const adj = adjustArsenal(data.pitches);
+  const avgTsl  = (adj.reduce((s,p)=>s+p.tSL,0)/adj.length).toFixed(3);
+  const avgTc   = (adj.reduce((s,p)=>s+p.tC,0)/adj.length).toFixed(3);
+  const avgF    = (adj.reduce((s,p)=>s+p.factor,0)/adj.length);
+
+  document.getElementById('pitcherCard').style.display = 'block';
+  document.getElementById('pitcherCardContent').innerHTML =
     `<div class="pr"><span class="pk">Name</span><span class="pv">${name}</span></div>
      <div class="pr"><span class="pk">Team / Hand</span><span class="pv">${data.team} / ${data.throws}HP</span></div>
-     <div class="pr"><span class="pk">Avg extension</span><span class="pv">${avgExt} ft</span></div>
-     <div class="pr"><span class="pk">Arsenal size</span><span class="pv">${adj.length} pitches</span></div>
-     <div class="pr"><span class="pk">Avg move factor</span><span class="pv w">${(avgF*100).toFixed(1)}%</span></div>`;
-  document.getElementById('content').innerHTML=
-    `<div class="section-label">${name.toUpperCase()} — PITCHER'S PERSPECTIVE MOVEMENT</div>
+     <div class="pr"><span class="pk">Avg t_sl</span><span class="pv">${avgTsl}s</span></div>
+     <div class="pr"><span class="pk">Avg t_coors</span><span class="pv w">${avgTc}s</span></div>
+     <div class="pr"><span class="pk">Avg move kept</span><span class="pv w">${(avgF*100).toFixed(1)}%</span></div>`;
+
+  document.getElementById('content').innerHTML =
+    `<div class="sl">${name.toUpperCase()} — PITCHER'S VIEW MOVEMENT PLOT</div>
      <div class="plots">
-       <div class="plot-card">
-         <div class="pct">STANDARD (SEA LEVEL)</div>
-         <div class="psub">Normal park conditions — from pitcher's view</div>
-         ${buildSVG(adj,false,data.throws)}${buildLeg(adj)}
+       <div class="pc">
+         <div class="pt">STANDARD (SEA LEVEL)</div>
+         <div class="ps">Pitcher's perspective · actual Statcast profile</div>
+         ${buildSVG(adj,false)}${buildLeg(adj)}
        </div>
-       <div class="plot-card coors">
-         <div class="pct">COORS FIELD ADJUSTED</div>
-         <div class="psub">ρ=85.3% · +5,280 ft · from pitcher's view</div>
-         ${buildSVG(adj,true,data.throws)}${buildLeg(adj)}
+       <div class="pc coors">
+         <div class="pt">COORS FIELD ADJUSTED</div>
+         <div class="ps">ρ=85.3% · per-pitch velocity + extension model</div>
+         ${buildSVG(adj,true)}${buildLeg(adj)}
        </div>
      </div>
-     <div class="section-label" style="margin-top:4px">ARSENAL BREAKDOWN — MOVEMENT DELTA</div>
+     <div class="sl" style="margin-top:4px">ARSENAL — MOVEMENT DELTA + FLIGHT PHYSICS</div>
      ${buildTable(adj)}`;
-  document.getElementById('statusMsg').className='status live';
-  document.getElementById('statusMsg').textContent=`${name.toUpperCase()} · ${data.throws}HP · ${data.team}`;
+
+  document.getElementById('statusMsg').className = 'status live';
+  document.getElementById('statusMsg').textContent = `${name.toUpperCase()} · ${data.throws}HP · ${data.team}`;
 }
 
-/* ── SVG PLOT (PITCHER'S VIEW) ────────────── */
-// Pitcher's view: flip x-axis vs catcher's view
-// display_x = -pfx_x  →  arm side is on RIGHT for all pitchers
-function buildSVG(pitches,coors,hand){
-  const W=300,H=300,P=30,pW=W-P*2,pH=H-P*2,R=22;
-  const cx=v=>P+(-v+R)/(R*2)*pW;   // flip x: negative pfx_x (arm side) → right of plot
-  const cy=v=>P+(-v+R)/(R*2)*pH;
-  let s=`<svg class="plot" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
-  s+=`<rect width="${W}" height="${H}" fill="#0a0a14" rx="4"/>`;
-  for(let v=-20;v<=20;v+=5){
-    const lx=cx(v),ly=cy(v),c=v===0?'#3d3d5c':'#1e1e2e',w=v===0?1:.5;
-    s+=`<line x1="${lx}" y1="${P}" x2="${lx}" y2="${P+pH}" stroke="${c}" stroke-width="${w}"/>`;
-    s+=`<line x1="${P}" y1="${ly}" x2="${P+pW}" y2="${ly}" stroke="${c}" stroke-width="${w}"/>`;
-    if(v!==0&&Math.abs(v)===10){
-      s+=`<text x="${lx}" y="${P+pH+10}" text-anchor="middle" font-size="8" fill="#444466" font-family="Courier New">${v}"</text>`;
-      s+=`<text x="${P-8}" y="${ly+3}" text-anchor="end" font-size="8" fill="#444466" font-family="Courier New">${v}"</text>`;
+/* ── SVG (PITCHER'S VIEW: flip x so arm side = RIGHT) ──────── */
+function buildSVG(pitches, coors) {
+  const W=300,H=300,P=28,pW=W-P*2,pH=H-P*2,R=22;
+  const cx = v => P + (-v+R)/(R*2)*pW;   // flip x: arm side (neg pfx_x) → right
+  const cy = v => P + (-v+R)/(R*2)*pH;
+  let s = `<svg class="plot" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+  s += `<rect width="${W}" height="${H}" fill="#09090f" rx="4"/>`;
+  for (let v=-20; v<=20; v+=5) {
+    const lx=cx(v), ly=cy(v), c=v===0?'#3a3a5c':'#1c1c2c', w=v===0?1:.5;
+    s += `<line x1="${lx}" y1="${P}" x2="${lx}" y2="${P+pH}" stroke="${c}" stroke-width="${w}"/>`;
+    s += `<line x1="${P}" y1="${ly}" x2="${P+pW}" y2="${ly}" stroke="${c}" stroke-width="${w}"/>`;
+    if (v!==0 && Math.abs(v)===10) {
+      s += `<text x="${lx}" y="${P+pH+10}" text-anchor="middle" font-size="8" fill="#3d3d5c" font-family="Courier New">${v}"</text>`;
+      s += `<text x="${P-7}" y="${ly+3}" text-anchor="end" font-size="8" fill="#3d3d5c" font-family="Courier New">${v}"</text>`;
     }
   }
-  // Axis labels — pitcher's perspective
-  // Right = arm side (for both RHP and LHP, after flip)
-  s+=`<text x="${P+pW}" y="${P-5}" text-anchor="end" font-size="8" fill="#7766aa" font-family="Courier New">ARM →</text>`;
-  s+=`<text x="${P}" y="${P-5}" font-size="8" fill="#7766aa" font-family="Courier New">← GLOVE</text>`;
-  s+=`<text x="${P+pW/2}" y="${H-2}" text-anchor="middle" font-size="8" fill="#555577" font-family="Courier New">HORIZONTAL BREAK</text>`;
-  // Arrows on coors plot
-  if(coors){
-    pitches.forEach(p=>{
+  s += `<text x="${P+pW}" y="${P-5}" text-anchor="end" font-size="8" fill="#6655aa" font-family="Courier New">ARM →</text>`;
+  s += `<text x="${P}" y="${P-5}" font-size="8" fill="#6655aa" font-family="Courier New">← GLOVE</text>`;
+  s += `<text x="${P+pW/2}" y="${H-2}" text-anchor="middle" font-size="7" fill="#444466" font-family="Courier New">HORIZONTAL (in)</text>`;
+  s += `<text x="${P-18}" y="${P+pH/2}" text-anchor="middle" font-size="7" fill="#444466" font-family="Courier New" transform="rotate(-90,${P-18},${P+pH/2})">VERTICAL (in)</text>`;
+
+  if (coors) {
+    pitches.forEach(p => {
       const ox=cx(p.x),oz=cy(p.z),nx=cx(p.cx),nz=cy(p.cz);
-      if(Math.abs(ox-nx)>1||Math.abs(oz-nz)>1)
-        s+=`<line x1="${ox}" y1="${oz}" x2="${nx}" y2="${nz}" stroke="${p.color}" stroke-width="1.2" stroke-dasharray="2,2" opacity=".45"/>`;
+      if (Math.hypot(ox-nx,oz-nz) > 1)
+        s += `<line x1="${ox}" y1="${oz}" x2="${nx}" y2="${nz}" stroke="${p.color}" stroke-width="1.1" stroke-dasharray="2,2" opacity=".4"/>`;
     });
   }
-  // Dots
-  pitches.forEach(p=>{
-    const px=coors?cx(p.cx):cx(p.x);
-    const pz=coors?cy(p.cz):cy(p.z);
-    s+=`<circle cx="${px}" cy="${pz}" r="7" fill="${p.color}" opacity=".92" stroke="#0a0a14" stroke-width="1.5"/>`;
-    const lx2=px+(p.x<0?10:-10),anc=p.x<0?'start':'end';
-    s+=`<text x="${lx2}" y="${pz+3}" font-size="8.5" fill="${p.color}" font-family="Courier New" font-weight="700" text-anchor="${anc}">${p.type}</text>`;
+  pitches.forEach(p => {
+    const px = coors ? cx(p.cx) : cx(p.x);
+    const pz = coors ? cy(p.cz) : cy(p.z);
+    s += `<circle cx="${px}" cy="${pz}" r="7" fill="${p.color}" opacity=".92" stroke="#09090f" stroke-width="1.5"/>`;
+    const lx2 = px + (p.x < 0 ? 10 : -10);
+    const anc = p.x < 0 ? 'start' : 'end';
+    s += `<text x="${lx2}" y="${pz+3}" font-size="8.5" fill="${p.color}" font-family="Courier New" font-weight="700" text-anchor="${anc}">${p.type}</text>`;
   });
-  if(coors)s+=`<text x="${W-P}" y="${H-8}" text-anchor="end" font-size="9" fill="#553380" font-family="Courier New" opacity=".6">COORS ADJ.</text>`;
-  return s+'</svg>';
+  if (coors)
+    s += `<text x="${W-P}" y="${H-7}" text-anchor="end" font-size="8" fill="#553380" font-family="Courier New" opacity=".7">COORS ADJ.</text>`;
+  return s + '</svg>';
 }
 
-function buildLeg(ps){
-  return`<div class="legend-row">${ps.map(p=>`<span class="li"><span class="ld" style="background:${p.color}"></span>${pname(p.type)} ${Math.round(p.use*100)}%</span>`).join('')}</div>`;
+function buildLeg(ps) {
+  return `<div class="lr">${ps.map(p=>`<span class="li"><span class="ld" style="background:${p.color}"></span>${pname(p.type)} ${Math.round(p.use*100)}%</span>`).join('')}</div>`;
 }
 
-function buildTable(ps){
-  const rows=ps.map(p=>{
-    const dx=+(p.cx-p.x).toFixed(2),dz=+(p.cz-p.z).toFixed(2);
-    return`<tr>
+function buildTable(ps) {
+  const rows = ps.map(p => {
+    const dx = +(p.cx-p.x).toFixed(2), dz = +(p.cz-p.z).toFixed(2);
+    const dist = (60.5-p.ext).toFixed(1);
+    return `<tr>
       <td><span class="tt" style="background:${p.color}22;color:${p.color}">${p.type}</span></td>
       <td>${pname(p.type)}</td>
       <td style="color:var(--mid)">${p.velo}</td>
-      <td style="color:var(--mid)">${p.spin}</td>
-      <td style="color:var(--mid)">${p.ext.toFixed(1)}'</td>
+      <td style="color:var(--mid)">${p.ext}'</td>
+      <td style="color:var(--mid)">${dist}ft</td>
+      <td style="color:var(--mid)">${p.tSL}s</td>
+      <td style="color:#c084fc">${p.tC}s</td>
       <td style="color:var(--mid)">${p.x}"</td>
       <td style="color:var(--mid)">${p.z}"</td>
       <td style="color:#c084fc">${p.cx}"</td>
       <td style="color:#c084fc">${p.cz}"</td>
       <td class="${dx<-.3?'neg':dx>.3?'pos':'zer'}">${dx>0?'+':''}${dx}"</td>
       <td class="${dz<-.3?'neg':dz>.3?'pos':'zer'}">${dz>0?'+':''}${dz}"</td>
-      <td style="color:var(--mid)">${Math.round(p.se*100)}%</td>
+      <td style="color:var(--mid)">${Math.round(p.spinEff*100)}%</td>
       <td style="color:var(--warn)">${(p.factor*100).toFixed(1)}%</td>
     </tr>`;
   }).join('');
-  return`<table>
-    <thead><tr><th>Type</th><th>Pitch</th><th>Velo</th><th>Spin</th><th>Ext</th>
-    <th>H Brk</th><th>V Brk</th><th>H Coors</th><th>V Coors</th>
-    <th>ΔH</th><th>ΔV</th><th>Spin Eff</th><th>Move Kept</th></tr></thead>
-    <tbody>${rows}</tbody></table>`;
+  return `<table>
+    <thead><tr>
+      <th>Type</th><th>Pitch</th><th>Velo</th><th>Ext</th><th>Dist</th>
+      <th>t_sl</th><th>t_coors</th>
+      <th>H Brk</th><th>V Brk</th><th>H Coors</th><th>V Coors</th>
+      <th>ΔH</th><th>ΔV</th><th>Spin Eff</th><th>Move Kept</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
 }
 </script>
 </body>
