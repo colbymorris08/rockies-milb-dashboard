@@ -5,360 +5,357 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Coors Pitch Movement Simulator</title>
 <style>
-:root {
+:root{
   --purple:#33006F;--silver:#C4CED4;--accent:#8B5CF6;--white:#f5f5f0;
   --good:#22c55e;--warn:#f59e0b;--bad:#ef4444;--mid:#94a3b8;
-  --bg:#0f0f18;--card:#16161f;--border:#252535;--border2:#333350;
+  --bg:#0f0f18;--card:#16161f;--border:#252535;--b2:#333350;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--white);font-family:'Courier New',monospace;min-height:100vh;}
-header{display:flex;align-items:center;gap:14px;padding:20px 28px 16px;border-bottom:1px solid var(--border);}
-.logo{width:42px;height:42px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:var(--silver);letter-spacing:-1px;flex-shrink:0;}
-.htext h1{font-size:16px;font-weight:700;letter-spacing:.1em;color:var(--white);}
-.htext p{font-size:10px;color:var(--mid);margin-top:2px;letter-spacing:.05em;}
-.controls{display:flex;align-items:center;gap:10px;padding:14px 28px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+
+/* EQUATION BAR */
+.eq-bar{
+  background:#0a0a14;border-bottom:1px solid #553380;
+  padding:8px 28px;display:flex;gap:24px;align-items:center;flex-wrap:wrap;
+}
+.eq-bar .eq-formula{font-size:11px;color:#c084fc;letter-spacing:.04em;}
+.eq-bar .eq-const{font-size:11px;color:var(--mid);}
+.eq-bar .eq-const span{color:var(--warn);}
+.eq-bar .eq-title{font-size:10px;color:#7766aa;letter-spacing:.1em;text-transform:uppercase;margin-right:4px;}
+
+header{display:flex;align-items:center;gap:14px;padding:16px 28px 14px;border-bottom:1px solid var(--border);}
+.logo{width:40px;height:40px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:var(--silver);flex-shrink:0;}
+.htext h1{font-size:15px;font-weight:700;letter-spacing:.1em;}
+.htext p{font-size:10px;color:var(--mid);margin-top:2px;letter-spacing:.04em;}
+
+/* CONTROLS */
+.controls{display:flex;align-items:center;gap:10px;padding:12px 28px;border-bottom:1px solid var(--border);flex-wrap:wrap;background:#0d0d18;}
 .ctrl-label{font-size:10px;color:var(--mid);letter-spacing:.1em;text-transform:uppercase;}
-select{background:var(--card);color:var(--white);border:1px solid var(--border2);border-radius:4px;padding:7px 10px;font-family:'Courier New',monospace;font-size:12px;cursor:pointer;min-width:160px;}
+select{background:var(--card);color:var(--white);border:1px solid var(--b2);border-radius:4px;padding:7px 10px;font-family:'Courier New',monospace;font-size:12px;cursor:pointer;min-width:180px;}
 select:focus{outline:none;border-color:var(--accent);}
-.sep{width:1px;height:24px;background:var(--border);margin:0 4px;}
+.sep{width:1px;height:22px;background:var(--border);margin:0 4px;}
 .status{font-size:10px;color:var(--mid);letter-spacing:.04em;margin-left:auto;}
 .status.live{color:var(--good);}
-.main{display:grid;grid-template-columns:1fr 300px;gap:0;min-height:calc(100vh - 110px);}
+
+/* INTRO */
+.intro{padding:32px 28px;max-width:900px;}
+.intro h2{font-size:20px;font-weight:700;color:var(--white);margin-bottom:16px;letter-spacing:.04em;}
+.intro p{font-size:13px;color:var(--mid);line-height:1.8;margin-bottom:12px;}
+.intro-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:20px;}
+.intro-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;}
+.intro-card h3{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:8px;text-transform:uppercase;}
+.intro-card p{font-size:11px;color:var(--mid);line-height:1.7;}
+.intro-card .big-stat{font-size:28px;font-weight:700;color:var(--warn);margin:6px 0 4px;}
+
+/* MAIN */
+.main{display:grid;grid-template-columns:1fr 280px;min-height:calc(100vh - 170px);}
 .left{padding:20px 24px;border-right:1px solid var(--border);overflow:auto;}
-.right{padding:20px 18px;overflow-y:auto;}
+.right{padding:18px 16px;overflow-y:auto;}
 .section-label{font-size:10px;letter-spacing:.15em;color:var(--mid);text-transform:uppercase;margin-bottom:10px;}
 .plots{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
 .plot-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;}
-.plot-card-title{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--white);margin-bottom:2px;}
-.plot-card-sub{font-size:10px;color:var(--mid);margin-bottom:10px;}
 .plot-card.coors{border-color:#553380;}
-.plot-card.coors .plot-card-title{color:#c084fc;}
+.pct{font-size:11px;font-weight:700;color:var(--white);margin-bottom:1px;}
+.psub{font-size:10px;color:var(--mid);margin-bottom:10px;}
+.plot-card.coors .pct{color:#c084fc;}
 svg.plot{display:block;width:100%;height:auto;}
-.legend-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
-.legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--mid);}
-.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-/* Arsenal table */
-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:4px;}
-thead th{text-align:left;padding:7px 8px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);border-bottom:1px solid var(--border);white-space:nowrap;}
-tbody tr{border-bottom:1px solid rgba(37,37,53,.5);transition:background .1s;}
+.legend-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.li{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--mid);}
+.ld{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:11px;}
+thead th{text-align:left;padding:6px 8px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;}
+thead th:hover{color:var(--white);}
+tbody tr{border-bottom:1px solid rgba(37,37,53,.5);}
 tbody tr:hover{background:rgba(139,92,246,.06);}
-tbody td{padding:7px 8px;white-space:nowrap;}
-.t-name{font-weight:700;letter-spacing:.02em;}
-.t-type{display:inline-block;font-size:9px;padding:1px 5px;border-radius:3px;font-weight:700;}
-.delta{font-size:11px;font-weight:700;}
-.delta.neg{color:var(--bad);}
-.delta.pos{color:var(--good);}
-.delta.zero{color:var(--mid);}
-/* Physics panel */
-.physics-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:12px;}
-.phys-title{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--accent);margin-bottom:10px;}
-.phys-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);font-size:11px;}
-.phys-row:last-child{border-bottom:none;}
-.phys-key{color:var(--mid);}
-.phys-val{color:var(--white);font-weight:700;}
-.phys-val.good{color:var(--good);}
-.phys-val.warn{color:var(--warn);}
-.formula{background:#0a0a14;border:1px solid var(--border);border-radius:6px;padding:10px;font-size:10px;color:#a78bfa;line-height:1.8;margin-top:8px;}
-.eff-bar{display:flex;align-items:center;gap:6px;margin:3px 0;}
-.eff-label{font-size:10px;color:var(--mid);width:72px;flex-shrink:0;}
-.eff-track{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
-.eff-fill{height:100%;border-radius:2px;background:var(--accent);}
-.eff-pct{font-size:10px;color:var(--white);width:28px;text-align:right;}
-.note-box{background:rgba(51,0,111,.2);border:1px solid #553380;border-radius:6px;padding:10px;font-size:10px;color:#c084fc;line-height:1.6;margin-top:8px;}
-.placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;gap:8px;color:var(--mid);font-size:12px;}
-.dot-loader{display:flex;gap:5px;}
-.dot-loader span{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:dl 1.2s ease-in-out infinite;}
-.dot-loader span:nth-child(2){animation-delay:.2s;}
-.dot-loader span:nth-child(3){animation-delay:.4s;}
+tbody td{padding:6px 8px;white-space:nowrap;}
+.tt{display:inline-block;font-size:9px;padding:1px 5px;border-radius:3px;font-weight:700;}
+.neg{color:var(--bad);font-weight:700;}
+.pos{color:var(--good);font-weight:700;}
+.zer{color:var(--mid);}
+
+/* SIDEBAR */
+.phys-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;}
+.phys-title{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--accent);margin-bottom:8px;text-transform:uppercase;}
+.pr{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(37,37,53,.6);font-size:11px;}
+.pr:last-child{border:none;}
+.pk{color:var(--mid);}
+.pv{color:var(--white);font-weight:700;}
+.pv.w{color:var(--warn);}
+.pv.b{color:var(--bad);}
+.pv.g{color:var(--good);}
+.eff-row{display:flex;align-items:center;gap:5px;margin:2px 0;}
+.el{font-size:10px;color:var(--mid);width:68px;flex-shrink:0;}
+.et{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
+.ef{height:100%;border-radius:2px;}
+.ep{font-size:10px;color:var(--white);width:26px;text-align:right;}
+.ph{display:flex;flex-direction:column;align-items:center;justify-content:center;height:140px;gap:8px;color:var(--mid);font-size:11px;}
+.dots{display:flex;gap:5px;}
+.dots span{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:dl 1.2s ease-in-out infinite;}
+.dots span:nth-child(2){animation-delay:.2s;}
+.dots span:nth-child(3){animation-delay:.4s;}
 @keyframes dl{0%,100%{opacity:.2;transform:scale(.8);}50%{opacity:1;transform:scale(1);}}
+@media(max-width:800px){
+  .main{grid-template-columns:1fr;}
+  .right{display:none;}
+  .plots{grid-template-columns:1fr;}
+  .intro-grid{grid-template-columns:1fr;}
+}
 </style>
 </head>
 <body>
+
+<!-- PERMANENT EQUATION BAR -->
+<div class="eq-bar">
+  <span class="eq-title">Model:</span>
+  <span class="eq-formula">pfx_coors = pfx × [1 − ε × (1 − ρ_coors/ρ₀ × τ)]</span>
+  <span class="eq-const">ρ ratio <span>0.853</span></span>
+  <span class="eq-const">flight τ <span>0.982</span></span>
+  <span class="eq-const">net aero <span>0.838×</span></span>
+  <span class="eq-const">ε = spin efficiency (gyro-excluded)</span>
+</div>
 
 <header>
   <div class="logo">COL</div>
   <div class="htext">
     <h1>COORS PITCH MOVEMENT SIMULATOR</h1>
-    <p>MLB STATCAST PROFILES → ALTITUDE-ADJUSTED MOVEMENT · PHYSICS-BASED MODEL · 5,280 FT</p>
+    <p>PITCHER'S PERSPECTIVE · STATCAST PROFILES → ALTITUDE-ADJUSTED MOVEMENT · 5,280 FT · SPIN-EFFICIENCY MODEL</p>
   </div>
 </header>
 
 <div class="controls">
   <span class="ctrl-label">Team</span>
-  <select id="teamSel" onchange="onTeamChange()"><option value="">— select team —</option></select>
+  <select id="teamSel" onchange="onTeam()"><option value="">— select team —</option></select>
   <div class="sep"></div>
   <span class="ctrl-label">Pitcher</span>
-  <select id="pitchSel" onchange="onPitcherChange()"><option value="">— select pitcher —</option></select>
+  <select id="pitchSel" onchange="onPitcher()"><option value="">— select pitcher —</option></select>
   <span class="status" id="statusMsg">SELECT A TEAM TO BEGIN</span>
 </div>
 
-<div class="main">
-  <div class="left">
-    <div id="content">
-      <div class="placeholder">
-        <div class="dot-loader"><span></span><span></span><span></span></div>
-        <span>SELECT A TEAM AND PITCHER ABOVE</span>
-      </div>
+<div id="introWrap">
+<div class="intro">
+  <h2>How Altitude Changes Pitch Movement at Coors Field</h2>
+  <p>At 5,280 feet, the air at Coors Field is approximately <strong style="color:var(--warn)">14.7% less dense</strong> than at sea level. This directly reduces the Magnus force that gives pitches their movement — but not all pitches equally. The effect depends on a pitch's <strong style="color:var(--accent)">spin efficiency</strong>: the fraction of total spin that generates lift (Magnus force) vs. spin that is purely gyroscopic.</p>
+  <p>Gyroscopic spin — where the spin axis points in the direction of travel — produces no Magnus force regardless of air density, and is therefore <strong style="color:var(--good)">altitude-independent</strong>. A cutter or gyro slider loses almost nothing at Coors. A four-seam fastball with near-pure backspin loses ~16% of its movement. The model also accounts for the fact that less drag means the ball arrives slightly faster (~1.8%), giving it even less time to accumulate movement.</p>
+  <p>Extension (release point distance) matters too — each extra foot of extension brings the release closer to the plate, reducing movement accumulation. All adjustments apply only to the Magnus-induced component, preserving gyroscopic movement untouched.</p>
+  <div class="intro-grid">
+    <div class="intro-card">
+      <h3>Air Density</h3>
+      <div class="big-stat">85.3%</div>
+      <p>Of sea level density at Coors. Magnus force scales directly with ρ — the thinner air reduces spin-induced break proportionally.</p>
     </div>
+    <div class="intro-card">
+      <h3>Gyro Exception</h3>
+      <div class="big-stat">~0%</div>
+      <p>Movement loss for pure gyroscopic pitches. Spin axis aligned with trajectory = zero Magnus force = zero altitude effect. Cutters and gyro sliders are Coors-friendly.</p>
+    </div>
+    <div class="intro-card">
+      <h3>4-Seam Impact</h3>
+      <div class="big-stat">~16%</div>
+      <p>Movement reduction for elite 4-seam fastballs (97%+ spin efficiency). A 16" vertical break becomes ~13.5" — the difference between an elite and average riser.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="main" id="mainWrap" style="display:none">
+  <div class="left" id="content">
+    <div class="ph"><div class="dots"><span></span><span></span><span></span></div><span>SELECT PITCHER ABOVE</span></div>
   </div>
   <div class="right">
     <div class="section-label">Physics Model</div>
-    <div class="physics-card">
-      <div class="phys-title">ALTITUDE CONSTANTS</div>
-      <div class="phys-row"><span class="phys-key">Coors altitude</span><span class="phys-val">5,280 ft / 1,609m</span></div>
-      <div class="phys-row"><span class="phys-key">Air density (sea level)</span><span class="phys-val">1.225 kg/m³</span></div>
-      <div class="phys-row"><span class="phys-key">Air density (Coors)</span><span class="phys-val">1.045 kg/m³</span></div>
-      <div class="phys-row"><span class="phys-key">Density ratio</span><span class="phys-val warn">0.853×</span></div>
-      <div class="phys-row"><span class="phys-key">Flight time factor</span><span class="phys-val warn">0.982×</span></div>
-      <div class="phys-row"><span class="phys-key">Net aero factor</span><span class="phys-val bad">0.838×</span></div>
+    <div class="phys-card">
+      <div class="phys-title">Altitude Constants</div>
+      <div class="pr"><span class="pk">Coors altitude</span><span class="pv">5,280 ft</span></div>
+      <div class="pr"><span class="pk">ρ sea level</span><span class="pv">1.225 kg/m³</span></div>
+      <div class="pr"><span class="pk">ρ Coors</span><span class="pv">1.045 kg/m³</span></div>
+      <div class="pr"><span class="pk">Density ratio</span><span class="pv w">0.853×</span></div>
+      <div class="pr"><span class="pk">Flight time τ</span><span class="pv w">0.982×</span></div>
+      <div class="pr"><span class="pk">Net aero factor</span><span class="pv b">0.838×</span></div>
     </div>
-    <div class="physics-card">
-      <div class="phys-title">MOVEMENT FORMULA</div>
-      <div class="formula">
-        Δmove = eff × (1 − aero_factor)<br>
-        factor = 1 − spin_eff × 0.162<br><br>
-        pfx_coors = pfx × factor × ext_adj<br><br>
-        ext_adj = 1 − (ext−6.5) × 0.015<br><br>
-        Gyro spin (FC,SL w/ low eff)<br>
-        → nearly unaffected by altitude
-      </div>
-      <div class="note-box">
-        Only Magnus-induced (transverse) spin movement is reduced. Gyroscopic spin — where the spin axis aligns with ball trajectory — generates no Magnus force and is therefore altitude-independent.
-      </div>
-    </div>
-    <div class="physics-card">
-      <div class="phys-title">SPIN EFFICIENCY BY TYPE</div>
+    <div class="phys-card">
+      <div class="phys-title">Spin Efficiency by Type</div>
       <div id="effPanel"></div>
     </div>
-    <div class="physics-card" id="pitcherPhys" style="display:none">
-      <div class="phys-title">SELECTED PITCHER</div>
-      <div id="pitcherPhysContent"></div>
+    <div class="phys-card" id="pitcherCard" style="display:none">
+      <div class="phys-title">Pitcher Summary</div>
+      <div id="pitcherCardContent"></div>
     </div>
   </div>
 </div>
 
 <script>
-/* ── PHYSICS MODEL ─────────────────────────────────────────── */
-const DENSITY_RATIO = 1.045 / 1.225;   // 0.8531 Coors vs sea level
-const TIME_FACTOR   = 0.982;            // ball arrives ~1.8% faster → less movement time
-const AERO_FACTOR   = DENSITY_RATIO * TIME_FACTOR; // 0.8378
+/* ── PHYSICS ─────────────────────────────── */
+const RHO_R=0.8531,TAU=0.982,AERO=RHO_R*TAU;
+const SE={FF:.97,FA:.97,SI:.80,FT:.82,FC:.42,CH:.82,SC:.75,FS:.72,FO:.68,CU:.88,KC:.85,CS:.80,SL:.50,ST:.58,SV:.46,KN:.05};
+const PC={FF:'#e63946',FA:'#e63946',SI:'#ff7f0e',FT:'#ff7f0e',FC:'#e377c2',CH:'#bcbd22',FS:'#17becf',FO:'#17becf',CU:'#4096ff',KC:'#4096ff',CS:'#4096ff',SL:'#9467bd',ST:'#8c564b',SV:'#7f7f7f',KN:'#2ca02c'};
+const PN={FF:'4-Seam',FA:'Fastball',SI:'Sinker',FT:'2-Seam',FC:'Cutter',CH:'Changeup',FS:'Splitter',FO:'Forkball',CU:'Curveball',KC:'Knuckle Curve',CS:'Slow Curve',SL:'Slider',ST:'Sweeper',SV:'Slurve',KN:'Knuckleball'};
+function col(t){return PC[t]||'#aaa';}
+function pname(t){return PN[t]||t;}
+function factor(type,ext=6.5){const e=SE[type]||.70,ea=1-Math.max(0,ext-6.5)*.015,mf=AERO*ea;return 1-e*(1-mf);}
+function adjust(pitches){return pitches.map(([t,v,x,z,sp,ex,rh,u])=>{const f=factor(t,ex);return{type:t,velo:v,x,z,spin:sp,ext:ex,rh,use:u,name:pname(t),color:col(t),cx:+(x*f).toFixed(2),cz:+(z*f).toFixed(2),factor:+f.toFixed(4),se:SE[t]||.70};});}
 
-const SPIN_EFF = {
-  FF:0.97, FA:0.97,           // 4-seam: near-pure backspin
-  SI:0.80, FT:0.82,           // sinker/2-seam: moderate gyro
-  FC:0.42,                    // cutter: significant gyro
-  CH:0.82, SC:0.75,           // changeup
-  FS:0.72, FO:0.68,           // splitter / forkball
-  CU:0.88, KC:0.85, CS:0.80,  // curveballs: mostly topspin (high transverse)
-  SL:0.50,                    // slider: wide range, default mixed
-  ST:0.58,                    // sweeper: more transverse than traditional SL
-  SV:0.46,                    // slurve
-  KN:0.05,                    // knuckleball: essentially no spin
-};
-
-function coorsFactor(type, ext=6.5) {
-  const eff = SPIN_EFF[type] ?? 0.70;
-  const extAdj = 1 - Math.max(0, ext - 6.5) * 0.015;
-  const magnusFactor = AERO_FACTOR * extAdj;
-  return 1 - eff * (1 - magnusFactor);
-}
-
-function applyCoorsToArsenal(pitches) {
-  return pitches.map(p => {
-    const f = coorsFactor(p.type, p.ext);
-    return {
-      ...p,
-      cx: +(p.x * f).toFixed(2),
-      cz: +(p.z * f).toFixed(2),
-      factor: +f.toFixed(4),
-      spinEff: SPIN_EFF[p.type] ?? 0.70,
-    };
-  });
-}
-
-/* ── PITCH COLORS ──────────────────────────────────────────── */
-const P_COLOR = {
-  FF:'#e63946',FA:'#e63946',SI:'#ff7f0e',FT:'#ff7f0e',
-  FC:'#e377c2',CH:'#bcbd22',FS:'#17becf',FO:'#17becf',
-  CU:'#4096ff',KC:'#4096ff',CS:'#4096ff',
-  SL:'#9467bd',ST:'#8c564b',SV:'#7f7f7f',KN:'#2ca02c',
-};
-const P_NAME = {
-  FF:'4-Seam',FA:'Fastball',SI:'Sinker',FT:'2-Seam',FC:'Cutter',
-  CH:'Changeup',FS:'Splitter',FO:'Forkball',CU:'Curveball',
-  KC:'Knuckle Curve',CS:'Slow Curve',SL:'Slider',ST:'Sweeper',
-  SV:'Slurve',KN:'Knuckleball',
-};
-function pc(t){return P_COLOR[t]||'#aaa';}
-function pn(t){return P_NAME[t]||t;}
-
-/* ── EMBEDDED PITCHER DATA ─────────────────────────────────── */
-// [type, velo, pfx_x_in, pfx_z_in, spin_rpm, ext_ft, rel_h_ft, usage_pct]
-// pfx from catcher's POV: pos x = toward 1B; pos z = rise above gravity
+/* ── DATA ─────────────────────────────────── */
 const PITCHERS = {
-// ── NYY ──
-  'Gerrit Cole':{team:'NYY',throws:'R',pitches:[
-    ['FF',95.8,-5.1,16.2,2526,6.8,6.1,.42],['SL',88.9,3.4,3.2,2488,6.6,6.0,.20],
-    ['CH',88.0,-6.8,8.4,1714,6.7,6.0,.14],['KC',82.3,7.8,-13.1,2784,6.5,5.9,.16],['FC',91.8,1.2,10.8,2356,6.7,6.1,.08]]},
-  'Marcus Stroman':{team:'NYY',throws:'R',pitches:[
-    ['SI',92.5,-11.2,5.1,2256,6.4,5.3,.45],['FC',87.2,2.2,8.2,2432,6.2,5.2,.18],
-    ['SL',84.8,4.1,1.8,2198,6.1,5.1,.22],['CH',83.4,-8.4,4.2,1820,6.2,5.2,.15]]},
-  'Max Fried':{team:'NYY',throws:'L',pitches:[
-    ['FF',93.1,5.8,14.6,2312,6.5,5.7,.40],['SL',84.8,-4.2,2.8,2486,6.3,5.5,.24],
-    ['CH',84.2,9.8,5.4,1834,6.4,5.6,.18],['CU',77.4,-10.2,-11.4,2342,6.2,5.4,.18]]},
-// ── PHI ──
-  'Zack Wheeler':{team:'PHI',throws:'R',pitches:[
-    ['FF',97.1,-5.5,16.8,2360,6.9,6.2,.38],['SL',88.2,4.8,3.5,2744,6.7,6.0,.22],
-    ['CH',87.8,-7.4,8.2,1756,6.8,6.1,.22],['CU',82.1,8.1,-11.8,2648,6.5,5.9,.18]]},
-  'Aaron Nola':{team:'PHI',throws:'R',pitches:[
-    ['FF',93.6,-4.2,15.1,2254,6.6,6.0,.36],['CU',76.8,9.4,-13.4,2512,6.4,5.8,.22],
-    ['CH',86.8,-7.2,7.8,1690,6.5,5.9,.26],['SL',83.1,5.6,2.2,2256,6.3,5.7,.16]]},
-// ── ATL ──
-  'Spencer Strider':{team:'ATL',throws:'R',pitches:[
-    ['FF',98.2,-3.8,17.4,2856,7.0,6.2,.53],['SL',90.1,4.2,2.4,2924,6.8,6.1,.47]]},
-  'Chris Sale':{team:'ATL',throws:'L',pitches:[
-    ['FF',93.8,5.2,15.6,2252,6.8,5.9,.38],['SL',82.4,-3.8,2.1,2484,6.6,5.7,.34],
-    ['CH',83.2,8.4,5.8,1692,6.7,5.8,.14],['CU',75.6,-8.8,-10.4,2386,6.4,5.6,.14]]},
-// ── LAD ──
-  'Tyler Glasnow':{team:'LAD',throws:'R',pitches:[
-    ['FF',98.6,-4.8,18.2,2452,7.2,6.4,.48],['CU',82.6,10.4,-14.6,2724,7.0,6.2,.30],
-    ['SL',91.2,2.6,5.1,2618,7.1,6.3,.22]]},
-  'Yoshinobu Yamamoto':{team:'LAD',throws:'R',pitches:[
-    ['FF',96.2,-5.4,14.8,2412,6.6,6.0,.36],['FC',91.4,1.6,10.4,2364,6.5,5.9,.22],
-    ['SL',86.2,5.2,3.4,2542,6.4,5.8,.24],['CU',78.8,8.6,-12.6,2612,6.3,5.7,.18]]},
-  'Blake Treinen':{team:'LAD',throws:'R',pitches:[
-    ['SI',97.2,-13.8,4.8,2284,6.3,5.8,.62],['SL',89.4,3.2,1.4,2552,6.1,5.6,.38]]},
-// ── SDP ──
-  'Dylan Cease':{team:'SDP',throws:'R',pitches:[
-    ['FF',96.4,-5.2,16.4,2488,6.9,6.1,.40],['SL',88.4,3.8,1.2,2822,6.7,5.9,.38],
-    ['CH',86.6,-7.8,7.4,1702,6.8,6.0,.22]]},
-  'Yu Darvish':{team:'SDP',throws:'R',pitches:[
-    ['FC',87.8,1.4,10.6,2388,6.4,6.2,.22],['SL',84.2,5.4,3.6,2488,6.2,6.0,.24],
-    ['CU',76.4,10.2,-12.4,2542,6.1,5.9,.18],['SI',94.8,-9.4,6.2,2244,6.5,6.3,.16],
-    ['FF',94.2,-4.6,14.8,2362,6.5,6.2,.20]]},
-// ── SFG ──
-  'Logan Webb':{team:'SFG',throws:'R',pitches:[
-    ['SI',90.8,-12.4,5.4,2186,6.4,5.5,.48],['CH',84.2,-9.2,5.8,1648,6.3,5.4,.28],
-    ['SL',84.8,5.6,2.4,2342,6.2,5.3,.24]]},
-// ── COL ──
-  'Cal Quantrill':{team:'COL',throws:'R',pitches:[
-    ['SI',93.4,-10.8,5.8,2224,6.5,5.8,.46],['SL',85.2,4.4,2.6,2388,6.3,5.6,.28],
-    ['CH',85.4,-8.4,6.4,1720,6.4,5.7,.26]]},
-  'Austin Gomber':{team:'COL',throws:'L',pitches:[
-    ['FF',91.8,4.8,13.2,2196,6.3,5.6,.42],['CU',75.4,-8.4,-11.2,2348,6.1,5.4,.28],
-    ['CH',83.2,7.8,5.6,1662,6.2,5.5,.30]]},
-// ── BAL ──
-  'Corbin Burnes':{team:'BAL',throws:'R',pitches:[
-    ['FC',93.4,0.8,12.2,2568,6.7,5.8,.36],['CU',82.4,7.4,-12.8,2882,6.5,5.6,.28],
-    ['SI',95.2,-9.8,6.4,2244,6.8,5.9,.22],['CH',86.8,-6.2,7.8,1766,6.6,5.7,.14]]},
-  'Grayson Rodriguez':{team:'BAL',throws:'R',pitches:[
-    ['FF',96.2,-5.8,16.8,2388,6.9,6.0,.42],['SL',88.4,4.8,2.8,2686,6.7,5.8,.28],
-    ['CH',88.2,-9.2,7.4,1702,6.8,5.9,.18],['CU',81.8,8.4,-12.4,2648,6.5,5.7,.12]]},
-// ── BOS ──
-  'Tanner Houck':{team:'BOS',throws:'R',pitches:[
-    ['SI',96.8,-13.4,4.8,2262,6.6,6.0,.52],['SL',88.2,4.8,1.8,2754,6.4,5.8,.38],
-    ['CH',88.4,-7.8,6.4,1688,6.5,5.9,.10]]},
-  'Brayan Bello':{team:'BOS',throws:'R',pitches:[
-    ['FF',96.4,-4.6,15.4,2344,6.8,6.1,.38],['SL',88.6,3.8,2.2,2588,6.6,5.9,.32],
-    ['CH',87.8,-7.4,7.2,1712,6.7,6.0,.18],['SI',95.2,-9.6,5.8,2228,6.7,6.0,.12]]},
-// ── TBR ──
-  'Shane McClanahan':{team:'TBR',throws:'L',pitches:[
-    ['FF',96.2,5.4,15.8,2412,7.0,5.8,.42],['SL',85.8,-3.6,1.6,2862,6.8,5.6,.38],
-    ['CH',87.4,8.8,6.4,1742,6.9,5.7,.20]]},
-  'Zach Eflin':{team:'TBR',throws:'R',pitches:[
-    ['SI',93.8,-9.4,5.8,2188,6.4,5.9,.44],['FC',89.2,1.2,10.4,2354,6.3,5.8,.22],
-    ['SL',85.2,4.6,2.8,2368,6.2,5.7,.20],['CU',79.8,7.2,-11.4,2468,6.1,5.6,.14]]},
-// ── TOR ──
-  'Kevin Gausman':{team:'TOR',throws:'R',pitches:[
-    ['FF',93.6,-5.6,16.4,2244,6.6,6.0,.34],['FS',87.4,-4.8,5.8,1566,6.5,5.9,.34],
-    ['SL',85.8,5.2,3.4,2386,6.3,5.8,.22],['FC',90.8,1.2,11.2,2312,6.5,5.9,.10]]},
-// ── MIN ──
-  'Pablo Lopez':{team:'MIN',throws:'R',pitches:[
-    ['FF',93.4,-5.4,14.8,2256,6.6,5.8,.32],['CH',84.4,-9.2,6.8,1664,6.5,5.7,.28],
-    ['SL',85.2,5.4,3.2,2384,6.3,5.6,.24],['CU',78.6,8.8,-11.4,2486,6.2,5.5,.16]]},
-// ── CLE ──
-  'Tanner Bibee':{team:'CLE',throws:'R',pitches:[
-    ['FF',93.8,-4.4,15.2,2286,6.7,5.9,.44],['SL',84.6,4.8,2.8,2488,6.5,5.7,.28],
-    ['CH',85.8,-7.2,7.4,1688,6.6,5.8,.28]]},
-  'Gavin Williams':{team:'CLE',throws:'R',pitches:[
-    ['FF',97.2,-5.8,15.8,2424,7.0,6.2,.48],['SL',89.4,4.4,1.8,2756,6.8,6.0,.32],
-    ['CH',88.4,-7.4,7.2,1724,6.9,6.1,.20]]},
-// ── KCR ──
-  'Cole Ragans':{team:'KCR',throws:'L',pitches:[
-    ['FF',96.4,5.8,17.2,2564,7.0,5.9,.40],['SL',86.2,-4.2,1.4,2882,6.8,5.7,.36],
-    ['CH',87.8,9.4,6.8,1762,6.9,5.8,.24]]},
-// ── DET ──
-  'Tarik Skubal':{team:'DET',throws:'L',pitches:[
-    ['FF',94.2,4.8,15.6,2344,6.7,5.6,.42],['SL',84.6,-4.6,1.8,2812,6.5,5.4,.28],
-    ['CH',86.4,8.8,5.8,1712,6.6,5.5,.20],['CU',76.8,-9.2,-11.8,2468,6.3,5.2,.10]]},
-// ── HOU ──
-  'Framber Valdez':{team:'HOU',throws:'L',pitches:[
-    ['SI',94.8,12.8,4.8,2216,6.5,5.5,.54],['CU',74.8,-9.8,-13.4,2612,6.3,5.3,.32],
-    ['FC',88.2,-1.4,10.8,2386,6.4,5.4,.14]]},
-  'Hunter Brown':{team:'HOU',throws:'R',pitches:[
-    ['FF',96.4,-5.4,16.2,2412,6.9,6.1,.42],['SL',88.8,4.8,2.4,2742,6.7,5.9,.32],
-    ['CH',87.6,-8.4,7.4,1706,6.8,6.0,.26]]},
-// ── SEA ──
-  'Luis Castillo':{team:'SEA',throws:'R',pitches:[
-    ['FF',96.8,-5.8,15.6,2388,6.8,6.0,.44],['CH',87.8,-9.4,5.4,1644,6.7,5.9,.32],
-    ['SL',86.4,4.2,2.6,2456,6.5,5.8,.24]]},
-  'George Kirby':{team:'SEA',throws:'R',pitches:[
-    ['FF',95.6,-4.8,15.8,2256,6.8,6.1,.42],['SI',94.2,-9.8,6.2,2212,6.7,6.0,.22],
-    ['SL',86.8,4.6,3.4,2388,6.5,5.9,.22],['FC',91.4,0.8,11.2,2342,6.6,6.0,.14]]},
-// ── TEX ──
-  'Nathan Eovaldi':{team:'TEX',throws:'R',pitches:[
-    ['FF',97.8,-5.2,16.4,2286,6.7,6.2,.40],['FC',92.4,1.8,11.8,2414,6.6,6.1,.32],
-    ['SL',87.8,4.2,3.2,2548,6.4,5.9,.18],['CH',88.4,-6.8,7.8,1688,6.5,6.0,.10]]},
-// ── ARI ──
-  'Zac Gallen':{team:'ARI',throws:'R',pitches:[
-    ['FF',93.8,-5.4,14.8,2268,6.6,5.9,.32],['CU',78.2,9.2,-12.6,2544,6.4,5.7,.24],
-    ['FC',88.2,1.4,10.8,2344,6.5,5.8,.22],['CH',87.4,-7.4,7.2,1698,6.5,5.8,.22]]},
-// ── MIL ──
-  'Freddy Peralta':{team:'MIL',throws:'R',pitches:[
-    ['FF',95.8,-4.8,16.8,2612,6.8,6.0,.44],['CU',79.8,8.8,-13.4,2784,6.6,5.8,.28],
-    ['SL',87.4,4.6,2.2,2688,6.5,5.7,.28]]},
-// ── CIN ──
-  'Hunter Greene':{team:'CIN',throws:'R',pitches:[
-    ['FF',99.4,-4.2,17.8,2612,7.1,6.3,.54],['SL',91.2,3.8,1.8,2942,6.9,6.1,.36],
-    ['CH',89.6,-7.2,8.4,1784,7.0,6.2,.10]]},
-// ── PIT ──
-  'Paul Skenes':{team:'PIT',throws:'R',pitches:[
-    ['FF',99.2,-3.6,19.4,2688,7.2,6.4,.46],['SL',90.8,4.4,2.2,2912,7.0,6.2,.28],
-    ['FS',91.8,-5.2,6.4,1992,7.1,6.3,.16],['CU',82.4,8.2,-12.8,2712,6.9,6.1,.10]]},
-  'Mitch Keller':{team:'PIT',throws:'R',pitches:[
-    ['FF',96.2,-5.4,15.8,2368,6.9,6.0,.42],['SL',87.6,4.4,2.8,2624,6.7,5.8,.30],
-    ['CH',87.8,-7.4,7.2,1716,6.8,5.9,.18],['CU',79.4,8.6,-11.8,2544,6.5,5.7,.10]]},
-// ── STL ──
-  'Lance Lynn':{team:'STL',throws:'R',pitches:[
-    ['FF',93.4,-5.8,14.4,2188,6.5,5.8,.36],['SI',92.8,-9.4,5.4,2156,6.4,5.7,.26],
-    ['SL',86.4,4.8,2.6,2382,6.3,5.6,.24],['FC',88.4,1.6,10.4,2312,6.4,5.7,.14]]},
-// ── CHC ──
-  'Justin Steele':{team:'CHC',throws:'L',pitches:[
-    ['FF',93.8,5.2,15.8,2286,6.7,5.8,.40],['SL',83.8,-4.8,1.4,2768,6.5,5.6,.36],
-    ['CH',84.8,8.4,6.2,1724,6.6,5.7,.24]]},
-// ── NYM ──
-  'Sean Manaea':{team:'NYM',throws:'L',pitches:[
-    ['FF',91.8,4.6,14.2,2268,6.6,5.7,.38],['FC',87.4,-1.2,11.2,2342,6.4,5.5,.24],
-    ['CH',83.2,8.4,5.8,1682,6.5,5.6,.22],['SL',82.4,-3.6,1.8,2468,6.3,5.4,.16]]},
-// ── WSN ──
-  'MacKenzie Gore':{team:'WSN',throws:'L',pitches:[
-    ['FF',95.2,5.4,16.2,2398,6.9,5.8,.42],['SL',84.4,-5.2,1.2,2812,6.7,5.6,.32],
-    ['CH',86.8,8.6,6.2,1732,6.8,5.7,.26]]},
-// ── MIA ──
-  'Sandy Alcantara':{team:'MIA',throws:'R',pitches:[
-    ['SI',97.2,-12.8,5.4,2228,6.8,6.0,.52],['SL',88.4,4.4,2.2,2524,6.6,5.8,.26],
-    ['CH',88.8,-8.2,7.4,1694,6.7,5.9,.12],['FF',97.8,-5.4,14.8,2296,6.8,6.0,.10]]},
-// ── OAK ──
-  'Mason Miller':{team:'OAK',throws:'R',pitches:[
-    ['FF',100.2,-4.6,18.4,2724,7.1,6.3,.60],['SL',91.8,3.4,2.8,2884,6.9,6.1,.40]]},
-// ── LAA ──
-  'Patrick Sandoval':{team:'LAA',throws:'L',pitches:[
-    ['FF',93.2,4.8,14.8,2266,6.6,5.7,.38],['SL',83.4,-4.2,1.6,2724,6.4,5.5,.32],
-    ['CH',84.4,8.2,5.6,1698,6.5,5.6,.18],['CU',76.8,-8.4,-11.4,2438,6.3,5.4,.12]]},
+  'Gerrit Cole':{team:'NYY',throws:'R',pitches:[['FF',95.8,-5.1,16.2,2526,6.8,6.1,0.42], ['SL',88.9,3.4,3.2,2488,6.6,6.0,0.2], ['CH',88.0,-6.8,8.4,1714,6.7,6.0,0.14], ['KC',82.3,7.8,-13.1,2784,6.5,5.9,0.16], ['FC',91.8,1.2,10.8,2356,6.7,6.1,0.08]]},
+  'Max Fried':{team:'NYY',throws:'L',pitches:[['FF',93.1,5.8,14.6,2312,6.5,5.7,0.4], ['SL',84.8,-4.2,2.8,2486,6.3,5.5,0.24], ['CH',84.2,9.8,5.4,1834,6.4,5.6,0.18], ['CU',77.4,-10.2,-11.4,2342,6.2,5.4,0.18]]},
+  'Marcus Stroman':{team:'NYY',throws:'R',pitches:[['SI',92.5,-11.2,5.1,2256,6.4,5.3,0.45], ['FC',87.2,2.2,8.2,2432,6.2,5.2,0.18], ['SL',84.8,4.1,1.8,2198,6.1,5.1,0.22], ['CH',83.4,-8.4,4.2,1820,6.2,5.2,0.15]]},
+  'Clarke Schmidt':{team:'NYY',throws:'R',pitches:[['FF',95.4,-5.8,15.8,2412,6.7,5.9,0.4], ['SL',87.2,4.2,2.4,2624,6.5,5.7,0.28], ['CH',87.8,-7.4,7.2,1698,6.6,5.8,0.2], ['CU',81.4,8.2,-12.2,2548,6.4,5.6,0.12]]},
+  'Carlos Rodón':{team:'NYY',throws:'L',pitches:[['FF',95.6,5.4,16.8,2388,6.9,5.8,0.44], ['SL',85.2,-5.2,1.4,2812,6.7,5.6,0.34], ['CH',86.4,8.6,6.2,1742,6.8,5.7,0.22]]},
+  'Luke Weaver':{team:'NYY',throws:'R',pitches:[['FF',93.2,-4.8,14.8,2268,6.6,5.9,0.38], ['SL',84.4,5.2,2.2,2588,6.4,5.7,0.32], ['CH',84.8,-7.2,6.8,1688,6.5,5.8,0.18], ['CU',79.2,8.4,-11.4,2498,6.3,5.6,0.12]]},
+  'Clay Holmes':{team:'NYY',throws:'R',pitches:[['SI',97.8,-14.2,4.4,2288,6.4,5.9,0.68], ['SL',88.6,4.8,1.6,2642,6.2,5.7,0.32]]},
+  'Garrett Crochet':{team:'BOS',throws:'L',pitches:[['FF',98.2,5.6,17.8,2624,7.1,5.9,0.52], ['SL',88.4,-4.8,1.2,2924,6.9,5.7,0.38], ['CH',88.8,9.4,6.8,1762,7.0,5.8,0.1]]},
+  'Brayan Bello':{team:'BOS',throws:'R',pitches:[['FF',96.4,-4.6,15.4,2344,6.8,6.1,0.38], ['SL',88.6,3.8,2.2,2588,6.6,5.9,0.32], ['CH',87.8,-7.4,7.2,1712,6.7,6.0,0.18], ['SI',95.2,-9.6,5.8,2228,6.7,6.0,0.12]]},
+  'Tanner Houck':{team:'BOS',throws:'R',pitches:[['SI',96.8,-13.4,4.8,2262,6.6,6.0,0.52], ['SL',88.2,4.8,1.8,2754,6.4,5.8,0.38], ['CH',88.4,-7.8,6.4,1688,6.5,5.9,0.1]]},
+  'Kutter Crawford':{team:'BOS',throws:'R',pitches:[['FF',94.2,-4.4,14.8,2316,6.7,5.9,0.36], ['SL',86.4,5.2,2.8,2654,6.5,5.7,0.34], ['CH',87.2,-7.6,7.4,1708,6.6,5.8,0.18], ['FC',90.8,1.4,10.4,2348,6.6,5.9,0.12]]},
+  'Nick Pivetta':{team:'BOS',throws:'R',pitches:[['FF',95.2,-5.4,15.6,2388,6.8,6.0,0.4], ['SL',86.8,4.6,2.4,2612,6.6,5.8,0.3], ['CU',80.2,8.8,-12.4,2568,6.4,5.6,0.18], ['CH',87.4,-7.2,7.2,1724,6.7,5.9,0.12]]},
+  'Kenley Jansen':{team:'BOS',throws:'R',pitches:[['FC',88.2,0.6,11.8,2512,6.2,6.0,0.88], ['FF',90.4,-4.2,13.4,2288,6.1,5.9,0.12]]},
+  'Shane McClanahan':{team:'TBR',throws:'L',pitches:[['FF',96.2,5.4,15.8,2412,7.0,5.8,0.42], ['SL',85.8,-3.6,1.6,2862,6.8,5.6,0.38], ['CH',87.4,8.8,6.4,1742,6.9,5.7,0.2]]},
+  'Zach Eflin':{team:'TBR',throws:'R',pitches:[['SI',93.8,-9.4,5.8,2188,6.4,5.9,0.44], ['FC',89.2,1.2,10.4,2354,6.3,5.8,0.22], ['SL',85.2,4.6,2.8,2368,6.2,5.7,0.2], ['CU',79.8,7.2,-11.4,2468,6.1,5.6,0.14]]},
+  'Ryan Pepiot':{team:'TBR',throws:'R',pitches:[['FF',94.8,-5.2,15.2,2356,6.7,5.9,0.42], ['SL',86.4,5.4,2.6,2624,6.5,5.7,0.32], ['CH',87.2,-7.8,7.4,1718,6.6,5.8,0.26]]},
+  'Taj Bradley':{team:'TBR',throws:'R',pitches:[['FF',97.2,-4.8,16.4,2468,6.9,6.1,0.46], ['SL',88.4,3.8,1.8,2756,6.7,5.9,0.34], ['CH',88.6,-7.6,7.2,1736,6.8,6.0,0.2]]},
+  'Pete Fairbanks':{team:'TBR',throws:'R',pitches:[['FF',99.4,-4.2,17.8,2544,6.8,6.2,0.58], ['SL',90.2,3.6,1.4,2888,6.6,6.0,0.42]]},
+  'Corbin Burnes':{team:'BAL',throws:'R',pitches:[['FC',93.4,0.8,12.2,2568,6.7,5.8,0.36], ['CU',82.4,7.4,-12.8,2882,6.5,5.6,0.28], ['SI',95.2,-9.8,6.4,2244,6.8,5.9,0.22], ['CH',86.8,-6.2,7.8,1766,6.6,5.7,0.14]]},
+  'Grayson Rodriguez':{team:'BAL',throws:'R',pitches:[['FF',96.2,-5.8,16.8,2388,6.9,6.0,0.42], ['SL',88.4,4.8,2.8,2686,6.7,5.8,0.28], ['CH',88.2,-9.2,7.4,1702,6.8,5.9,0.18], ['CU',81.8,8.4,-12.4,2648,6.5,5.7,0.12]]},
+  'Dean Kremer':{team:'BAL',throws:'R',pitches:[['FF',93.6,-4.8,14.2,2244,6.5,5.8,0.38], ['SL',84.8,5.2,3.2,2468,6.3,5.6,0.28], ['CH',85.4,-7.4,6.8,1698,6.4,5.7,0.2], ['CU',79.4,8.6,-11.8,2512,6.2,5.5,0.14]]},
+  'Kyle Bradish':{team:'BAL',throws:'R',pitches:[['FF',94.8,-5.4,15.6,2368,6.7,5.9,0.42], ['SL',86.2,4.6,2.4,2588,6.5,5.7,0.3], ['CH',86.8,-7.8,7.4,1712,6.6,5.8,0.16], ['CU',80.8,8.2,-12.2,2548,6.4,5.6,0.12]]},
+  'Félix Bautista':{team:'BAL',throws:'R',pitches:[['FF',99.8,-4.6,17.6,2612,6.9,6.2,0.52], ['SL',91.4,3.8,1.8,2912,6.7,6.0,0.34], ['SI',99.2,-10.4,5.8,2288,6.8,6.1,0.14]]},
+  'Kevin Gausman':{team:'TOR',throws:'R',pitches:[['FF',93.6,-5.6,16.4,2244,6.6,6.0,0.34], ['FS',87.4,-4.8,5.8,1566,6.5,5.9,0.34], ['SL',85.8,5.2,3.4,2386,6.3,5.8,0.22], ['FC',90.8,1.2,11.2,2312,6.5,5.9,0.1]]},
+  'José Berríos':{team:'TOR',throws:'R',pitches:[['FF',93.8,-4.8,14.8,2268,6.6,5.9,0.38], ['CU',79.4,9.2,-12.8,2624,6.4,5.7,0.28], ['CH',87.2,-7.4,7.2,1706,6.5,5.8,0.22], ['SL',85.4,4.6,2.6,2412,6.3,5.6,0.12]]},
+  'Yariel Rodríguez':{team:'TOR',throws:'R',pitches:[['FF',96.4,-5.2,16.2,2456,6.8,5.9,0.46], ['SL',88.2,4.4,2.2,2712,6.6,5.7,0.36], ['CH',87.6,-7.8,7.4,1724,6.7,5.8,0.18]]},
+  'Bowden Francis':{team:'TOR',throws:'R',pitches:[['FF',95.2,-4.8,15.8,2388,6.7,5.9,0.44], ['SL',87.2,4.8,2.4,2648,6.5,5.7,0.36], ['CH',87.4,-7.4,7.2,1712,6.6,5.8,0.2]]},
+  'Jordan Romano':{team:'TOR',throws:'R',pitches:[['FF',96.8,-5.4,16.2,2444,6.7,6.0,0.6], ['SL',87.6,4.2,1.8,2688,6.5,5.8,0.4]]},
+  'Pablo López':{team:'MIN',throws:'R',pitches:[['FF',93.4,-5.4,14.8,2256,6.6,5.8,0.32], ['CH',84.4,-9.2,6.8,1664,6.5,5.7,0.28], ['SL',85.2,5.4,3.2,2384,6.3,5.6,0.24], ['CU',78.6,8.8,-11.4,2486,6.2,5.5,0.16]]},
+  'Joe Ryan':{team:'MIN',throws:'R',pitches:[['FF',93.8,-4.4,15.8,2344,6.7,5.9,0.44], ['SL',83.6,5.6,2.8,2568,6.5,5.7,0.28], ['CH',84.8,-7.2,7.4,1688,6.6,5.8,0.18], ['CU',78.2,9.2,-12.4,2512,6.3,5.6,0.1]]},
+  'Bailey Ober':{team:'MIN',throws:'R',pitches:[['FF',91.8,-4.2,14.2,2228,6.5,6.0,0.42], ['SL',83.4,5.4,2.4,2488,6.3,5.8,0.3], ['CH',83.2,-7.8,7.2,1672,6.4,5.9,0.18], ['CU',77.8,9.4,-11.8,2468,6.2,5.7,0.1]]},
+  'Simeon Woods Richardson':{team:'MIN',throws:'R',pitches:[['FF',95.6,-5.2,15.4,2368,6.8,5.9,0.42], ['SL',87.4,4.8,2.6,2612,6.6,5.7,0.32], ['CH',86.8,-7.4,7.2,1712,6.7,5.8,0.26]]},
+  'Jhoan Durán':{team:'MIN',throws:'R',pitches:[['FF',100.8,-4.8,17.4,2588,6.9,6.2,0.56], ['FS',93.2,-6.4,5.8,2012,6.8,6.1,0.44]]},
+  'Griffin Jax':{team:'MIN',throws:'R',pitches:[['FC',95.2,0.8,13.2,2488,6.6,5.9,0.52], ['SL',88.4,4.4,2.2,2712,6.4,5.7,0.3], ['FF',97.8,-4.6,16.2,2512,6.7,6.0,0.18]]},
+  'Tarik Skubal':{team:'DET',throws:'L',pitches:[['FF',94.2,4.8,15.6,2344,6.7,5.6,0.42], ['SL',84.6,-4.6,1.8,2812,6.5,5.4,0.28], ['CH',86.4,8.8,5.8,1712,6.6,5.5,0.2], ['CU',76.8,-9.2,-11.8,2468,6.3,5.2,0.1]]},
+  'Jack Flaherty':{team:'DET',throws:'R',pitches:[['FF',95.8,-5.4,16.2,2412,6.8,6.0,0.4], ['SL',87.8,4.8,2.4,2688,6.6,5.8,0.32], ['CH',87.2,-7.4,7.4,1716,6.7,5.9,0.18], ['CU',80.4,8.6,-12.4,2588,6.4,5.7,0.1]]},
+  'Casey Mize':{team:'DET',throws:'R',pitches:[['FF',93.4,-5.2,14.4,2268,6.6,5.9,0.38], ['FS',87.6,-5.4,5.6,1588,6.5,5.8,0.28], ['SL',84.6,5.6,3.2,2424,6.3,5.6,0.22], ['SI',93.2,-9.8,5.6,2212,6.5,5.8,0.12]]},
+  'Reese Olson':{team:'DET',throws:'R',pitches:[['FF',93.8,-4.8,14.8,2328,6.6,5.9,0.4], ['SL',84.8,5.2,2.8,2548,6.4,5.7,0.32], ['CH',84.4,-7.6,6.8,1692,6.5,5.8,0.18], ['CU',79.2,8.8,-11.6,2488,6.3,5.6,0.1]]},
+  'Will Vest':{team:'DET',throws:'R',pitches:[['FF',96.2,-4.8,16.4,2424,6.7,6.0,0.54], ['SL',87.6,4.4,2.2,2712,6.5,5.8,0.38], ['CH',87.8,-7.2,7.2,1708,6.6,5.9,0.08]]},
+  'Tanner Bibee':{team:'CLE',throws:'R',pitches:[['FF',93.8,-4.4,15.2,2286,6.7,5.9,0.44], ['SL',84.6,4.8,2.8,2488,6.5,5.7,0.28], ['CH',85.8,-7.2,7.4,1688,6.6,5.8,0.28]]},
+  'Gavin Williams':{team:'CLE',throws:'R',pitches:[['FF',97.2,-5.8,15.8,2424,7.0,6.2,0.48], ['SL',89.4,4.4,1.8,2756,6.8,6.0,0.32], ['CH',88.4,-7.4,7.2,1724,6.9,6.1,0.2]]},
+  'Shane Bieber':{team:'CLE',throws:'R',pitches:[['FF',91.8,-4.2,13.8,2188,6.5,5.8,0.38], ['SL',82.4,5.8,3.4,2348,6.3,5.6,0.3], ['CU',78.6,9.4,-11.4,2468,6.2,5.5,0.2], ['CH',84.2,-7.2,7.2,1664,6.4,5.7,0.12]]},
+  'Ben Lively':{team:'CLE',throws:'R',pitches:[['FF',91.2,-4.6,13.4,2212,6.4,5.8,0.36], ['FC',87.8,1.4,10.8,2324,6.3,5.7,0.28], ['SL',83.8,5.2,2.8,2424,6.2,5.6,0.22], ['CH',83.4,-7.4,6.8,1676,6.3,5.7,0.14]]},
+  'Emmanuel Clase':{team:'CLE',throws:'R',pitches:[['FC',100.8,1.2,12.4,2724,6.3,5.9,0.88], ['SL',91.2,3.8,1.6,2884,6.1,5.7,0.12]]},
+  'Cole Ragans':{team:'KCR',throws:'L',pitches:[['FF',96.4,5.8,17.2,2564,7.0,5.9,0.4], ['SL',86.2,-4.2,1.4,2882,6.8,5.7,0.36], ['CH',87.8,9.4,6.8,1762,6.9,5.8,0.24]]},
+  'Seth Lugo':{team:'KCR',throws:'R',pitches:[['FC',90.4,0.8,11.4,2412,6.5,5.8,0.38], ['CU',78.8,9.2,-12.4,2612,6.3,5.6,0.28], ['SI',92.6,-9.4,5.8,2192,6.5,5.8,0.22], ['CH',83.8,-7.2,6.8,1672,6.4,5.7,0.12]]},
+  'Brady Singer':{team:'KCR',throws:'R',pitches:[['FF',95.8,-5.4,15.4,2388,6.8,6.0,0.44], ['SL',87.4,4.6,2.4,2648,6.6,5.8,0.34], ['CH',87.8,-7.8,7.4,1716,6.7,5.9,0.22]]},
+  'Michael Wacha':{team:'KCR',throws:'R',pitches:[['FF',92.8,-4.8,13.8,2224,6.5,5.8,0.38], ['CH',84.2,-8.4,6.4,1672,6.4,5.7,0.28], ['SL',83.4,5.2,2.8,2388,6.3,5.6,0.22], ['CU',77.8,8.8,-11.2,2448,6.2,5.5,0.12]]},
+  'James McArthur':{team:'KCR',throws:'R',pitches:[['SI',97.4,-12.8,5.2,2264,6.5,6.0,0.58], ['SL',88.8,4.4,1.8,2712,6.3,5.8,0.42]]},
+  'Erick Fedde':{team:'CWS',throws:'R',pitches:[['SI',93.4,-9.8,5.6,2196,6.4,5.8,0.46], ['SL',84.6,5.4,2.8,2388,6.2,5.6,0.28], ['CH',84.2,-7.6,6.4,1672,6.3,5.7,0.16], ['FC',88.8,1.4,10.4,2324,6.3,5.7,0.1]]},
+  'Sean Burke':{team:'CWS',throws:'R',pitches:[['FF',96.8,-5.2,16.2,2424,6.9,6.0,0.46], ['SL',88.2,4.6,2.2,2688,6.7,5.8,0.36], ['CH',87.6,-7.4,7.2,1712,6.8,5.9,0.18]]},
+  'Davis Martin':{team:'CWS',throws:'R',pitches:[['FF',94.2,-4.8,14.6,2312,6.6,5.9,0.42], ['SL',85.4,5.2,2.6,2512,6.4,5.7,0.34], ['CH',85.8,-7.6,7.2,1692,6.5,5.8,0.24]]},
+  'Michael Kopech':{team:'CWS',throws:'R',pitches:[['FF',99.2,-4.4,17.8,2556,6.9,6.2,0.58], ['SL',91.2,3.8,1.6,2892,6.7,6.0,0.42]]},
+  'Framber Valdez':{team:'HOU',throws:'L',pitches:[['SI',94.8,12.8,4.8,2216,6.5,5.5,0.54], ['CU',74.8,-9.8,-13.4,2612,6.3,5.3,0.32], ['FC',88.2,-1.4,10.8,2386,6.4,5.4,0.14]]},
+  'Hunter Brown':{team:'HOU',throws:'R',pitches:[['FF',96.4,-5.4,16.2,2412,6.9,6.1,0.42], ['SL',88.8,4.8,2.4,2742,6.7,5.9,0.32], ['CH',87.6,-8.4,7.4,1706,6.8,6.0,0.26]]},
+  'Ronel Blanco':{team:'HOU',throws:'R',pitches:[['FF',94.6,-5.2,15.4,2356,6.7,5.9,0.42], ['SL',87.4,4.6,2.2,2668,6.5,5.7,0.3], ['CH',87.2,-7.8,7.2,1714,6.6,5.8,0.18], ['FC',90.8,1.2,11.2,2368,6.6,5.9,0.1]]},
+  'Yusei Kikuchi':{team:'HOU',throws:'L',pitches:[['FF',95.2,5.6,16.4,2412,6.9,5.8,0.44], ['SL',85.4,-4.4,1.6,2824,6.7,5.6,0.34], ['CH',86.8,9.2,6.4,1736,6.8,5.7,0.22]]},
+  'Josh Hader':{team:'HOU',throws:'L',pitches:[['FF',95.8,5.2,17.4,2524,6.9,5.7,0.54], ['SL',83.4,-4.8,0.8,2856,6.7,5.5,0.46]]},
+  'Ryan Pressly':{team:'HOU',throws:'R',pitches:[['FC',92.4,1.2,12.2,2488,6.5,5.9,0.58], ['SL',87.4,4.8,2.4,2648,6.3,5.7,0.42]]},
+  'Luis Castillo':{team:'SEA',throws:'R',pitches:[['FF',96.8,-5.8,15.6,2388,6.8,6.0,0.44], ['CH',87.8,-9.4,5.4,1644,6.7,5.9,0.32], ['SL',86.4,4.2,2.6,2456,6.5,5.8,0.24]]},
+  'George Kirby':{team:'SEA',throws:'R',pitches:[['FF',95.6,-4.8,15.8,2256,6.8,6.1,0.42], ['SI',94.2,-9.8,6.2,2212,6.7,6.0,0.22], ['SL',86.8,4.6,3.4,2388,6.5,5.9,0.22], ['FC',91.4,0.8,11.2,2342,6.6,6.0,0.14]]},
+  'Logan Gilbert':{team:'SEA',throws:'R',pitches:[['FF',95.2,-5.6,15.4,2368,6.8,6.0,0.42], ['SL',87.2,5.2,2.6,2644,6.6,5.8,0.28], ['CH',87.4,-7.6,7.4,1712,6.7,5.9,0.18], ['CU',80.8,8.8,-12.2,2568,6.4,5.7,0.12]]},
+  'Bryan Woo':{team:'SEA',throws:'R',pitches:[['FF',96.4,-5.4,16.2,2424,6.9,6.0,0.44], ['SL',87.8,4.8,2.4,2688,6.7,5.8,0.3], ['CH',87.6,-7.8,7.2,1718,6.8,5.9,0.26]]},
+  'Andrés Muñoz':{team:'SEA',throws:'R',pitches:[['FF',101.2,-4.2,18.4,2612,6.9,6.2,0.54], ['SL',92.4,3.6,1.8,2952,6.7,6.0,0.46]]},
+  'Nathan Eovaldi':{team:'TEX',throws:'R',pitches:[['FF',97.8,-5.2,16.4,2286,6.7,6.2,0.4], ['FC',92.4,1.8,11.8,2414,6.6,6.1,0.32], ['SL',87.8,4.2,3.2,2548,6.4,5.9,0.18], ['CH',88.4,-6.8,7.8,1688,6.5,6.0,0.1]]},
+  'Jon Gray':{team:'TEX',throws:'R',pitches:[['FF',94.2,-5.2,14.6,2296,6.6,5.9,0.4], ['SL',86.8,4.8,2.6,2524,6.4,5.7,0.28], ['CH',86.4,-7.6,7.2,1692,6.5,5.8,0.2], ['CU',80.4,8.6,-11.8,2488,6.3,5.6,0.12]]},
+  'Andrew Heaney':{team:'TEX',throws:'L',pitches:[['FF',93.8,5.4,15.8,2352,6.8,5.7,0.4], ['SL',84.2,-4.4,1.8,2788,6.6,5.5,0.38], ['CH',85.4,9.2,6.2,1724,6.7,5.6,0.22]]},
+  'Jack Leiter':{team:'TEX',throws:'R',pitches:[['FF',96.2,-5.4,16.4,2456,6.9,6.0,0.44], ['SL',88.4,4.6,2.2,2712,6.7,5.8,0.36], ['CH',87.8,-7.4,7.4,1716,6.8,5.9,0.2]]},
+  'Kirby Yates':{team:'TEX',throws:'R',pitches:[['FC',91.8,0.8,12.4,2556,6.4,5.9,0.62], ['SL',86.4,5.2,2.4,2668,6.2,5.7,0.38]]},
+  'Patrick Sandoval':{team:'LAA',throws:'L',pitches:[['FF',93.2,4.8,14.8,2266,6.6,5.7,0.38], ['SL',83.4,-4.2,1.6,2724,6.4,5.5,0.32], ['CH',84.4,8.2,5.6,1698,6.5,5.6,0.18], ['CU',76.8,-8.4,-11.4,2438,6.3,5.4,0.12]]},
+  'Reid Detmers':{team:'LAA',throws:'L',pitches:[['FF',93.6,5.2,15.2,2312,6.7,5.7,0.4], ['SL',84.6,-4.8,1.8,2754,6.5,5.5,0.34], ['CH',84.8,8.6,5.8,1712,6.6,5.6,0.18], ['CU',77.4,-9.2,-11.8,2468,6.4,5.4,0.08]]},
+  'Tyler Anderson':{team:'LAA',throws:'L',pitches:[['FF',91.8,4.6,13.8,2228,6.5,5.6,0.38], ['SL',82.4,-4.4,1.6,2648,6.3,5.4,0.32], ['CH',83.2,8.4,5.4,1682,6.4,5.5,0.22], ['FC',88.4,-1.2,10.8,2348,6.4,5.5,0.08]]},
+  'José Soriano':{team:'LAA',throws:'R',pitches:[['FF',98.8,-4.6,17.8,2568,6.9,6.1,0.56], ['SL',90.2,4.2,1.6,2924,6.7,5.9,0.38], ['CH',88.8,-7.4,7.6,1738,6.8,6.0,0.06]]},
+  'Carlos Estévez':{team:'LAA',throws:'R',pitches:[['FF',99.2,-4.4,17.6,2556,6.8,6.1,0.58], ['SL',90.8,3.8,1.8,2912,6.6,5.9,0.42]]},
+  'Mason Miller':{team:'OAK',throws:'R',pitches:[['FF',100.2,-4.6,18.4,2724,7.1,6.3,0.6], ['SL',91.8,3.4,2.8,2884,6.9,6.1,0.4]]},
+  'JP Sears':{team:'OAK',throws:'L',pitches:[['FF',91.8,4.8,13.8,2228,6.5,5.6,0.38], ['CH',83.4,9.2,5.6,1682,6.4,5.5,0.28], ['SL',82.8,-4.2,1.8,2524,6.3,5.4,0.22], ['FC',88.4,-1.4,10.6,2336,6.4,5.5,0.12]]},
+  'Joey Estes':{team:'OAK',throws:'R',pitches:[['FF',94.4,-5.2,14.8,2348,6.7,5.9,0.42], ['SL',86.4,5.4,2.6,2588,6.5,5.7,0.32], ['CH',86.8,-7.6,7.2,1704,6.6,5.8,0.18], ['CU',79.8,8.8,-11.4,2492,6.3,5.6,0.08]]},
+  'Mitch Spence':{team:'OAK',throws:'R',pitches:[['SI',93.6,-9.8,5.6,2204,6.5,5.8,0.44], ['FC',89.4,1.4,10.8,2368,6.4,5.7,0.26], ['SL',85.4,5.4,2.8,2432,6.3,5.6,0.2], ['CH',85.2,-7.4,6.8,1688,6.4,5.7,0.1]]},
+  'Luis Medina':{team:'OAK',throws:'R',pitches:[['FF',98.4,-4.8,17.2,2512,6.9,6.1,0.56], ['SL',91.2,3.8,1.6,2892,6.7,5.9,0.3], ['CH',88.8,-7.6,7.4,1736,6.8,6.0,0.14]]},
+  'Zack Wheeler':{team:'PHI',throws:'R',pitches:[['FF',97.1,-5.5,16.8,2360,6.9,6.2,0.38], ['SL',88.2,4.8,3.5,2744,6.7,6.0,0.22], ['CH',87.8,-7.4,8.2,1756,6.8,6.1,0.22], ['CU',82.1,8.1,-11.8,2648,6.5,5.9,0.18]]},
+  'Aaron Nola':{team:'PHI',throws:'R',pitches:[['FF',93.6,-4.2,15.1,2254,6.6,6.0,0.36], ['CU',76.8,9.4,-13.4,2512,6.4,5.8,0.22], ['CH',86.8,-7.2,7.8,1690,6.5,5.9,0.26], ['SL',83.1,5.6,2.2,2256,6.3,5.7,0.16]]},
+  'Ranger Suárez':{team:'PHI',throws:'L',pitches:[['SI',92.4,11.8,5.4,2184,6.4,5.5,0.48], ['CU',77.4,-9.4,-12.2,2498,6.2,5.3,0.28], ['FC',88.2,-1.2,10.8,2364,6.3,5.4,0.14], ['CH',84.8,8.8,6.2,1692,6.3,5.4,0.1]]},
+  'Cristopher Sánchez':{team:'PHI',throws:'L',pitches:[['FF',94.2,5.4,15.8,2376,6.8,5.7,0.42], ['SL',85.2,-4.6,1.6,2784,6.6,5.5,0.36], ['CH',86.4,9.2,6.4,1728,6.7,5.6,0.22]]},
+  'Jeff Hoffman':{team:'PHI',throws:'R',pitches:[['FF',97.4,-4.8,17.4,2512,6.8,6.1,0.54], ['SL',89.4,4.4,1.8,2812,6.6,5.9,0.46]]},
+  'Spencer Strider':{team:'ATL',throws:'R',pitches:[['FF',98.2,-3.8,17.4,2856,7.0,6.2,0.53], ['SL',90.1,4.2,2.4,2924,6.8,6.1,0.47]]},
+  'Chris Sale':{team:'ATL',throws:'L',pitches:[['FF',93.8,5.2,15.6,2252,6.8,5.9,0.38], ['SL',82.4,-3.8,2.1,2484,6.6,5.7,0.34], ['CH',83.2,8.4,5.8,1692,6.7,5.8,0.14], ['CU',75.6,-8.8,-10.4,2386,6.4,5.6,0.14]]},
+  'Reynaldo López':{team:'ATL',throws:'R',pitches:[['FF',98.2,-4.6,17.6,2524,6.9,6.1,0.52], ['SL',90.4,3.8,1.6,2864,6.7,5.9,0.34], ['CH',88.8,-7.6,7.4,1736,6.8,6.0,0.14]]},
+  'AJ Smith-Shawver':{team:'ATL',throws:'R',pitches:[['FF',96.8,-5.4,16.4,2456,6.9,6.0,0.46], ['SL',88.4,4.8,2.2,2724,6.7,5.8,0.34], ['CH',87.8,-7.4,7.2,1712,6.8,5.9,0.2]]},
+  'Raisel Iglesias':{team:'ATL',throws:'R',pitches:[['FF',97.6,-4.8,17.2,2512,6.7,6.0,0.54], ['FC',92.8,1.4,12.4,2524,6.6,5.9,0.46]]},
+  'Sean Manaea':{team:'NYM',throws:'L',pitches:[['FF',91.8,4.6,14.2,2268,6.6,5.7,0.38], ['FC',87.4,-1.2,11.2,2342,6.4,5.5,0.24], ['CH',83.2,8.4,5.8,1682,6.5,5.6,0.22], ['SL',82.4,-3.6,1.8,2468,6.3,5.4,0.16]]},
+  'Luis Severino':{team:'NYM',throws:'R',pitches:[['FF',97.2,-5.2,16.8,2456,6.9,6.1,0.46], ['SL',88.8,4.8,2.2,2724,6.7,5.9,0.32], ['CH',88.4,-7.6,7.4,1724,6.8,6.0,0.22]]},
+  'Tylor Megill':{team:'NYM',throws:'R',pitches:[['FF',96.4,-5.6,16.2,2412,6.9,6.0,0.44], ['SL',87.4,4.6,2.4,2664,6.7,5.8,0.32], ['CH',87.8,-7.8,7.2,1716,6.8,5.9,0.24]]},
+  'Edwin Díaz':{team:'NYM',throws:'R',pitches:[['FF',100.4,-4.2,18.6,2624,6.8,6.2,0.52], ['SL',91.8,3.6,1.6,2964,6.6,6.0,0.48]]},
+  'David Peterson':{team:'NYM',throws:'L',pitches:[['FF',93.4,5.2,14.8,2284,6.7,5.7,0.4], ['SL',83.8,-4.4,1.8,2648,6.5,5.5,0.32], ['CH',85.4,9.4,5.8,1708,6.6,5.6,0.28]]},
+  'MacKenzie Gore':{team:'WSN',throws:'L',pitches:[['FF',95.2,5.4,16.2,2398,6.9,5.8,0.42], ['SL',84.4,-5.2,1.2,2812,6.7,5.6,0.32], ['CH',86.8,8.6,6.2,1732,6.8,5.7,0.26]]},
+  'Patrick Corbin':{team:'WSN',throws:'L',pitches:[['FF',91.2,4.8,13.2,2196,6.4,5.5,0.38], ['SL',83.6,-4.8,1.6,2448,6.2,5.3,0.32], ['CH',83.8,8.4,5.4,1668,6.3,5.4,0.2], ['CU',76.4,-8.8,-11.2,2412,6.1,5.2,0.1]]},
+  'Trevor Williams':{team:'WSN',throws:'R',pitches:[['FF',93.8,-4.8,13.8,2248,6.5,5.9,0.4], ['SL',84.4,5.2,2.6,2432,6.3,5.7,0.28], ['CH',84.8,-7.6,6.8,1684,6.4,5.8,0.2], ['SI',92.8,-9.4,5.4,2192,6.4,5.8,0.12]]},
+  'Kyle Finnegan':{team:'WSN',throws:'R',pitches:[['FC',94.2,0.8,13.2,2544,6.5,5.9,0.68], ['SL',88.4,4.8,2.2,2712,6.3,5.7,0.32]]},
+  'Sandy Alcantara':{team:'MIA',throws:'R',pitches:[['SI',97.2,-12.8,5.4,2228,6.8,6.0,0.52], ['SL',88.4,4.4,2.2,2524,6.6,5.8,0.26], ['CH',88.8,-8.2,7.4,1694,6.7,5.9,0.12], ['FF',97.8,-5.4,14.8,2296,6.8,6.0,0.1]]},
+  'Jesús Luzardo':{team:'MIA',throws:'L',pitches:[['FF',95.6,5.8,16.4,2412,6.9,5.8,0.44], ['SL',86.4,-4.8,1.4,2844,6.7,5.6,0.34], ['CH',87.4,9.4,6.4,1744,6.8,5.7,0.22]]},
+  'Edward Cabrera':{team:'MIA',throws:'R',pitches:[['FF',97.4,-4.8,17.2,2512,7.0,6.1,0.46], ['SL',89.4,4.4,2.0,2812,6.8,5.9,0.34], ['CH',88.6,-7.6,7.4,1724,6.9,6.0,0.2]]},
+  'A.J. Puk':{team:'MIA',throws:'L',pitches:[['FF',97.8,5.4,17.8,2568,7.0,5.9,0.58], ['SL',87.8,-5.2,1.2,2912,6.8,5.7,0.42]]},
+  'Justin Steele':{team:'CHC',throws:'L',pitches:[['FF',93.8,5.2,15.8,2286,6.7,5.8,0.4], ['SL',83.8,-4.8,1.4,2768,6.5,5.6,0.36], ['CH',84.8,8.4,6.2,1724,6.6,5.7,0.24]]},
+  'Shota Imanaga':{team:'CHC',throws:'L',pitches:[['FF',91.6,4.8,13.8,2228,6.5,5.6,0.36], ['SL',81.4,-4.4,1.4,2612,6.3,5.4,0.28], ['FS',85.8,6.4,4.8,1548,6.4,5.5,0.28], ['CU',74.4,-9.2,-11.4,2412,6.1,5.2,0.08]]},
+  'Jameson Taillon':{team:'CHC',throws:'R',pitches:[['FC',92.4,0.8,11.8,2448,6.5,5.8,0.36], ['CU',79.4,9.2,-12.4,2568,6.3,5.6,0.26], ['FF',93.6,-5.2,14.4,2256,6.6,5.9,0.24], ['CH',84.8,-7.4,6.8,1684,6.4,5.7,0.14]]},
+  'Colin Rea':{team:'CHC',throws:'R',pitches:[['SI',93.2,-9.8,5.6,2196,6.4,5.8,0.44], ['FC',89.4,1.4,10.8,2368,6.3,5.7,0.26], ['SL',84.8,5.4,2.8,2424,6.2,5.6,0.2], ['CH',84.4,-7.4,6.8,1680,6.3,5.7,0.1]]},
+  'Hector Neris':{team:'CHC',throws:'R',pitches:[['FF',96.8,-5.2,16.4,2488,6.7,6.0,0.54], ['SL',88.8,4.4,1.8,2788,6.5,5.8,0.38], ['CH',87.8,-7.4,7.2,1716,6.6,5.9,0.08]]},
+  'Freddy Peralta':{team:'MIL',throws:'R',pitches:[['FF',95.8,-4.8,16.8,2612,6.8,6.0,0.44], ['CU',79.8,8.8,-13.4,2784,6.6,5.8,0.28], ['SL',87.4,4.6,2.2,2688,6.5,5.7,0.28]]},
+  'Aaron Civale':{team:'MIL',throws:'R',pitches:[['FC',90.4,1.2,11.4,2412,6.4,5.8,0.38], ['CU',78.8,9.4,-12.2,2548,6.2,5.6,0.28], ['SI',92.8,-9.2,5.6,2192,6.4,5.8,0.22], ['CH',83.8,-7.4,6.8,1672,6.3,5.7,0.12]]},
+  'Tobias Myers':{team:'MIL',throws:'R',pitches:[['SI',93.4,-9.6,5.4,2188,6.4,5.8,0.44], ['SL',85.2,5.2,2.6,2432,6.2,5.6,0.28], ['FC',89.4,1.2,10.8,2348,6.3,5.7,0.18], ['CH',85.4,-7.6,6.8,1688,6.3,5.7,0.1]]},
+  'Devin Williams':{team:'MIL',throws:'R',pitches:[['FF',96.4,-4.8,17.2,2524,6.8,6.0,0.54], ['CH',87.4,-11.2,4.8,1588,6.7,5.9,0.46]]},
+  'Abner Uribe':{team:'MIL',throws:'R',pitches:[['FF',100.6,-4.4,18.6,2612,6.8,6.2,0.56], ['SL',91.6,3.8,1.6,2912,6.6,6.0,0.44]]},
+  'Hunter Greene':{team:'CIN',throws:'R',pitches:[['FF',99.4,-4.2,17.8,2612,7.1,6.3,0.54], ['SL',91.2,3.8,1.8,2942,6.9,6.1,0.36], ['CH',89.6,-7.2,8.4,1784,7.0,6.2,0.1]]},
+  'Nick Lodolo':{team:'CIN',throws:'L',pitches:[['FF',94.4,5.4,15.6,2344,6.8,5.7,0.42], ['SL',84.6,-4.8,1.6,2768,6.6,5.5,0.32], ['CU',76.8,-9.4,-12.2,2468,6.4,5.3,0.16], ['CH',86.2,9.4,6.2,1724,6.7,5.6,0.1]]},
+  'Andrew Abbott':{team:'CIN',throws:'L',pitches:[['FF',92.8,5.2,15.2,2312,6.7,5.7,0.42], ['SL',83.8,-4.6,1.6,2724,6.5,5.5,0.34], ['CH',84.4,8.8,5.8,1704,6.6,5.6,0.24]]},
+  'Alexis Díaz':{team:'CIN',throws:'R',pitches:[['FF',98.4,-4.4,17.6,2556,6.8,6.1,0.58], ['SL',90.4,3.8,1.6,2892,6.6,5.9,0.42]]},
+  'Tejay Antone':{team:'CIN',throws:'R',pitches:[['SL',88.8,5.2,1.6,2812,6.5,5.8,0.58], ['FF',97.2,-5.2,16.4,2488,6.7,6.0,0.42]]},
+  'Miles Mikolas':{team:'STL',throws:'R',pitches:[['FC',91.2,1.2,10.8,2364,6.4,5.8,0.36], ['SI',93.2,-9.6,5.4,2188,6.4,5.8,0.3], ['SL',84.4,5.6,2.8,2388,6.2,5.6,0.2], ['CU',79.4,9.2,-11.8,2468,6.2,5.6,0.14]]},
+  'Lance Lynn':{team:'STL',throws:'R',pitches:[['FF',93.4,-5.8,14.4,2188,6.5,5.8,0.36], ['SI',92.8,-9.4,5.4,2156,6.4,5.7,0.26], ['SL',86.4,4.8,2.6,2382,6.3,5.6,0.24], ['FC',88.4,1.6,10.4,2312,6.4,5.7,0.14]]},
+  'Matthew Liberatore':{team:'STL',throws:'L',pitches:[['FF',93.8,5.4,14.8,2288,6.7,5.7,0.4], ['SL',84.2,-4.6,1.6,2724,6.5,5.5,0.32], ['CU',77.2,-9.4,-11.6,2452,6.3,5.3,0.18], ['CH',85.4,9.2,5.8,1708,6.6,5.6,0.1]]},
+  'André Pallante':{team:'STL',throws:'R',pitches:[['SI',95.6,-11.4,5.6,2236,6.5,5.9,0.54], ['SL',87.2,4.8,2.4,2568,6.3,5.7,0.3], ['FC',90.8,1.4,11.2,2388,6.4,5.8,0.16]]},
+  'Ryan Helsley':{team:'STL',throws:'R',pitches:[['FF',101.2,-4.2,18.8,2648,6.8,6.2,0.56], ['SL',92.4,3.6,1.4,2968,6.6,6.0,0.44]]},
+  'Paul Skenes':{team:'PIT',throws:'R',pitches:[['FF',99.2,-3.6,19.4,2688,7.2,6.4,0.46], ['SL',90.8,4.4,2.2,2912,7.0,6.2,0.28], ['FS',91.8,-5.2,6.4,1992,7.1,6.3,0.16], ['CU',82.4,8.2,-12.8,2712,6.9,6.1,0.1]]},
+  'Mitch Keller':{team:'PIT',throws:'R',pitches:[['FF',96.2,-5.4,15.8,2368,6.9,6.0,0.42], ['SL',87.6,4.4,2.8,2624,6.7,5.8,0.3], ['CH',87.8,-7.4,7.2,1716,6.8,5.9,0.18], ['CU',79.4,8.6,-11.8,2544,6.5,5.7,0.1]]},
+  'Bailey Falter':{team:'PIT',throws:'L',pitches:[['FF',91.2,4.8,13.4,2212,6.5,5.6,0.38], ['SL',82.8,-4.6,1.6,2648,6.3,5.4,0.32], ['CH',83.8,9.2,5.4,1676,6.4,5.5,0.22], ['CU',76.4,-9.4,-11.2,2412,6.2,5.3,0.08]]},
+  'Jared Jones':{team:'PIT',throws:'R',pitches:[['FF',97.4,-5.2,17.2,2524,7.0,6.1,0.46], ['SL',89.4,4.4,2.0,2812,6.8,5.9,0.36], ['CH',88.4,-7.6,7.4,1724,6.9,6.0,0.18]]},
+  'David Bednar':{team:'PIT',throws:'R',pitches:[['SI',96.4,-11.8,5.4,2248,6.5,6.0,0.54], ['SL',89.2,4.6,1.8,2788,6.3,5.8,0.46]]},
+  'Tyler Glasnow':{team:'LAD',throws:'R',pitches:[['FF',98.6,-4.8,18.2,2452,7.2,6.4,0.48], ['CU',82.6,10.4,-14.6,2724,7.0,6.2,0.3], ['SL',91.2,2.6,5.1,2618,7.1,6.3,0.22]]},
+  'Yoshinobu Yamamoto':{team:'LAD',throws:'R',pitches:[['FF',96.2,-5.4,14.8,2412,6.6,6.0,0.36], ['FC',91.4,1.6,10.4,2364,6.5,5.9,0.22], ['SL',86.2,5.2,3.4,2542,6.4,5.8,0.24], ['CU',78.8,8.6,-12.6,2612,6.3,5.7,0.18]]},
+  'Shohei Ohtani':{team:'LAD',throws:'L',pitches:[['FF',96.6,5.8,16.4,2412,7.1,6.0,0.38], ['SL',84.6,-5.4,1.2,2868,6.9,5.8,0.36], ['SP',87.4,8.4,3.2,1742,7.0,5.9,0.14], ['CU',77.8,-9.8,-12.4,2512,6.8,5.7,0.12]]},
+  'Walker Buehler':{team:'LAD',throws:'R',pitches:[['FF',94.8,-5.2,15.2,2296,6.7,6.0,0.4], ['SL',86.4,5.6,2.8,2624,6.5,5.8,0.3], ['CU',80.4,9.2,-12.4,2568,6.3,5.6,0.18], ['CH',87.2,-7.4,7.4,1712,6.6,5.9,0.12]]},
+  'Blake Treinen':{team:'LAD',throws:'R',pitches:[['SI',97.2,-13.8,4.8,2284,6.3,5.8,0.62], ['SL',89.4,3.2,1.4,2552,6.1,5.6,0.38]]},
+  'Brusdar Graterol':{team:'LAD',throws:'R',pitches:[['SI',99.8,-12.4,5.4,2268,6.4,6.1,0.68], ['SL',90.4,3.4,1.6,2812,6.2,5.9,0.32]]},
+  'Alex Vesia':{team:'LAD',throws:'L',pitches:[['FF',96.2,5.6,17.2,2512,7.0,5.8,0.56], ['SL',85.8,-5.2,1.2,2884,6.8,5.6,0.44]]},
+  'Logan Webb':{team:'SFG',throws:'R',pitches:[['SI',90.8,-12.4,5.4,2186,6.4,5.5,0.48], ['CH',84.2,-9.2,5.8,1648,6.3,5.4,0.28], ['SL',84.8,5.6,2.4,2342,6.2,5.3,0.24]]},
+  'Mason Black':{team:'SFG',throws:'R',pitches:[['FF',95.2,-5.4,15.6,2368,6.8,5.9,0.44], ['SL',87.4,4.8,2.4,2644,6.6,5.7,0.32], ['CH',87.2,-7.6,7.2,1712,6.7,5.8,0.24]]},
+  'Kyle Harrison':{team:'SFG',throws:'L',pitches:[['FF',94.8,5.6,16.4,2412,6.9,5.8,0.44], ['SL',84.8,-4.8,1.4,2824,6.7,5.6,0.34], ['CH',86.4,9.2,6.2,1728,6.8,5.7,0.22]]},
+  'Jordan Hicks':{team:'SFG',throws:'R',pitches:[['SI',100.4,-12.8,5.8,2284,6.4,6.0,0.6], ['SL',91.6,4.2,1.8,2824,6.2,5.8,0.3], ['FC',95.8,1.2,13.2,2512,6.3,5.9,0.1]]},
+  'Camilo Doval':{team:'SFG',throws:'R',pitches:[['SI',98.4,-11.8,5.6,2252,6.3,6.0,0.54], ['SL',90.4,4.4,1.6,2892,6.1,5.8,0.46]]},
+  'Dylan Cease':{team:'SDP',throws:'R',pitches:[['FF',96.4,-5.2,16.4,2488,6.9,6.1,0.4], ['SL',88.4,3.8,1.2,2822,6.7,5.9,0.38], ['CH',86.6,-7.8,7.4,1702,6.8,6.0,0.22]]},
+  'Yu Darvish':{team:'SDP',throws:'R',pitches:[['FC',87.8,1.4,10.6,2388,6.4,6.2,0.22], ['SL',84.2,5.4,3.6,2488,6.2,6.0,0.24], ['CU',76.4,10.2,-12.4,2542,6.1,5.9,0.18], ['SI',94.8,-9.4,6.2,2244,6.5,6.3,0.16], ['FF',94.2,-4.6,14.8,2362,6.5,6.2,0.2]]},
+  'Joe Musgrove':{team:'SDP',throws:'R',pitches:[['FC',90.8,0.8,11.4,2468,6.5,5.9,0.34], ['SL',86.4,5.4,2.8,2544,6.3,5.7,0.26], ['CU',81.2,9.4,-12.8,2612,6.2,5.6,0.22], ['FF',94.4,-5.2,14.8,2312,6.6,6.0,0.18]]},
+  'Michael King':{team:'SDP',throws:'R',pitches:[['SI',96.8,-10.8,5.8,2244,6.6,5.9,0.44], ['SL',88.4,4.6,2.2,2712,6.4,5.7,0.32], ['FF',97.4,-5.4,16.2,2468,6.7,6.0,0.14], ['CH',87.8,-7.6,7.4,1712,6.5,5.8,0.1]]},
+  'Robert Suarez':{team:'SDP',throws:'R',pitches:[['FF',99.4,-4.6,17.8,2568,6.8,6.1,0.52], ['SL',91.2,3.8,1.6,2912,6.6,5.9,0.48]]},
+  'Cal Quantrill':{team:'COL',throws:'R',pitches:[['SI',93.4,-10.8,5.8,2224,6.5,5.8,0.46], ['SL',85.2,4.4,2.6,2388,6.3,5.6,0.28], ['CH',85.4,-8.4,6.4,1720,6.4,5.7,0.26]]},
+  'Austin Gomber':{team:'COL',throws:'L',pitches:[['FF',91.8,4.8,13.2,2196,6.3,5.6,0.42], ['CU',75.4,-8.4,-11.2,2348,6.1,5.4,0.28], ['CH',83.2,7.8,5.6,1662,6.2,5.5,0.3]]},
+  'Ryan Feltner':{team:'COL',throws:'R',pitches:[['FF',95.4,-5.4,15.4,2368,6.8,6.0,0.44], ['SL',87.2,4.6,2.4,2612,6.6,5.8,0.32], ['CH',87.4,-7.6,7.2,1708,6.7,5.9,0.24]]},
+  'Kyle Freeland':{team:'COL',throws:'L',pitches:[['FF',91.4,4.6,13.4,2212,6.4,5.5,0.38], ['CU',75.8,-8.8,-11.4,2386,6.2,5.3,0.28], ['CH',83.4,8.4,5.4,1672,6.3,5.4,0.22], ['SL',82.4,-4.2,1.6,2512,6.2,5.3,0.12]]},
+  'Germán Márquez':{team:'COL',throws:'R',pitches:[['FF',94.8,-5.6,15.2,2356,6.7,5.9,0.4], ['SL',86.4,4.8,2.4,2524,6.5,5.7,0.28], ['CU',80.4,9.2,-12.4,2548,6.3,5.6,0.2], ['CH',86.2,-7.8,7.2,1698,6.4,5.8,0.12]]},
+  'Brent Suter':{team:'COL',throws:'L',pitches:[['FF',88.4,4.4,11.8,2088,6.2,5.5,0.38], ['CU',73.8,-8.4,-10.8,2312,6.0,5.3,0.32], ['CH',81.2,7.8,5.2,1612,6.1,5.4,0.3]]},
+  'Zac Gallen':{team:'ARI',throws:'R',pitches:[['FF',93.8,-5.4,14.8,2268,6.6,5.9,0.32], ['CU',78.2,9.2,-12.6,2544,6.4,5.7,0.24], ['FC',88.2,1.4,10.8,2344,6.5,5.8,0.22], ['CH',87.4,-7.4,7.2,1698,6.5,5.8,0.22]]},
+  'Merrill Kelly':{team:'ARI',throws:'R',pitches:[['FC',90.8,1.2,10.8,2388,6.4,5.8,0.36], ['CU',78.8,9.4,-12.4,2524,6.2,5.6,0.26], ['FF',93.2,-5.2,14.4,2256,6.5,5.9,0.22], ['SI',92.6,-9.2,5.6,2196,6.4,5.8,0.16]]},
+  'Jordan Montgomery':{team:'ARI',throws:'L',pitches:[['FF',92.8,5.2,14.8,2268,6.6,5.7,0.38], ['SL',83.4,-4.4,1.6,2624,6.4,5.5,0.3], ['CH',84.4,9.2,5.6,1684,6.5,5.6,0.22], ['CU',77.4,-9.4,-11.4,2448,6.3,5.4,0.1]]},
+  'Brandon Pfaadt':{team:'ARI',throws:'R',pitches:[['FF',95.4,-5.4,15.4,2376,6.8,6.0,0.44], ['SL',88.2,4.8,2.4,2688,6.6,5.8,0.32], ['CH',87.8,-7.6,7.4,1716,6.7,5.9,0.24]]},
+  'Paul Sewald':{team:'ARI',throws:'R',pitches:[['FC',91.4,0.8,12.4,2512,6.4,5.9,0.62], ['SL',86.4,5.2,2.4,2648,6.2,5.7,0.38]]},
 };
 
-/* ── TEAM LIST ─────────────────────────────────────────────── */
-const TEAMS = [
+const TEAMS=[
   {id:'ARI',name:'Arizona Diamondbacks'},{id:'ATL',name:'Atlanta Braves'},
   {id:'BAL',name:'Baltimore Orioles'},{id:'BOS',name:'Boston Red Sox'},
   {id:'CHC',name:'Chicago Cubs'},{id:'CWS',name:'Chicago White Sox'},
@@ -376,171 +373,125 @@ const TEAMS = [
   {id:'TOR',name:'Toronto Blue Jays'},{id:'WSN',name:'Washington Nationals'},
 ];
 
-/* ── INIT ──────────────────────────────────────────────────── */
-window.onload = () => {
-  const ts = document.getElementById('teamSel');
-  TEAMS.forEach(t => ts.add(new Option(t.name, t.id)));
-  renderEffPanel();
+/* ── INIT ─────────────────────────────────── */
+window.onload=()=>{
+  const ts=document.getElementById('teamSel');
+  TEAMS.forEach(t=>ts.add(new Option(t.name,t.id)));
+  renderEff();
 };
 
-function renderEffPanel() {
-  const order = [
-    ['FF','4-Seam'],['SI','Sinker'],['CH','Changeup'],['FS','Splitter'],
-    ['CU','Curveball'],['SL','Slider'],['FC','Cutter'],['ST','Sweeper'],['KN','Knuckleball'],
-  ];
-  document.getElementById('effPanel').innerHTML = order.map(([t,n]) => {
-    const eff = SPIN_EFF[t] ?? 0.70;
-    const pct = Math.round(eff*100);
-    const loss = Math.round(eff*(1-AERO_FACTOR)*100);
-    return `<div class="eff-bar">
-      <span class="eff-label" style="color:${pc(t)}">${n}</span>
-      <div class="eff-track"><div class="eff-fill" style="width:${pct}%;background:${pc(t)};opacity:.85;"></div></div>
-      <span class="eff-pct">−${loss}%</span>
-    </div>`;
+function renderEff(){
+  const order=[['FF','4-Seam'],['SI','Sinker'],['CH','Changeup'],['FS','Splitter'],['CU','Curveball'],['SL','Slider'],['FC','Cutter'],['ST','Sweeper'],['KN','Knuckleball']];
+  document.getElementById('effPanel').innerHTML=order.map(([t,n])=>{
+    const e=SE[t]||.70,loss=Math.round(e*(1-AERO)*100);
+    return`<div class="eff-row"><span class="el" style="color:${col(t)}">${n}</span><div class="et"><div class="ef" style="width:${Math.round(e*100)}%;background:${col(t)};opacity:.85"></div></div><span class="ep">-${loss}%</span></div>`;
   }).join('');
 }
 
-function onTeamChange() {
-  const team = document.getElementById('teamSel').value;
-  const ps = document.getElementById('pitchSel');
-  ps.innerHTML = '<option value="">— select pitcher —</option>';
-  if (!team) return;
-  const inTeam = Object.keys(PITCHERS).filter(n => PITCHERS[n].team === team);
-  if (!inTeam.length) {
-    ps.innerHTML = '<option value="">No data for this team yet</option>';
-    document.getElementById('statusMsg').textContent = 'NO DATA FOR THIS TEAM';
-    return;
-  }
-  inTeam.forEach(n => ps.add(new Option(n, n)));
-  document.getElementById('statusMsg').textContent = `${inTeam.length} PITCHERS LOADED`;
+function onTeam(){
+  const team=document.getElementById('teamSel').value;
+  const ps=document.getElementById('pitchSel');
+  ps.innerHTML='<option value="">— select pitcher —</option>';
+  if(!team)return;
+  const inTeam=Object.keys(PITCHERS).filter(n=>PITCHERS[n].team===team).sort();
+  if(!inTeam.length){document.getElementById('statusMsg').textContent='NO DATA FOR THIS TEAM';return;}
+  inTeam.forEach(n=>ps.add(new Option(n,n)));
+  document.getElementById('statusMsg').textContent=`${inTeam.length} PITCHERS AVAILABLE`;
+  document.getElementById('introWrap').style.display='none';
+  document.getElementById('mainWrap').style.display='grid';
 }
 
-function onPitcherChange() {
-  const name = document.getElementById('pitchSel').value;
-  if (!name || !PITCHERS[name]) return;
-  renderDashboard(name, PITCHERS[name]);
+function onPitcher(){
+  const name=document.getElementById('pitchSel').value;
+  if(!name||!PITCHERS[name])return;
+  render(name,PITCHERS[name]);
 }
 
-/* ── RENDER ────────────────────────────────────────────────── */
-function renderDashboard(name, data) {
-  const adjusted = applyCoorsToArsenal(
-    data.pitches.map(([type,velo,x,z,spin,ext,rh,use]) =>
-      ({type,velo,x,z,spin,ext,rh,use,name:pn(type),color:pc(type)}))
-  );
-  const avgExt = adjusted.reduce((s,p) => s+p.ext,0)/adjusted.length;
-  const avgFactor = adjusted.reduce((s,p) => s+p.factor,0)/adjusted.length;
-
-  // pitcher physics card
-  document.getElementById('pitcherPhys').style.display = 'block';
-  document.getElementById('pitcherPhysContent').innerHTML = `
-    <div class="phys-row"><span class="phys-key">Name</span><span class="phys-val">${name}</span></div>
-    <div class="phys-row"><span class="phys-key">Team / Hand</span><span class="phys-val">${data.team} / ${data.throws}HP</span></div>
-    <div class="phys-row"><span class="phys-key">Avg extension</span><span class="phys-val">${avgExt.toFixed(1)} ft</span></div>
-    <div class="phys-row"><span class="phys-key">Pitches tracked</span><span class="phys-val">${adjusted.length}</span></div>
-    <div class="phys-row"><span class="phys-key">Avg move factor</span><span class="phys-val warn">${avgFactor.toFixed(3)}×</span></div>
-  `;
-
-  document.getElementById('content').innerHTML = `
-    <div class="section-label">${name.toUpperCase()} — MOVEMENT PLOT</div>
-    <div class="plots">
-      <div class="plot-card">
-        <div class="plot-card-title">STANDARD (SEA LEVEL)</div>
-        <div class="plot-card-sub">As measured — MLB average park conditions</div>
-        ${buildSVG(adjusted, false, data.throws)}
-        ${buildLegend(adjusted)}
-      </div>
-      <div class="plot-card coors">
-        <div class="plot-card-title">COORS FIELD ADJUSTED</div>
-        <div class="plot-card-sub">ρ = 85.3% sea level · +5,280 ft altitude</div>
-        ${buildSVG(adjusted, true, data.throws)}
-        ${buildLegend(adjusted)}
-      </div>
-    </div>
-    <div class="section-label" style="margin-top:4px">ARSENAL BREAKDOWN</div>
-    ${buildTable(adjusted)}
-  `;
-  document.getElementById('statusMsg').className = 'status live';
-  document.getElementById('statusMsg').textContent = `${name.toUpperCase()} LOADED`;
+/* ── RENDER ───────────────────────────────── */
+function render(name,data){
+  const adj=adjust(data.pitches);
+  const avgExt=(adj.reduce((s,p)=>s+p.ext,0)/adj.length).toFixed(1);
+  const avgF=(adj.reduce((s,p)=>s+p.factor,0)/adj.length);
+  document.getElementById('pitcherCard').style.display='block';
+  document.getElementById('pitcherCardContent').innerHTML=
+    `<div class="pr"><span class="pk">Name</span><span class="pv">${name}</span></div>
+     <div class="pr"><span class="pk">Team / Hand</span><span class="pv">${data.team} / ${data.throws}HP</span></div>
+     <div class="pr"><span class="pk">Avg extension</span><span class="pv">${avgExt} ft</span></div>
+     <div class="pr"><span class="pk">Arsenal size</span><span class="pv">${adj.length} pitches</span></div>
+     <div class="pr"><span class="pk">Avg move factor</span><span class="pv w">${(avgF*100).toFixed(1)}%</span></div>`;
+  document.getElementById('content').innerHTML=
+    `<div class="section-label">${name.toUpperCase()} — PITCHER'S PERSPECTIVE MOVEMENT</div>
+     <div class="plots">
+       <div class="plot-card">
+         <div class="pct">STANDARD (SEA LEVEL)</div>
+         <div class="psub">Normal park conditions — from pitcher's view</div>
+         ${buildSVG(adj,false,data.throws)}${buildLeg(adj)}
+       </div>
+       <div class="plot-card coors">
+         <div class="pct">COORS FIELD ADJUSTED</div>
+         <div class="psub">ρ=85.3% · +5,280 ft · from pitcher's view</div>
+         ${buildSVG(adj,true,data.throws)}${buildLeg(adj)}
+       </div>
+     </div>
+     <div class="section-label" style="margin-top:4px">ARSENAL BREAKDOWN — MOVEMENT DELTA</div>
+     ${buildTable(adj)}`;
+  document.getElementById('statusMsg').className='status live';
+  document.getElementById('statusMsg').textContent=`${name.toUpperCase()} · ${data.throws}HP · ${data.team}`;
 }
 
-/* ── SVG MOVEMENT PLOT ─────────────────────────────────────── */
-function buildSVG(pitches, coors, hand) {
-  const W=320, H=320, PAD=32;
-  const plotW=W-PAD*2, plotH=H-PAD*2;
-  const range=24; // ±24 inches
-  const cx=(v)=>PAD + (v+range)/(range*2)*plotW;
-  const cy=(v)=>PAD + (-v+range)/(range*2)*plotH;
-
-  let svg = `<svg class="plot" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
-
-  // Background
-  svg += `<rect width="${W}" height="${H}" fill="#0a0a14" rx="4"/>`;
-
-  // Grid lines
-  for (let v=-20; v<=20; v+=5) {
-    const lx=cx(v), ly=cy(v);
-    const col=v===0?'#444466':'#252535';
-    const sw=v===0?1:0.5;
-    svg += `<line x1="${lx}" y1="${PAD}" x2="${lx}" y2="${PAD+plotH}" stroke="${col}" stroke-width="${sw}"/>`;
-    svg += `<line x1="${PAD}" y1="${ly}" x2="${PAD+plotW}" y2="${ly}" stroke="${col}" stroke-width="${sw}"/>`;
-    if (v!==0 && v%10===0) {
-      svg += `<text x="${lx}" y="${PAD+plotH+11}" text-anchor="middle" font-size="8" fill="#555566" font-family="Courier New">${v}"</text>`;
-      svg += `<text x="${PAD-10}" y="${ly+3}" text-anchor="end" font-size="8" fill="#555566" font-family="Courier New">${v}"</text>`;
+/* ── SVG PLOT (PITCHER'S VIEW) ────────────── */
+// Pitcher's view: flip x-axis vs catcher's view
+// display_x = -pfx_x  →  arm side is on RIGHT for all pitchers
+function buildSVG(pitches,coors,hand){
+  const W=300,H=300,P=30,pW=W-P*2,pH=H-P*2,R=22;
+  const cx=v=>P+(-v+R)/(R*2)*pW;   // flip x: negative pfx_x (arm side) → right of plot
+  const cy=v=>P+(-v+R)/(R*2)*pH;
+  let s=`<svg class="plot" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+  s+=`<rect width="${W}" height="${H}" fill="#0a0a14" rx="4"/>`;
+  for(let v=-20;v<=20;v+=5){
+    const lx=cx(v),ly=cy(v),c=v===0?'#3d3d5c':'#1e1e2e',w=v===0?1:.5;
+    s+=`<line x1="${lx}" y1="${P}" x2="${lx}" y2="${P+pH}" stroke="${c}" stroke-width="${w}"/>`;
+    s+=`<line x1="${P}" y1="${ly}" x2="${P+pW}" y2="${ly}" stroke="${c}" stroke-width="${w}"/>`;
+    if(v!==0&&Math.abs(v)===10){
+      s+=`<text x="${lx}" y="${P+pH+10}" text-anchor="middle" font-size="8" fill="#444466" font-family="Courier New">${v}"</text>`;
+      s+=`<text x="${P-8}" y="${ly+3}" text-anchor="end" font-size="8" fill="#444466" font-family="Courier New">${v}"</text>`;
     }
   }
-
-  // Axis labels
-  const armLabel=hand==='R'?'ARM →':'← ARM';
-  const gloveLabel=hand==='R'?'← GLOVE':'GLOVE →';
-  svg += `<text x="${PAD}" y="${PAD-6}" font-size="8" fill="#7766aa" font-family="Courier New">${gloveLabel}</text>`;
-  svg += `<text x="${PAD+plotW}" y="${PAD-6}" text-anchor="end" font-size="8" fill="#7766aa" font-family="Courier New">${armLabel}</text>`;
-  svg += `<text x="${PAD+plotW/2}" y="${H-2}" text-anchor="middle" font-size="8" fill="#7766aa" font-family="Courier New">HORIZONTAL BREAK (in)</text>`;
-
-  // Arrows from original to coors (only on coors plot)
-  if (coors) {
-    pitches.forEach(p => {
-      const ox=cx(p.x), oz=cy(p.z);
-      const nx=cx(p.cx), nz=cy(p.cz);
-      svg += `<line x1="${ox}" y1="${oz}" x2="${nx}" y2="${nz}" stroke="${p.color}" stroke-width="1.5" stroke-dasharray="3,2" opacity=".5"/>`;
+  // Axis labels — pitcher's perspective
+  // Right = arm side (for both RHP and LHP, after flip)
+  s+=`<text x="${P+pW}" y="${P-5}" text-anchor="end" font-size="8" fill="#7766aa" font-family="Courier New">ARM →</text>`;
+  s+=`<text x="${P}" y="${P-5}" font-size="8" fill="#7766aa" font-family="Courier New">← GLOVE</text>`;
+  s+=`<text x="${P+pW/2}" y="${H-2}" text-anchor="middle" font-size="8" fill="#555577" font-family="Courier New">HORIZONTAL BREAK</text>`;
+  // Arrows on coors plot
+  if(coors){
+    pitches.forEach(p=>{
+      const ox=cx(p.x),oz=cy(p.z),nx=cx(p.cx),nz=cy(p.cz);
+      if(Math.abs(ox-nx)>1||Math.abs(oz-nz)>1)
+        s+=`<line x1="${ox}" y1="${oz}" x2="${nx}" y2="${nz}" stroke="${p.color}" stroke-width="1.2" stroke-dasharray="2,2" opacity=".45"/>`;
     });
   }
-
-  // Pitch dots
-  pitches.forEach(p => {
-    const px = coors ? cx(p.cx) : cx(p.x);
-    const pz = coors ? cy(p.cz) : cy(p.z);
-    svg += `<circle cx="${px}" cy="${pz}" r="7" fill="${p.color}" opacity=".9" stroke="#0a0a14" stroke-width="1.5"/>`;
-    // Label: pitch type abbreviated
-    const lx = px + (p.x >= 0 ? 10 : -10);
-    const anchor = p.x >= 0 ? 'start' : 'end';
-    svg += `<text x="${lx}" y="${pz+3}" font-size="8.5" fill="${p.color}" font-family="Courier New" font-weight="700" text-anchor="${anchor}">${p.type}</text>`;
+  // Dots
+  pitches.forEach(p=>{
+    const px=coors?cx(p.cx):cx(p.x);
+    const pz=coors?cy(p.cz):cy(p.z);
+    s+=`<circle cx="${px}" cy="${pz}" r="7" fill="${p.color}" opacity=".92" stroke="#0a0a14" stroke-width="1.5"/>`;
+    const lx2=px+(p.x<0?10:-10),anc=p.x<0?'start':'end';
+    s+=`<text x="${lx2}" y="${pz+3}" font-size="8.5" fill="${p.color}" font-family="Courier New" font-weight="700" text-anchor="${anc}">${p.type}</text>`;
   });
-
-  // Coors watermark
-  if (coors) {
-    svg += `<text x="${W-PAD}" y="${H-10}" text-anchor="end" font-size="9" fill="#553380" font-family="Courier New" opacity=".7">COORS ADJUSTED</text>`;
-  }
-
-  svg += '</svg>';
-  return svg;
+  if(coors)s+=`<text x="${W-P}" y="${H-8}" text-anchor="end" font-size="9" fill="#553380" font-family="Courier New" opacity=".6">COORS ADJ.</text>`;
+  return s+'</svg>';
 }
 
-function buildLegend(pitches) {
-  return `<div class="legend-row">${pitches.map(p =>
-    `<span class="legend-item"><span class="legend-dot" style="background:${p.color}"></span>${pn(p.type)} (${(p.use*100).toFixed(0)}%)</span>`
-  ).join('')}</div>`;
+function buildLeg(ps){
+  return`<div class="legend-row">${ps.map(p=>`<span class="li"><span class="ld" style="background:${p.color}"></span>${pname(p.type)} ${Math.round(p.use*100)}%</span>`).join('')}</div>`;
 }
 
-function buildTable(pitches) {
-  const rows = pitches.map(p => {
-    const dx=+(p.cx-p.x).toFixed(2), dz=+(p.cz-p.z).toFixed(2);
-    const dxCls=dx<-0.3?'neg':dx>0.3?'pos':'zero';
-    const dzCls=dz<-0.3?'neg':dz>0.3?'pos':'zero';
-    const eff=Math.round(p.spinEff*100);
-    const lossH=Math.abs(dx).toFixed(1), lossV=Math.abs(dz).toFixed(1);
-    return `<tr>
-      <td><span class="t-type" style="background:${p.color}22;color:${p.color}">${p.type}</span></td>
-      <td class="t-name">${pn(p.type)}</td>
+function buildTable(ps){
+  const rows=ps.map(p=>{
+    const dx=+(p.cx-p.x).toFixed(2),dz=+(p.cz-p.z).toFixed(2);
+    return`<tr>
+      <td><span class="tt" style="background:${p.color}22;color:${p.color}">${p.type}</span></td>
+      <td>${pname(p.type)}</td>
       <td style="color:var(--mid)">${p.velo}</td>
       <td style="color:var(--mid)">${p.spin}</td>
       <td style="color:var(--mid)">${p.ext.toFixed(1)}'</td>
@@ -548,20 +499,17 @@ function buildTable(pitches) {
       <td style="color:var(--mid)">${p.z}"</td>
       <td style="color:#c084fc">${p.cx}"</td>
       <td style="color:#c084fc">${p.cz}"</td>
-      <td class="delta ${dxCls}">${dx>0?'+':''}${dx}"</td>
-      <td class="delta ${dzCls}">${dz>0?'+':''}${dz}"</td>
-      <td style="color:var(--mid)">${eff}%</td>
+      <td class="${dx<-.3?'neg':dx>.3?'pos':'zer'}">${dx>0?'+':''}${dx}"</td>
+      <td class="${dz<-.3?'neg':dz>.3?'pos':'zer'}">${dz>0?'+':''}${dz}"</td>
+      <td style="color:var(--mid)">${Math.round(p.se*100)}%</td>
       <td style="color:var(--warn)">${(p.factor*100).toFixed(1)}%</td>
     </tr>`;
   }).join('');
-  return `<table>
-    <thead><tr>
-      <th>Type</th><th>Pitch</th><th>Velo</th><th>Spin</th><th>Ext</th>
-      <th>H Brk</th><th>V Brk</th><th>H Coors</th><th>V Coors</th>
-      <th>ΔH</th><th>ΔV</th><th>Spin Eff</th><th>Move Factor</th>
-    </tr></thead>
-    <tbody>${rows}</tbody>
-  </table>`;
+  return`<table>
+    <thead><tr><th>Type</th><th>Pitch</th><th>Velo</th><th>Spin</th><th>Ext</th>
+    <th>H Brk</th><th>V Brk</th><th>H Coors</th><th>V Coors</th>
+    <th>ΔH</th><th>ΔV</th><th>Spin Eff</th><th>Move Kept</th></tr></thead>
+    <tbody>${rows}</tbody></table>`;
 }
 </script>
 </body>
