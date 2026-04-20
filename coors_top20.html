@@ -8,7 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 :root{
-  --bg:#0a0e14;--surface:#111620;--surface2:#161d2a;--border:#1e2d42;
+  --bg:#121822;--surface:#181e2e;--surface2:#1e2536;--border:#2a3548;
   --purple:#8b5cf6;--teal:#14b8a6;--amber:#f59e0b;--red:#ef4444;--green:#22c55e;
   --text:#e2e8f0;--muted:#64748b;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
 }
@@ -16,11 +16,12 @@
 body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden}
 
 /* header */
-.site-header{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;gap:2rem;position:sticky;top:0;z-index:100}
-.site-header .logo{font-family:var(--mono);font-size:13px;color:var(--teal);letter-spacing:.08em}
-.nav-links{display:flex;gap:1.5rem}
-.nav-links a{font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:.05em;transition:color .2s}
-.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.site-header{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;position:sticky;top:0;z-index:100}
+.site-header .logo{font-family:var(--mono);font-size:13px;color:var(--teal);letter-spacing:.08em;flex-shrink:0}
+.site-nav{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-left:auto}
+.site-nav .nav-page{font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;padding:8px 14px;border-radius:6px;border:1px solid transparent;transition:background .15s,color .15s,border-color .15s}
+.site-nav .nav-page:hover{color:var(--text);background:rgba(20,184,166,.1);border-color:rgba(20,184,166,.35)}
+.site-nav .nav-page.active{color:var(--teal);background:rgba(20,184,166,.15);border-color:var(--teal)}
 
 /* hero */
 .hero{padding:3rem 2rem 2rem;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
@@ -127,10 +128,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 
 <header class="site-header">
   <span class="logo">ROCKIES · ANALYTICS</span>
-  <nav class="nav-links">
-    <a href="col_minors_dashboard.html">Minors Dashboard</a>
-    <a href="coors_movement_sim.html">Movement Sim</a>
-    <a href="coors_top20.html" class="active">Coors Best Pitchers</a>
+  <nav class="site-nav" aria-label="Rockies analytics">
+    <a class="nav-page" href="col_minors_dashboard.html">MiLB 2026</a>
+    <a class="nav-page" href="coors_movement_sim.html">Coors movement</a>
+    <a class="nav-page active" href="coors_top20.html">Top 20 at Coors</a>
   </nav>
 </header>
 
