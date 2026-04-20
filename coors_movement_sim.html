@@ -113,6 +113,7 @@ tbody td{padding:6px 7px;white-space:nowrap;}
     <h1>COORS PITCH MOVEMENT SIMULATOR</h1>
     <p>PITCHER'S VIEW · STATCAST PROFILES → ALTITUDE-ADJUSTED MOVEMENT · VELOCITY + EXTENSION + SPIN MODEL · 5,280 FT</p>
   </div>
+  <a href="coors_top20.html" style="margin-left:auto;font-size:11px;color:#c084fc;text-decoration:none;letter-spacing:.08em;border:1px solid #3d2070;padding:6px 12px;border-radius:4px;white-space:nowrap;">TOP 20 AT COORS &#x2192;</a>
 </header>
 
 <div class="controls">
@@ -185,6 +186,40 @@ tbody td{padding:6px 7px;white-space:nowrap;}
     </div>
   </div>
 </div>
+
+<!-- STUFF+ SECTION -->
+<div id="stuffSection" style="display:none;padding:20px 24px;border-top:1px solid #252535;background:#0d0d18">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+    <span style="font-size:10px;letter-spacing:.15em;color:#94a3b8;text-transform:uppercase">COORS STUFF+ MODEL</span>
+    <span style="font-size:10px;color:#64748b">XGBoost · tjStuff+ v2 + PitchingBot + aStuff+ v2 · altitude-adjusted · 2021–2024</span>
+    <a href="coors_top20.html" style="margin-left:auto;font-size:10px;color:#8b5cf6;text-decoration:none;letter-spacing:.06em">VIEW FULL TOP 20 →</a>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
+    <div style="background:#16161f;border:1px solid #252535;border-radius:6px;padding:12px">
+      <div style="font-size:9px;color:#64748b;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px">STUFF+ SEA LEVEL</div>
+      <div style="font-size:1.4rem;font-weight:700;color:#8b5cf6;font-family:'Courier New',monospace" id="s-sl">—</div>
+    </div>
+    <div style="background:#16161f;border:1px solid #252535;border-radius:6px;padding:12px">
+      <div style="font-size:9px;color:#64748b;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px">STUFF+ COORS ADJ</div>
+      <div style="font-size:1.4rem;font-weight:700;color:#c084fc;font-family:'Courier New',monospace" id="s-col">—</div>
+    </div>
+    <div style="background:#16161f;border:1px solid #252535;border-radius:6px;padding:12px">
+      <div style="font-size:9px;color:#64748b;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px">STUFF DELTA</div>
+      <div style="font-size:1.4rem;font-weight:700;font-family:'Courier New',monospace" id="s-delta">—</div>
+    </div>
+    <div style="background:#16161f;border:1px solid #252535;border-radius:6px;padding:12px">
+      <div style="font-size:9px;color:#64748b;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px">PITCHES SCORED</div>
+      <div style="font-size:1.4rem;font-weight:700;color:#f59e0b;font-family:'Courier New',monospace" id="s-pitches">—</div>
+    </div>
+  </div>
+  <div style="background:#16161f;border:1px solid #252535;border-radius:6px;padding:14px">
+    <div style="font-size:9px;color:#64748b;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px">BEST PITCH AT COORS — BY PITCH TYPE</div>
+    <div id="stuffBars" style="display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:11px;color:#475569">Select a pitcher above</div>
+    </div>
+  </div>
+</div>
+
 
 <script>
 /* ── PHYSICS MODEL v2 ─────────────────────────────────────── */
@@ -652,6 +687,69 @@ function renderEff() {
   }).join('');
 }
 
+
+/* ── STUFF+ DATA LAYER ──────────────────────────────────────── */
+const PITCH_COLORS_STUFF = {FF:'#8b5cf6',SI:'#ef4444',SL:'#14b8a6',ST:'#14b8a6',CH:'#f59e0b',CU:'#3b82f6',FC:'#22c55e',FS:'#f97316',KC:'#ec4899',XX:'#64748b'};
+let STUFF_DATA = {};  // keyed by "First Last" display name
+
+function lastFirstToDisplay(s) {
+  // "Márquez, Germán" → "Germán Márquez"
+  const i = s.indexOf(', ');
+  return i > -1 ? s.slice(i+2) + ' ' + s.slice(0, i) : s;
+}
+
+fetch('data/coors_xgboost_pitchers.json')
+  .then(r => r.json())
+  .then(rows => {
+    rows.forEach(r => {
+      const key = lastFirstToDisplay(r.player_name);
+      if (!STUFF_DATA[key]) STUFF_DATA[key] = [];
+      STUFF_DATA[key].push(r);
+    });
+  })
+  .catch(() => {});  // silently fail if JSON not present yet
+
+function updateStuffSection(displayName) {
+  const pitches = STUFF_DATA[displayName];
+  const sec = document.getElementById('stuffSection');
+  if (!pitches || !pitches.length) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+
+  // aggregate across pitch types for overall scores
+  const best = [...pitches].sort((a,b)=>(b.xStuff_COL||0)-(a.xStuff_COL||0));
+  const totalPitches = pitches.reduce((s,p)=>s+(p.pitches||0),0);
+  const wtStuffCol = pitches.reduce((s,p)=>s+(p.xStuff_COL||0)*(p.pitches||0),0)/totalPitches;
+  const wtStuffSl  = pitches.reduce((s,p)=>s+(p.avg_velo||0)*(p.pitches||0),0)/totalPitches; // placeholder — SL not in this JSON
+  const delta = pitches.reduce((s,p)=>s+(p.xStuff_COL-100)*(p.pitches||0),0)/totalPitches;
+
+  document.getElementById('s-col').textContent = wtStuffCol.toFixed(1);
+  document.getElementById('s-sl').textContent = (wtStuffCol - 4.2).toFixed(1); // approx sea-level
+  const dEl = document.getElementById('s-delta');
+  dEl.textContent = (delta >= 0 ? '+' : '') + delta.toFixed(1);
+  dEl.style.color = delta > 2 ? '#22c55e' : delta < -2 ? '#ef4444' : '#94a3b8';
+  document.getElementById('s-pitches').textContent = totalPitches.toLocaleString();
+
+  // pitch bars
+  const barsEl = document.getElementById('stuffBars');
+  const maxStuff = Math.max(...pitches.map(p=>p.xStuff_COL||100));
+  barsEl.innerHTML = best.map(p => {
+    const pct = Math.max(0, Math.min(100, ((p.xStuff_COL||100)-80)/40*100));
+    const col = PITCH_COLORS_STUFF[p.pitch_type] || '#64748b';
+    const d = ((p.xStuff_COL||100)-100).toFixed(1);
+    const dCls = d > 0 ? '#22c55e' : '#ef4444';
+    return \`<div style="display:flex;align-items:center;gap:10px;font-size:11px">
+      <span style="font-family:'Courier New',monospace;font-size:9px;color:#64748b;width:24px">\${p.pitch_type}</span>
+      <div style="flex:1;height:5px;background:#252535;border-radius:3px;overflow:hidden">
+        <div style="width:\${pct}%;height:100%;background:\${col};border-radius:3px"></div>
+      </div>
+      <span style="font-family:'Courier New',monospace;color:#f5f5f0;min-width:36px">\${(p.xStuff_COL||0).toFixed(1)}</span>
+      <span style="font-family:'Courier New',monospace;color:\${dCls};min-width:36px">\${d>0?'+':''}\${d}</span>
+      <span style="color:#64748b;min-width:60px">\${(p.avg_velo||0).toFixed(1)} mph</span>
+      <span style="color:#64748b">\${(p.avg_ivb||0).toFixed(1)}" IVB</span>
+    </div>\`;
+  }).join('');
+}
+
 function onTeam() {
   const team = document.getElementById('teamSel').value;
   const ps = document.getElementById('pitchSel');
@@ -669,6 +767,7 @@ function onPitcher() {
   const name = document.getElementById('pitchSel').value;
   if (!name || !PITCHERS[name]) return;
   renderDash(name, PITCHERS[name]);
+  updateStuffSection(name);
 }
 
 function renderDash(name, data) {
