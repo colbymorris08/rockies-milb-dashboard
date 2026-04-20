@@ -1,92 +1,82 @@
 [
   {
-    "feature": "plate_x",
-    "importance": 0.1495,
-    "alpha": 1.0
-  },
-  {
-    "feature": "plate_z",
-    "importance": 0.1383,
-    "alpha": 1.0
-  },
-  {
     "feature": "delta_velo",
-    "importance": 0.1357,
+    "importance": 0.223,
     "alpha": 1.05
   },
   {
+    "feature": "pitch_type_enc",
+    "importance": 0.0908,
+    "alpha": 1.0
+  },
+  {
+    "feature": "delta_ivb",
+    "importance": 0.0814,
+    "alpha": 0.79
+  },
+  {
     "feature": "stand_enc",
-    "importance": 0.0751,
+    "importance": 0.065,
     "alpha": 1.0
   },
   {
     "feature": "vaa",
-    "importance": 0.0694,
+    "importance": 0.0595,
     "alpha": 1.14
   },
   {
-    "feature": "delta_ivb",
-    "importance": 0.0659,
-    "alpha": 0.79
-  },
-  {
-    "feature": "delta_hb",
-    "importance": 0.0463,
-    "alpha": 0.9
-  },
-  {
-    "feature": "haa",
-    "importance": 0.0416,
-    "alpha": 1.06
-  },
-  {
-    "feature": "pitch_type_enc",
-    "importance": 0.0413,
-    "alpha": 1.0
-  },
-  {
-    "feature": "pfx_x_magnus",
-    "importance": 0.0339,
-    "alpha": 0.82
-  },
-  {
-    "feature": "pfx_z",
-    "importance": 0.033,
-    "alpha": 0.79
-  },
-  {
     "feature": "release_speed",
-    "importance": 0.032,
+    "importance": 0.0563,
     "alpha": 1.05
   },
   {
+    "feature": "delta_hb",
+    "importance": 0.0498,
+    "alpha": 0.9
+  },
+  {
+    "feature": "pfx_z",
+    "importance": 0.0498,
+    "alpha": 0.79
+  },
+  {
     "feature": "release_spin_rate",
-    "importance": 0.0297,
+    "importance": 0.0485,
     "alpha": 0.86
   },
   {
-    "feature": "pfx_x_gyro",
-    "importance": 0.0285,
-    "alpha": 0.97
-  },
-  {
     "feature": "spin_axis",
-    "importance": 0.0249,
+    "importance": 0.0428,
     "alpha": 1.0
   },
   {
+    "feature": "haa",
+    "importance": 0.0424,
+    "alpha": 1.06
+  },
+  {
     "feature": "release_pos_z",
-    "importance": 0.0203,
+    "importance": 0.0399,
     "alpha": 1.08
   },
   {
+    "feature": "pfx_x_magnus",
+    "importance": 0.0395,
+    "alpha": 0.82
+  },
+  {
+    "feature": "pfx_x_gyro",
+    "importance": 0.0388,
+    "alpha": 0.97
+  },
+  {
     "feature": "release_pos_x",
-    "importance": 0.0185,
+    "importance": 0.0371,
     "alpha": 1.0
   },
   {
     "feature": "log_ext",
-    "importance": 0.016,
+    "importance": 0.0355,
     "alpha": 1.18
   }
 ]

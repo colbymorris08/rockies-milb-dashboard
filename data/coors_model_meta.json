@@ -1,8 +1,8 @@
 {
-  "train_r2": 0.1022,
-  "test_r2": 0.0893,
-  "test_rmse": 0.3532,
-  "n_features": 18,
+  "train_r2": 0.0371,
+  "test_r2": 0.0232,
+  "test_rmse": 0.3649,
+  "n_features": 16,
   "features": [
     "release_speed",
     "pfx_z",
@@ -15,8 +15,6 @@
     "delta_hb",
     "release_pos_z",
     "release_pos_x",
-    "plate_x",
-    "plate_z",
     "stand_enc",
     "pitch_type_enc",
     "vaa",
@@ -47,5 +45,5 @@
   "hr_park_factor": 1.42,
   "babip_lift": 0.045,
   "training_years": "2021-2024",
-  "n_estimators": 496
+  "n_estimators": 499
 }

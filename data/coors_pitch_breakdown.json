@@ -1,0 +1,1072 @@
+[
+  {
+    "player_name":"Anderson, Chase",
+    "pitch_type":"CH",
+    "pitches":194,
+    "stuff_sl":97.3600006104,
+    "stuff_col":98.5400009155,
+    "avg_velo":83.98,
+    "avg_ivb":0.86,
+    "avg_hb":-1.16
+  },
+  {
+    "player_name":"Anderson, Chase",
+    "pitch_type":"CU",
+    "pitches":36,
+    "stuff_sl":99.4800033569,
+    "stuff_col":100.4899978638,
+    "avg_velo":78.09,
+    "avg_ivb":-1.08,
+    "avg_hb":0.52
+  },
+  {
+    "player_name":"Anderson, Chase",
+    "pitch_type":"FC",
+    "pitches":221,
+    "stuff_sl":101.3799972534,
+    "stuff_col":101.1399993896,
+    "avg_velo":89.38,
+    "avg_ivb":0.5,
+    "avg_hb":0.33
+  },
+  {
+    "player_name":"Anderson, Chase",
+    "pitch_type":"FF",
+    "pitches":216,
+    "stuff_sl":104.5299987793,
+    "stuff_col":103.7799987793,
+    "avg_velo":93.04,
+    "avg_ivb":1.07,
+    "avg_hb":-0.45
+  },
+  {
+    "player_name":"Anderson, Chase",
+    "pitch_type":"SI",
+    "pitches":112,
+    "stuff_sl":105.0500030518,
+    "stuff_col":104.8199996948,
+    "avg_velo":93.1,
+    "avg_ivb":0.88,
+    "avg_hb":-0.83
+  },
+  {
+    "player_name":"Anderson, Chase",
+    "pitch_type":"ST",
+    "pitches":53,
+    "stuff_sl":97.9100036621,
+    "stuff_col":96.7200012207,
+    "avg_velo":81.13,
+    "avg_ivb":-0.2,
+    "avg_hb":0.94
+  },
+  {
+    "player_name":"Beeks, Jalen",
+    "pitch_type":"CH",
+    "pitches":75,
+    "stuff_sl":97.5800018311,
+    "stuff_col":98.6699981689,
+    "avg_velo":88.57,
+    "avg_ivb":0.67,
+    "avg_hb":1.03
+  },
+  {
+    "player_name":"Beeks, Jalen",
+    "pitch_type":"FC",
+    "pitches":79,
+    "stuff_sl":98.1900024414,
+    "stuff_col":97.7699966431,
+    "avg_velo":85.15,
+    "avg_ivb":0.28,
+    "avg_hb":-0.2
+  },
+  {
+    "player_name":"Beeks, Jalen",
+    "pitch_type":"FF",
+    "pitches":264,
+    "stuff_sl":103.4400024414,
+    "stuff_col":103.4599990845,
+    "avg_velo":94.47,
+    "avg_ivb":1.14,
+    "avg_hb":0.38
+  },
+  {
+    "player_name":"Blach, Ty",
+    "pitch_type":"CH",
+    "pitches":422,
+    "stuff_sl":99.4000015259,
+    "stuff_col":98.3300018311,
+    "avg_velo":80.04,
+    "avg_ivb":-0.09,
+    "avg_hb":1.08
+  },
+  {
+    "player_name":"Blach, Ty",
+    "pitch_type":"CU",
+    "pitches":150,
+    "stuff_sl":98.6399993896,
+    "stuff_col":96.9700012207,
+    "avg_velo":78.85,
+    "avg_ivb":-0.32,
+    "avg_hb":-0.21
+  },
+  {
+    "player_name":"Blach, Ty",
+    "pitch_type":"FC",
+    "pitches":249,
+    "stuff_sl":100.2200012207,
+    "stuff_col":99.0699996948,
+    "avg_velo":83.65,
+    "avg_ivb":0.31,
+    "avg_hb":0.09
+  },
+  {
+    "player_name":"Blach, Ty",
+    "pitch_type":"SI",
+    "pitches":884,
+    "stuff_sl":103.1399993896,
+    "stuff_col":102.0500030518,
+    "avg_velo":89.62,
+    "avg_ivb":0.56,
+    "avg_hb":1.1
+  },
+  {
+    "player_name":"Blalock, Bradley",
+    "pitch_type":"FF",
+    "pitches":77,
+    "stuff_sl":103.1800003052,
+    "stuff_col":102.7200012207,
+    "avg_velo":93.45,
+    "avg_ivb":1.24,
+    "avg_hb":-0.31
+  },
+  {
+    "player_name":"Bowden, Ben",
+    "pitch_type":"CH",
+    "pitches":62,
+    "stuff_sl":97.1500015259,
+    "stuff_col":98.8099975586,
+    "avg_velo":82.19,
+    "avg_ivb":0.85,
+    "avg_hb":1.02
+  },
+  {
+    "player_name":"Bowden, Ben",
+    "pitch_type":"FF",
+    "pitches":240,
+    "stuff_sl":103.9300003052,
+    "stuff_col":103.4100036621,
+    "avg_velo":92.32,
+    "avg_ivb":1.3,
+    "avg_hb":0.79
+  },
+  {
+    "player_name":"Chac\u00edn, Jhoulys",
+    "pitch_type":"CU",
+    "pitches":270,
+    "stuff_sl":98.4800033569,
+    "stuff_col":97.5500030518,
+    "avg_velo":80.69,
+    "avg_ivb":-0.07,
+    "avg_hb":0.98
+  },
+  {
+    "player_name":"Chac\u00edn, Jhoulys",
+    "pitch_type":"FC",
+    "pitches":240,
+    "stuff_sl":101.1999969482,
+    "stuff_col":101.3799972534,
+    "avg_velo":87.64,
+    "avg_ivb":0.37,
+    "avg_hb":0.32
+  },
+  {
+    "player_name":"Chac\u00edn, Jhoulys",
+    "pitch_type":"FF",
+    "pitches":82,
+    "stuff_sl":104.0199966431,
+    "stuff_col":103.6200027466,
+    "avg_velo":92.63,
+    "avg_ivb":1.05,
+    "avg_hb":-0.25
+  },
+  {
+    "player_name":"Chac\u00edn, Jhoulys",
+    "pitch_type":"SI",
+    "pitches":317,
+    "stuff_sl":104.2600021362,
+    "stuff_col":103.5,
+    "avg_velo":92.86,
+    "avg_ivb":0.75,
+    "avg_hb":-0.86
+  },
+  {
+    "player_name":"Davis, Noah",
+    "pitch_type":"CH",
+    "pitches":38,
+    "stuff_sl":99.7200012207,
+    "stuff_col":100.5,
+    "avg_velo":84.99,
+    "avg_ivb":0.39,
+    "avg_hb":-1.11
+  },
+  {
+    "player_name":"Davis, Noah",
+    "pitch_type":"CU",
+    "pitches":30,
+    "stuff_sl":89.6500015259,
+    "stuff_col":88.8799972534,
+    "avg_velo":78.17,
+    "avg_ivb":-0.8,
+    "avg_hb":0.96
+  },
+  {
+    "player_name":"Davis, Noah",
+    "pitch_type":"FC",
+    "pitches":105,
+    "stuff_sl":100.9700012207,
+    "stuff_col":100.5299987793,
+    "avg_velo":88.3,
+    "avg_ivb":0.54,
+    "avg_hb":0.12
+  },
+  {
+    "player_name":"Davis, Noah",
+    "pitch_type":"SI",
+    "pitches":217,
+    "stuff_sl":104.9100036621,
+    "stuff_col":103.4700012207,
+    "avg_velo":93.47,
+    "avg_ivb":0.66,
+    "avg_hb":-1.09
+  },
+  {
+    "player_name":"Davis, Noah",
+    "pitch_type":"ST",
+    "pitches":43,
+    "stuff_sl":95.5500030518,
+    "stuff_col":94.3499984741,
+    "avg_velo":79.94,
+    "avg_ivb":-0.15,
+    "avg_hb":1.1
+  },
+  {
+    "player_name":"Doyle, Tommy",
+    "pitch_type":"FC",
+    "pitches":112,
+    "stuff_sl":100.1100006104,
+    "stuff_col":102.9700012207,
+    "avg_velo":90.53,
+    "avg_ivb":0.54,
+    "avg_hb":-0.16
+  },
+  {
+    "player_name":"Doyle, Tommy",
+    "pitch_type":"FF",
+    "pitches":122,
+    "stuff_sl":107.3899993896,
+    "stuff_col":108.9300003052,
+    "avg_velo":94.07,
+    "avg_ivb":1.02,
+    "avg_hb":-0.4
+  },
+  {
+    "player_name":"Feltner, Ryan",
+    "pitch_type":"CH",
+    "pitches":267,
+    "stuff_sl":97.1200027466,
+    "stuff_col":97.6600036621,
+    "avg_velo":85.03,
+    "avg_ivb":0.42,
+    "avg_hb":-0.41
+  },
+  {
+    "player_name":"Feltner, Ryan",
+    "pitch_type":"CU",
+    "pitches":238,
+    "stuff_sl":94.1399993896,
+    "stuff_col":96.9899978638,
+    "avg_velo":78.91,
+    "avg_ivb":-0.64,
+    "avg_hb":0.68
+  },
+  {
+    "player_name":"Feltner, Ryan",
+    "pitch_type":"FF",
+    "pitches":819,
+    "stuff_sl":101.6500015259,
+    "stuff_col":101.4199981689,
+    "avg_velo":94.48,
+    "avg_ivb":0.95,
+    "avg_hb":-0.39
+  },
+  {
+    "player_name":"Feltner, Ryan",
+    "pitch_type":"SI",
+    "pitches":342,
+    "stuff_sl":102.5800018311,
+    "stuff_col":102.0,
+    "avg_velo":93.94,
+    "avg_ivb":0.49,
+    "avg_hb":-0.9
+  },
+  {
+    "player_name":"Feltner, Ryan",
+    "pitch_type":"SL",
+    "pitches":538,
+    "stuff_sl":100.7699966431,
+    "stuff_col":100.4800033569,
+    "avg_velo":87.07,
+    "avg_ivb":0.26,
+    "avg_hb":0.35
+  },
+  {
+    "player_name":"Feltner, Ryan",
+    "pitch_type":"ST",
+    "pitches":81,
+    "stuff_sl":96.1399993896,
+    "stuff_col":96.5800018311,
+    "avg_velo":82.79,
+    "avg_ivb":0.05,
+    "avg_hb":0.91
+  },
+  {
+    "player_name":"Flexen, Chris",
+    "pitch_type":"CH",
+    "pitches":77,
+    "stuff_sl":94.6699981689,
+    "stuff_col":95.1699981689,
+    "avg_velo":81.22,
+    "avg_ivb":0.53,
+    "avg_hb":-0.66
+  },
+  {
+    "player_name":"Flexen, Chris",
+    "pitch_type":"FC",
+    "pitches":177,
+    "stuff_sl":98.4400024414,
+    "stuff_col":99.5599975586,
+    "avg_velo":87.69,
+    "avg_ivb":0.27,
+    "avg_hb":0.54
+  },
+  {
+    "player_name":"Flexen, Chris",
+    "pitch_type":"FF",
+    "pitches":260,
+    "stuff_sl":104.7699966431,
+    "stuff_col":106.1699981689,
+    "avg_velo":92.04,
+    "avg_ivb":1.14,
+    "avg_hb":0.05
+  },
+  {
+    "player_name":"Flexen, Chris",
+    "pitch_type":"SL",
+    "pitches":50,
+    "stuff_sl":91.4499969482,
+    "stuff_col":93.9599990845,
+    "avg_velo":80.59,
+    "avg_ivb":-0.48,
+    "avg_hb":0.2
+  },
+  {
+    "player_name":"Freeland, Kyle",
+    "pitch_type":"CH",
+    "pitches":611,
+    "stuff_sl":104.0599975586,
+    "stuff_col":106.3799972534,
+    "avg_velo":85.12,
+    "avg_ivb":0.55,
+    "avg_hb":0.81
+  },
+  {
+    "player_name":"Freeland, Kyle",
+    "pitch_type":"FC",
+    "pitches":1011,
+    "stuff_sl":99.8899993896,
+    "stuff_col":99.8000030518,
+    "avg_velo":85.69,
+    "avg_ivb":0.4,
+    "avg_hb":-0.11
+  },
+  {
+    "player_name":"Freeland, Kyle",
+    "pitch_type":"FF",
+    "pitches":980,
+    "stuff_sl":101.5999984741,
+    "stuff_col":102.2200012207,
+    "avg_velo":90.71,
+    "avg_ivb":1.02,
+    "avg_hb":0.48
+  },
+  {
+    "player_name":"Freeland, Kyle",
+    "pitch_type":"KC",
+    "pitches":861,
+    "stuff_sl":93.5500030518,
+    "stuff_col":93.0,
+    "avg_velo":81.38,
+    "avg_ivb":-0.48,
+    "avg_hb":-0.2
+  },
+  {
+    "player_name":"Freeland, Kyle",
+    "pitch_type":"SI",
+    "pitches":996,
+    "stuff_sl":103.1600036621,
+    "stuff_col":104.7399978638,
+    "avg_velo":90.05,
+    "avg_ivb":0.55,
+    "avg_hb":0.99
+  },
+  {
+    "player_name":"Gilbreath, Lucas",
+    "pitch_type":"FF",
+    "pitches":535,
+    "stuff_sl":102.0800018311,
+    "stuff_col":102.0699996948,
+    "avg_velo":93.29,
+    "avg_ivb":1.15,
+    "avg_hb":0.02
+  },
+  {
+    "player_name":"Gilbreath, Lucas",
+    "pitch_type":"SL",
+    "pitches":234,
+    "stuff_sl":96.4000015259,
+    "stuff_col":95.8399963379,
+    "avg_velo":81.98,
+    "avg_ivb":-0.21,
+    "avg_hb":-0.4
+  },
+  {
+    "player_name":"Givens, Mychal",
+    "pitch_type":"CH",
+    "pitches":137,
+    "stuff_sl":102.1999969482,
+    "stuff_col":101.5699996948,
+    "avg_velo":82.54,
+    "avg_ivb":-0.13,
+    "avg_hb":-0.62
+  },
+  {
+    "player_name":"Givens, Mychal",
+    "pitch_type":"FF",
+    "pitches":183,
+    "stuff_sl":100.2600021362,
+    "stuff_col":100.6200027466,
+    "avg_velo":94.26,
+    "avg_ivb":0.9,
+    "avg_hb":-0.53
+  },
+  {
+    "player_name":"Givens, Mychal",
+    "pitch_type":"SL",
+    "pitches":46,
+    "stuff_sl":100.0400009155,
+    "stuff_col":100.5100021362,
+    "avg_velo":86.5,
+    "avg_ivb":0.28,
+    "avg_hb":0.43
+  },
+  {
+    "player_name":"Gomber, Austin",
+    "pitch_type":"CH",
+    "pitches":844,
+    "stuff_sl":99.1100006104,
+    "stuff_col":101.4599990845,
+    "avg_velo":81.87,
+    "avg_ivb":0.79,
+    "avg_hb":0.72
+  },
+  {
+    "player_name":"Gomber, Austin",
+    "pitch_type":"FF",
+    "pitches":1703,
+    "stuff_sl":105.6100006104,
+    "stuff_col":108.5,
+    "avg_velo":90.74,
+    "avg_ivb":1.31,
+    "avg_hb":0.52
+  },
+  {
+    "player_name":"Gomber, Austin",
+    "pitch_type":"KC",
+    "pitches":750,
+    "stuff_sl":94.4700012207,
+    "stuff_col":95.1699981689,
+    "avg_velo":76.81,
+    "avg_ivb":-0.91,
+    "avg_hb":-0.5
+  },
+  {
+    "player_name":"Gomber, Austin",
+    "pitch_type":"SL",
+    "pitches":879,
+    "stuff_sl":96.8000030518,
+    "stuff_col":97.5599975586,
+    "avg_velo":84.42,
+    "avg_ivb":0.28,
+    "avg_hb":-0.39
+  },
+  {
+    "player_name":"Gonz\u00e1lez, Chi Chi",
+    "pitch_type":"CH",
+    "pitches":69,
+    "stuff_sl":98.4000015259,
+    "stuff_col":97.9899978638,
+    "avg_velo":84.23,
+    "avg_ivb":0.33,
+    "avg_hb":-0.86
+  },
+  {
+    "player_name":"Gonz\u00e1lez, Chi Chi",
+    "pitch_type":"CU",
+    "pitches":59,
+    "stuff_sl":95.8099975586,
+    "stuff_col":94.5699996948,
+    "avg_velo":81.03,
+    "avg_ivb":-0.21,
+    "avg_hb":0.37
+  },
+  {
+    "player_name":"Gonz\u00e1lez, Chi Chi",
+    "pitch_type":"FC",
+    "pitches":96,
+    "stuff_sl":99.6399993896,
+    "stuff_col":99.8499984741,
+    "avg_velo":87.89,
+    "avg_ivb":0.33,
+    "avg_hb":0.2
+  },
+  {
+    "player_name":"Gonz\u00e1lez, Chi Chi",
+    "pitch_type":"FF",
+    "pitches":383,
+    "stuff_sl":101.6200027466,
+    "stuff_col":101.5800018311,
+    "avg_velo":91.96,
+    "avg_ivb":0.8,
+    "avg_hb":-0.17
+  },
+  {
+    "player_name":"Gonz\u00e1lez, Chi Chi",
+    "pitch_type":"SI",
+    "pitches":40,
+    "stuff_sl":102.8000030518,
+    "stuff_col":103.1800003052,
+    "avg_velo":90.61,
+    "avg_ivb":0.55,
+    "avg_hb":-0.86
+  },
+  {
+    "player_name":"Gonz\u00e1lez, Chi Chi",
+    "pitch_type":"SL",
+    "pitches":174,
+    "stuff_sl":100.4300003052,
+    "stuff_col":99.9899978638,
+    "avg_velo":85.68,
+    "avg_ivb":0.2,
+    "avg_hb":0.27
+  },
+  {
+    "player_name":"Goudeau, Ashton",
+    "pitch_type":"CH",
+    "pitches":69,
+    "stuff_sl":99.4300003052,
+    "stuff_col":99.5,
+    "avg_velo":84.84,
+    "avg_ivb":0.57,
+    "avg_hb":-0.82
+  },
+  {
+    "player_name":"Goudeau, Ashton",
+    "pitch_type":"CU",
+    "pitches":115,
+    "stuff_sl":99.0199966431,
+    "stuff_col":102.8099975586,
+    "avg_velo":77.05,
+    "avg_ivb":-0.84,
+    "avg_hb":0.65
+  },
+  {
+    "player_name":"Goudeau, Ashton",
+    "pitch_type":"FF",
+    "pitches":190,
+    "stuff_sl":106.8499984741,
+    "stuff_col":106.9700012207,
+    "avg_velo":92.5,
+    "avg_ivb":1.2,
+    "avg_hb":-0.46
+  },
+  {
+    "player_name":"Gray, Jon",
+    "pitch_type":"CH",
+    "pitches":113,
+    "stuff_sl":101.0699996948,
+    "stuff_col":101.7600021362,
+    "avg_velo":87.49,
+    "avg_ivb":0.51,
+    "avg_hb":-0.84
+  },
+  {
+    "player_name":"Gray, Jon",
+    "pitch_type":"CU",
+    "pitches":82,
+    "stuff_sl":100.5199966431,
+    "stuff_col":103.9000015259,
+    "avg_velo":76.04,
+    "avg_ivb":-0.7,
+    "avg_hb":0.85
+  },
+  {
+    "player_name":"Gray, Jon",
+    "pitch_type":"FF",
+    "pitches":636,
+    "stuff_sl":103.0199966431,
+    "stuff_col":102.1999969482,
+    "avg_velo":94.58,
+    "avg_ivb":0.82,
+    "avg_hb":-0.92
+  },
+  {
+    "player_name":"Gray, Jon",
+    "pitch_type":"SL",
+    "pitches":529,
+    "stuff_sl":96.5800018311,
+    "stuff_col":96.2300033569,
+    "avg_velo":86.61,
+    "avg_ivb":0.23,
+    "avg_hb":0.22
+  },
+  {
+    "player_name":"Hudson, Dakota",
+    "pitch_type":"CH",
+    "pitches":81,
+    "stuff_sl":101.8700027466,
+    "stuff_col":102.3499984741,
+    "avg_velo":83.59,
+    "avg_ivb":0.22,
+    "avg_hb":-0.89
+  },
+  {
+    "player_name":"Hudson, Dakota",
+    "pitch_type":"CU",
+    "pitches":148,
+    "stuff_sl":95.9300003052,
+    "stuff_col":96.3099975586,
+    "avg_velo":80.27,
+    "avg_ivb":-0.46,
+    "avg_hb":0.86
+  },
+  {
+    "player_name":"Hudson, Dakota",
+    "pitch_type":"FF",
+    "pitches":136,
+    "stuff_sl":103.5299987793,
+    "stuff_col":104.1100006104,
+    "avg_velo":89.77,
+    "avg_ivb":0.55,
+    "avg_hb":-0.41
+  },
+  {
+    "player_name":"Hudson, Dakota",
+    "pitch_type":"SI",
+    "pitches":234,
+    "stuff_sl":104.3499984741,
+    "stuff_col":104.9100036621,
+    "avg_velo":90.12,
+    "avg_ivb":0.33,
+    "avg_hb":-0.88
+  },
+  {
+    "player_name":"Hudson, Dakota",
+    "pitch_type":"SL",
+    "pitches":205,
+    "stuff_sl":99.6200027466,
+    "stuff_col":100.6800003052,
+    "avg_velo":84.07,
+    "avg_ivb":0.08,
+    "avg_hb":0.04
+  },
+  {
+    "player_name":"Kauffmann, Karl",
+    "pitch_type":"CH",
+    "pitches":66,
+    "stuff_sl":98.5,
+    "stuff_col":98.8199996948,
+    "avg_velo":85.03,
+    "avg_ivb":0.14,
+    "avg_hb":-0.73
+  },
+  {
+    "player_name":"Kauffmann, Karl",
+    "pitch_type":"FC",
+    "pitches":47,
+    "stuff_sl":100.5599975586,
+    "stuff_col":101.0,
+    "avg_velo":88.13,
+    "avg_ivb":0.74,
+    "avg_hb":0.01
+  },
+  {
+    "player_name":"Kauffmann, Karl",
+    "pitch_type":"FF",
+    "pitches":64,
+    "stuff_sl":105.2399978638,
+    "stuff_col":105.0400009155,
+    "avg_velo":90.38,
+    "avg_ivb":1.02,
+    "avg_hb":-0.65
+  },
+  {
+    "player_name":"Kauffmann, Karl",
+    "pitch_type":"SI",
+    "pitches":110,
+    "stuff_sl":104.8899993896,
+    "stuff_col":104.7200012207,
+    "avg_velo":89.97,
+    "avg_ivb":0.63,
+    "avg_hb":-0.99
+  },
+  {
+    "player_name":"Kauffmann, Karl",
+    "pitch_type":"SL",
+    "pitches":53,
+    "stuff_sl":96.7600021362,
+    "stuff_col":96.5400009155,
+    "avg_velo":83.59,
+    "avg_ivb":0.12,
+    "avg_hb":0.38
+  },
+  {
+    "player_name":"Kuhl, Chad",
+    "pitch_type":"CH",
+    "pitches":83,
+    "stuff_sl":100.5899963379,
+    "stuff_col":101.0599975586,
+    "avg_velo":87.27,
+    "avg_ivb":0.42,
+    "avg_hb":-0.93
+  },
+  {
+    "player_name":"Kuhl, Chad",
+    "pitch_type":"FF",
+    "pitches":102,
+    "stuff_sl":103.1200027466,
+    "stuff_col":102.8600006104,
+    "avg_velo":93.01,
+    "avg_ivb":1.03,
+    "avg_hb":-0.74
+  },
+  {
+    "player_name":"Kuhl, Chad",
+    "pitch_type":"KC",
+    "pitches":114,
+    "stuff_sl":97.8799972534,
+    "stuff_col":100.9800033569,
+    "avg_velo":79.13,
+    "avg_ivb":-0.81,
+    "avg_hb":0.87
+  },
+  {
+    "player_name":"Kuhl, Chad",
+    "pitch_type":"SI",
+    "pitches":438,
+    "stuff_sl":106.2300033569,
+    "stuff_col":105.6200027466,
+    "avg_velo":92.57,
+    "avg_ivb":0.72,
+    "avg_hb":-1.03
+  },
+  {
+    "player_name":"Kuhl, Chad",
+    "pitch_type":"SL",
+    "pitches":481,
+    "stuff_sl":97.2399978638,
+    "stuff_col":96.6999969482,
+    "avg_velo":86.5,
+    "avg_ivb":0.13,
+    "avg_hb":0.25
+  },
+  {
+    "player_name":"Lambert, Peter",
+    "pitch_type":"CH",
+    "pitches":269,
+    "stuff_sl":97.9100036621,
+    "stuff_col":97.3799972534,
+    "avg_velo":86.27,
+    "avg_ivb":0.42,
+    "avg_hb":-0.81
+  },
+  {
+    "player_name":"Lambert, Peter",
+    "pitch_type":"CU",
+    "pitches":53,
+    "stuff_sl":97.7200012207,
+    "stuff_col":100.4899978638,
+    "avg_velo":77.09,
+    "avg_ivb":-1.15,
+    "avg_hb":0.46
+  },
+  {
+    "player_name":"Lambert, Peter",
+    "pitch_type":"FF",
+    "pitches":482,
+    "stuff_sl":106.5299987793,
+    "stuff_col":105.8099975586,
+    "avg_velo":93.63,
+    "avg_ivb":1.2,
+    "avg_hb":-0.55
+  },
+  {
+    "player_name":"Lambert, Peter",
+    "pitch_type":"SL",
+    "pitches":222,
+    "stuff_sl":99.75,
+    "stuff_col":99.4599990845,
+    "avg_velo":87.53,
+    "avg_ivb":0.24,
+    "avg_hb":0.31
+  },
+  {
+    "player_name":"Lambert, Peter",
+    "pitch_type":"ST",
+    "pitches":57,
+    "stuff_sl":96.7699966431,
+    "stuff_col":96.9700012207,
+    "avg_velo":82.52,
+    "avg_ivb":-0.13,
+    "avg_hb":1.03
+  },
+  {
+    "player_name":"Lambert, Peter",
+    "pitch_type":"SV",
+    "pitches":41,
+    "stuff_sl":94.0199966431,
+    "stuff_col":97.3099975586,
+    "avg_velo":81.24,
+    "avg_ivb":-0.61,
+    "avg_hb":0.98
+  },
+  {
+    "player_name":"Lamet, Dinelson",
+    "pitch_type":"FF",
+    "pitches":209,
+    "stuff_sl":104.3700027466,
+    "stuff_col":104.0100021362,
+    "avg_velo":95.03,
+    "avg_ivb":0.96,
+    "avg_hb":-0.36
+  },
+  {
+    "player_name":"Lamet, Dinelson",
+    "pitch_type":"SI",
+    "pitches":89,
+    "stuff_sl":105.2799987793,
+    "stuff_col":104.0299987793,
+    "avg_velo":94.8,
+    "avg_ivb":0.92,
+    "avg_hb":-0.91
+  },
+  {
+    "player_name":"Lamet, Dinelson",
+    "pitch_type":"SL",
+    "pitches":298,
+    "stuff_sl":96.1100006104,
+    "stuff_col":95.9599990845,
+    "avg_velo":85.83,
+    "avg_ivb":0.17,
+    "avg_hb":0.12
+  },
+  {
+    "player_name":"Lawrence, Justin",
+    "pitch_type":"SI",
+    "pitches":941,
+    "stuff_sl":103.1100006104,
+    "stuff_col":105.6900024414,
+    "avg_velo":95.36,
+    "avg_ivb":0.01,
+    "avg_hb":-1.12
+  },
+  {
+    "player_name":"Lawrence, Justin",
+    "pitch_type":"ST",
+    "pitches":793,
+    "stuff_sl":95.0199966431,
+    "stuff_col":95.0400009155,
+    "avg_velo":83.12,
+    "avg_ivb":0.23,
+    "avg_hb":1.13
+  },
+  {
+    "player_name":"Quantrill, Cal",
+    "pitch_type":"CU",
+    "pitches":137,
+    "stuff_sl":99.9400024414,
+    "stuff_col":101.2699966431,
+    "avg_velo":78.98,
+    "avg_ivb":-0.3,
+    "avg_hb":0.21
+  },
+  {
+    "player_name":"Quantrill, Cal",
+    "pitch_type":"FC",
+    "pitches":161,
+    "stuff_sl":100.8199996948,
+    "stuff_col":100.9499969482,
+    "avg_velo":87.82,
+    "avg_ivb":0.34,
+    "avg_hb":0.27
+  },
+  {
+    "player_name":"Quantrill, Cal",
+    "pitch_type":"FF",
+    "pitches":256,
+    "stuff_sl":105.1500015259,
+    "stuff_col":104.4599990845,
+    "avg_velo":94.05,
+    "avg_ivb":1.11,
+    "avg_hb":-0.69
+  },
+  {
+    "player_name":"Quantrill, Cal",
+    "pitch_type":"FS",
+    "pitches":441,
+    "stuff_sl":96.7699966431,
+    "stuff_col":96.4899978638,
+    "avg_velo":86.69,
+    "avg_ivb":0.36,
+    "avg_hb":-0.63
+  },
+  {
+    "player_name":"Quantrill, Cal",
+    "pitch_type":"SI",
+    "pitches":258,
+    "stuff_sl":105.0699996948,
+    "stuff_col":104.5999984741,
+    "avg_velo":93.61,
+    "avg_ivb":0.96,
+    "avg_hb":-0.89
+  },
+  {
+    "player_name":"Seabold, Connor",
+    "pitch_type":"CH",
+    "pitches":115,
+    "stuff_sl":96.6200027466,
+    "stuff_col":96.5100021362,
+    "avg_velo":80.68,
+    "avg_ivb":0.2,
+    "avg_hb":-0.96
+  },
+  {
+    "player_name":"Seabold, Connor",
+    "pitch_type":"FF",
+    "pitches":456,
+    "stuff_sl":104.1999969482,
+    "stuff_col":103.8600006104,
+    "avg_velo":92.46,
+    "avg_ivb":1.02,
+    "avg_hb":-0.64
+  },
+  {
+    "player_name":"Seabold, Connor",
+    "pitch_type":"SL",
+    "pitches":276,
+    "stuff_sl":98.6399993896,
+    "stuff_col":97.6200027466,
+    "avg_velo":85.13,
+    "avg_ivb":0.21,
+    "avg_hb":0.2
+  },
+  {
+    "player_name":"Senzatela, Antonio",
+    "pitch_type":"CH",
+    "pitches":134,
+    "stuff_sl":101.8799972534,
+    "stuff_col":102.6200027466,
+    "avg_velo":86.21,
+    "avg_ivb":0.6,
+    "avg_hb":-0.55
+  },
+  {
+    "player_name":"Senzatela, Antonio",
+    "pitch_type":"CU",
+    "pitches":139,
+    "stuff_sl":96.3300018311,
+    "stuff_col":95.5800018311,
+    "avg_velo":77.82,
+    "avg_ivb":-0.5,
+    "avg_hb":0.47
+  },
+  {
+    "player_name":"Senzatela, Antonio",
+    "pitch_type":"FF",
+    "pitches":1299,
+    "stuff_sl":102.4700012207,
+    "stuff_col":102.1800003052,
+    "avg_velo":94.34,
+    "avg_ivb":0.81,
+    "avg_hb":-0.31
+  },
+  {
+    "player_name":"Senzatela, Antonio",
+    "pitch_type":"SI",
+    "pitches":36,
+    "stuff_sl":105.3600006104,
+    "stuff_col":104.7099990845,
+    "avg_velo":92.29,
+    "avg_ivb":0.85,
+    "avg_hb":-0.8
+  },
+  {
+    "player_name":"Senzatela, Antonio",
+    "pitch_type":"SL",
+    "pitches":666,
+    "stuff_sl":97.4800033569,
+    "stuff_col":96.7799987793,
+    "avg_velo":86.0,
+    "avg_ivb":0.2,
+    "avg_hb":0.38
+  },
+  {
+    "player_name":"Ure\u00f1a, Jos\u00e9",
+    "pitch_type":"CH",
+    "pitches":175,
+    "stuff_sl":101.8600006104,
+    "stuff_col":102.7799987793,
+    "avg_velo":89.63,
+    "avg_ivb":0.66,
+    "avg_hb":-0.82
+  },
+  {
+    "player_name":"Ure\u00f1a, Jos\u00e9",
+    "pitch_type":"FF",
+    "pitches":119,
+    "stuff_sl":104.8600006104,
+    "stuff_col":104.1999969482,
+    "avg_velo":95.77,
+    "avg_ivb":1.02,
+    "avg_hb":-0.78
+  },
+  {
+    "player_name":"Ure\u00f1a, Jos\u00e9",
+    "pitch_type":"SI",
+    "pitches":439,
+    "stuff_sl":103.3099975586,
+    "stuff_col":101.7799987793,
+    "avg_velo":95.41,
+    "avg_ivb":0.58,
+    "avg_hb":-1.03
+  },
+  {
+    "player_name":"Ure\u00f1a, Jos\u00e9",
+    "pitch_type":"SL",
+    "pitches":268,
+    "stuff_sl":94.9599990845,
+    "stuff_col":96.0199966431,
+    "avg_velo":86.75,
+    "avg_ivb":0.45,
+    "avg_hb":0.06
+  }
+]
