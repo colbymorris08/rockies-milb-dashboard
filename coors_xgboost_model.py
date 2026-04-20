@@ -115,8 +115,6 @@ TJ_FEATURES = [
 FG_FEATURES = [
     "release_pos_z",        # vertical release point
     "release_pos_x",        # horizontal release point
-    "plate_x",              # horizontal pitch location
-    "plate_z",              # vertical pitch location
     "stand_enc",            # batter handedness
     "pitch_type_enc",       # pitch type categorical
 ]

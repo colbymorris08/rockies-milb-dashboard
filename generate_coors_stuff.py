@@ -10,9 +10,10 @@ import pandas as pd
 import pybaseball as pb
 from xgboost import XGBRegressor
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import root_mean_squared_error
 from sklearn.preprocessing import LabelEncoder
 import json, os, warnings
+from collections import defaultdict
 warnings.filterwarnings("ignore")
 
 pb.cache.enable()
@@ -67,7 +68,7 @@ df["pitch_type_enc"] = le_pitch.fit_transform(df["pitch_type"].fillna("XX"))
 FEATURES = [
     "release_speed","pfx_z","pfx_x_magnus","pfx_x_gyro",
     "release_spin_rate","log_ext","delta_velo","delta_ivb","delta_hb",
-    "release_pos_z","release_pos_x","plate_x","plate_z",
+    "release_pos_z","release_pos_x",
     "balls","strikes","stand_enc","pitch_type_enc",
     "vaa","haa","spin_axis",
 ]
@@ -121,7 +122,7 @@ def fit_model(X, y, label):
     )
     m.fit(Xtr, ytr, eval_set=[(Xte, yte)], verbose=False)
     r2  = m.score(Xte, yte)
-    rmse = mean_squared_error(yte, m.predict(Xte), squared=False)
+    rmse = root_mean_squared_error(yte, m.predict(Xte))
     print(f"  {label}: Test R²={r2:.4f}  RMSE={rmse:.4f}  trees={m.best_iteration}")
     return m
 
@@ -151,36 +152,53 @@ combined_scores["stuff_col"] = score_adj["stuff_col"].values
 combined_scores["xRV_col"]   = score_adj["xRV_col"].values
 combined_scores["stuff_delta"] = combined_scores["stuff_col"] - combined_scores["stuff_sl"]
 
+# At Coors (home_team == COL), Top half = away batting = Rockies pitching.
+if "inning_topbot" in coors.columns:
+    _ibt = coors.loc[score_base.index, "inning_topbot"].astype(str).str.upper()
+    combined_scores["is_rockies_pitch"] = (_ibt == "TOP").values
+else:
+    combined_scores["is_rockies_pitch"] = pd.Series(False, index=combined_scores.index)
+
+MIN_PITCHES_ALL = 450   # ~30 IP at ~15 pitches/IP
+MIN_PITCHES_ROCKIES = 150  # ~10 IP
+
 # ── 7. Pitcher-level aggregation ───────────────────────────────────────────
-pitcher_agg = (
-    combined_scores.groupby("player_name")
-    .agg(
-        pitches=("stuff_sl","count"),
-        stuff_sl=("stuff_sl","mean"),
-        stuff_col=("stuff_col","mean"),
-        stuff_delta=("stuff_delta","mean"),
-        avg_velo=("release_speed","mean"),
-        avg_ivb=("pfx_z","mean"),
-        avg_hb=("pfx_x","mean"),
-        avg_spin=("release_spin_rate","mean"),
-        avg_ext=("release_extension","mean"),
-        avg_vaa=("vaa","mean"),
+def aggregate_pitchers(sub: pd.DataFrame, min_pitches: int) -> pd.DataFrame:
+    return (
+        sub.groupby("player_name")
+        .agg(
+            pitches=("stuff_sl", "count"),
+            stuff_sl=("stuff_sl", "mean"),
+            stuff_col=("stuff_col", "mean"),
+            stuff_delta=("stuff_delta", "mean"),
+            avg_velo=("release_speed", "mean"),
+            avg_ivb=("pfx_z", "mean"),
+            avg_hb=("pfx_x", "mean"),
+            avg_spin=("release_spin_rate", "mean"),
+            avg_ext=("release_extension", "mean"),
+            avg_vaa=("vaa", "mean"),
+        )
+        .reset_index()
+        .query(f"pitches >= {min_pitches}")
+        .round(2)
     )
-    .reset_index()
-    .query("pitches >= 100")
-    .round(2)
+
+
+pitcher_agg = aggregate_pitchers(combined_scores, MIN_PITCHES_ALL)
+pitcher_agg_rockies = aggregate_pitchers(
+    combined_scores[combined_scores["is_rockies_pitch"]], MIN_PITCHES_ROCKIES
 )
 
 # merge FanGraphs success stats if available
 if have_fg:
-    pitcher_agg = pitcher_agg.merge(
-        fg[["player_name","ERA","FIP","K_pct","BB_pct","WHIP","WAR","xFIP","success_score"]],
-        on="player_name", how="left"
-    ).round(3)
+    fg_cols = ["player_name", "ERA", "FIP", "K_pct", "BB_pct", "WHIP", "WAR", "xFIP", "success_score"]
+    pitcher_agg = pitcher_agg.merge(fg[fg_cols], on="player_name", how="left").round(3)
+    pitcher_agg_rockies = pitcher_agg_rockies.merge(fg[fg_cols], on="player_name", how="left").round(3)
 
 # composite Coors success score (stuff_col + success_score weighted equally)
 if "success_score" in pitcher_agg.columns:
-    stuff_z   = (pitcher_agg["stuff_col"] - pitcher_agg["stuff_col"].mean()) / pitcher_agg["stuff_col"].std()
+    _std_col = pitcher_agg["stuff_col"].std() or 1.0
+    stuff_z   = (pitcher_agg["stuff_col"] - pitcher_agg["stuff_col"].mean()) / _std_col
     success_z = pitcher_agg["success_score"].fillna(0)
     pitcher_agg["coors_composite"] = ((stuff_z + success_z) / 2 * 10 + 100).round(1)
 else:
@@ -189,26 +207,57 @@ else:
 pitcher_agg = pitcher_agg.sort_values("coors_composite", ascending=False)
 top20 = pitcher_agg.head(20).copy()
 
-print(f"\nTop 20 Coors pitchers:")
-print(top20[["player_name","pitches","stuff_sl","stuff_col","stuff_delta",
-             "avg_velo","avg_ivb","ERA","coors_composite"]].to_string(index=False))
+if "success_score" in pitcher_agg_rockies.columns:
+    stuff_z_r = (pitcher_agg_rockies["stuff_col"] - pitcher_agg_rockies["stuff_col"].mean()) / (
+        pitcher_agg_rockies["stuff_col"].std() or 1.0
+    )
+    success_z_r = pitcher_agg_rockies["success_score"].fillna(0)
+    pitcher_agg_rockies["coors_composite"] = ((stuff_z_r + success_z_r) / 2 * 10 + 100).round(1)
+else:
+    pitcher_agg_rockies["coors_composite"] = pitcher_agg_rockies["stuff_col"]
+
+pitcher_agg_rockies = pitcher_agg_rockies.sort_values("coors_composite", ascending=False)
+top20_rockies = pitcher_agg_rockies.head(20).copy()
+
+print(f"\nTop 20 Coors pitchers (all, min {MIN_PITCHES_ALL} pitches):")
+_cols = ["player_name", "pitches", "stuff_sl", "stuff_col", "stuff_delta", "avg_velo", "avg_ivb", "coors_composite"]
+if "ERA" in top20.columns:
+    _cols.insert(-1, "ERA")
+print(top20[[c for c in _cols if c in top20.columns]].to_string(index=False))
+
+print(f"\nTop Rockies pitchers at Coors (min {MIN_PITCHES_ROCKIES} pitches):")
+print(top20_rockies[[c for c in _cols if c in top20_rockies.columns]].to_string(index=False))
 
 # ── 8. Pitch-type breakdown per top pitcher ────────────────────────────────
+_breakout_names = set(top20["player_name"]) | set(top20_rockies["player_name"])
 pitch_breakdown = (
-    combined_scores[combined_scores["player_name"].isin(top20["player_name"])]
-    .groupby(["player_name","pitch_type"])
+    combined_scores[combined_scores["player_name"].isin(_breakout_names)]
+    .groupby(["player_name", "pitch_type"])
     .agg(
-        pitches=("stuff_sl","count"),
-        stuff_sl=("stuff_sl","mean"),
-        stuff_col=("stuff_col","mean"),
-        avg_velo=("release_speed","mean"),
-        avg_ivb=("pfx_z","mean"),
-        avg_hb=("pfx_x","mean"),
+        pitches=("stuff_sl", "count"),
+        stuff_sl=("stuff_sl", "mean"),
+        stuff_col=("stuff_col", "mean"),
+        avg_velo=("release_speed", "mean"),
+        avg_ivb=("pfx_z", "mean"),
+        avg_hb=("pfx_x", "mean"),
     )
     .reset_index()
     .query("pitches >= 30")
     .round(2)
 )
+
+_pbt_by_player = defaultdict(list)
+for row in pitch_breakdown.itertuples(index=False):
+    _pbt_by_player[str(row.player_name)].append(
+        {
+            "pitch_type": str(row.pitch_type),
+            "stuff_sl": float(row.stuff_sl),
+            "stuff_col": float(row.stuff_col),
+        }
+    )
+
+top20["pitches_by_type"] = top20["player_name"].map(lambda n: _pbt_by_player.get(str(n), []))
+top20_rockies["pitches_by_type"] = top20_rockies["player_name"].map(lambda n: _pbt_by_player.get(str(n), []))
 
 # ── 9. Feature importance for both models ─────────────────────────────────
 def get_importance(model, label):
@@ -228,7 +277,10 @@ meta = {
     "models": ["tjStuff+ v2", "FanGraphs Stuff+/PitchingBot", "aStuff+ v2"],
     "coors_alpha": ALPHA,
     "park_intercept": PARK_INTERCEPT,
+    "min_pitches_all_pitchers": MIN_PITCHES_ALL,
+    "min_pitches_rockies_at_coors": MIN_PITCHES_ROCKIES,
     "top20_names": top20["player_name"].tolist(),
+    "rockies_top20_names": top20_rockies["player_name"].tolist(),
     "top20_key_findings": {
         "avg_stuff_delta": round(top20["stuff_delta"].mean(), 2),
         "avg_vaa": round(top20["avg_vaa"].mean(), 2),
@@ -241,6 +293,7 @@ meta = {
 os.makedirs("data", exist_ok=True)
 
 top20.to_json("data/coors_top20.json", orient="records", indent=2)
+top20_rockies.to_json("data/coors_pitchers_rockies.json", orient="records", indent=2)
 pitch_breakdown.to_json("data/coors_pitch_breakdown.json", orient="records", indent=2)
 
 with open("data/coors_importance_sl.json",  "w") as f: json.dump(importance_sl,  f, indent=2)
@@ -253,6 +306,7 @@ sample.to_json("data/coors_pitch_sample.json", orient="records", indent=2, date_
 
 print("\nExported to data/:")
 print("  coors_top20.json")
+print("  coors_pitchers_rockies.json")
 print("  coors_pitch_breakdown.json")
 print("  coors_importance_sl.json")
 print("  coors_importance_col.json")

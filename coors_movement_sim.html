@@ -213,7 +213,7 @@ tbody td{padding:6px 7px;white-space:nowrap;}
     </div>
   </div>
   <div style="background:#16161f;border:1px solid #252535;border-radius:6px;padding:14px">
-    <div style="font-size:9px;color:#64748b;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px">BEST PITCH AT COORS — BY PITCH TYPE</div>
+    <div style="font-size:9px;color:#64748b;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px">BY PITCH TYPE — SEA LEVEL vs COORS (STUFF+)</div>
     <div id="stuffBars" style="display:flex;flex-direction:column;gap:8px">
       <div style="font-size:11px;color:#475569">Select a pitcher above</div>
     </div>
@@ -688,9 +688,9 @@ function renderEff() {
 }
 
 
-/* ── STUFF+ DATA LAYER ──────────────────────────────────────── */
+/* ── STUFF+ DATA LAYER (from generate_coors_stuff.py pitch breakdown) ── */
 const PITCH_COLORS_STUFF = {FF:'#8b5cf6',SI:'#ef4444',SL:'#14b8a6',ST:'#14b8a6',CH:'#f59e0b',CU:'#3b82f6',FC:'#22c55e',FS:'#f97316',KC:'#ec4899',XX:'#64748b'};
-let STUFF_DATA = {};  // keyed by "First Last" display name
+let STUFF_BY_PITCH = {};  // "First Last" -> rows from data/coors_pitch_breakdown.json
 
 function lastFirstToDisplay(s) {
   // "Márquez, Germán" → "Germán Márquez"
@@ -698,55 +698,65 @@ function lastFirstToDisplay(s) {
   return i > -1 ? s.slice(i+2) + ' ' + s.slice(0, i) : s;
 }
 
-fetch('data/coors_xgboost_pitchers.json')
+fetch('data/coors_pitch_breakdown.json')
   .then(r => r.json())
   .then(rows => {
-    rows.forEach(r => {
+    (rows || []).forEach(r => {
       const key = lastFirstToDisplay(r.player_name);
-      if (!STUFF_DATA[key]) STUFF_DATA[key] = [];
-      STUFF_DATA[key].push(r);
+      if (!STUFF_BY_PITCH[key]) STUFF_BY_PITCH[key] = [];
+      STUFF_BY_PITCH[key].push(r);
     });
   })
-  .catch(() => {});  // silently fail if JSON not present yet
+  .catch(() => {});
 
 function updateStuffSection(displayName) {
-  const pitches = STUFF_DATA[displayName];
+  const rows = STUFF_BY_PITCH[displayName];
   const sec = document.getElementById('stuffSection');
-  if (!pitches || !pitches.length) { sec.style.display = 'none'; return; }
+  if (!rows || !rows.length) { sec.style.display = 'none'; return; }
   sec.style.display = 'block';
 
-  // aggregate across pitch types for overall scores
-  const best = [...pitches].sort((a,b)=>(b.xStuff_COL||0)-(a.xStuff_COL||0));
-  const totalPitches = pitches.reduce((s,p)=>s+(p.pitches||0),0);
-  const wtStuffCol = pitches.reduce((s,p)=>s+(p.xStuff_COL||0)*(p.pitches||0),0)/totalPitches;
-  const wtStuffSl  = pitches.reduce((s,p)=>s+(p.avg_velo||0)*(p.pitches||0),0)/totalPitches; // placeholder — SL not in this JSON
-  const delta = pitches.reduce((s,p)=>s+(p.xStuff_COL-100)*(p.pitches||0),0)/totalPitches;
+  const totalP = rows.reduce((s, r) => s + (Number(r.pitches) || 0), 0) || 1;
+  const wtSl = rows.reduce((s, r) => s + (Number(r.stuff_sl) || 0) * (Number(r.pitches) || 0), 0) / totalP;
+  const wtCol = rows.reduce((s, r) => s + (Number(r.stuff_col) || 0) * (Number(r.pitches) || 0), 0) / totalP;
+  const delta = wtCol - wtSl;
 
-  document.getElementById('s-col').textContent = wtStuffCol.toFixed(1);
-  document.getElementById('s-sl').textContent = (wtStuffCol - 4.2).toFixed(1); // approx sea-level
+  document.getElementById('s-col').textContent = wtCol.toFixed(1);
+  document.getElementById('s-sl').textContent = wtSl.toFixed(1);
   const dEl = document.getElementById('s-delta');
   dEl.textContent = (delta >= 0 ? '+' : '') + delta.toFixed(1);
   dEl.style.color = delta > 2 ? '#22c55e' : delta < -2 ? '#ef4444' : '#94a3b8';
-  document.getElementById('s-pitches').textContent = totalPitches.toLocaleString();
+  document.getElementById('s-pitches').textContent = Math.round(totalP).toLocaleString();
 
-  // pitch bars
   const barsEl = document.getElementById('stuffBars');
-  const maxStuff = Math.max(...pitches.map(p=>p.xStuff_COL||100));
+  const best = [...rows].sort((a, b) => (Number(b.stuff_col) || 0) - (Number(a.stuff_col) || 0));
   barsEl.innerHTML = best.map(p => {
-    const pct = Math.max(0, Math.min(100, ((p.xStuff_COL||100)-80)/40*100));
-    const col = PITCH_COLORS_STUFF[p.pitch_type] || '#64748b';
-    const d = ((p.xStuff_COL||100)-100).toFixed(1);
-    const dCls = d > 0 ? '#22c55e' : '#ef4444';
-    return \`<div style="display:flex;align-items:center;gap:10px;font-size:11px">
-      <span style="font-family:'Courier New',monospace;font-size:9px;color:#64748b;width:24px">\${p.pitch_type}</span>
-      <div style="flex:1;height:5px;background:#252535;border-radius:3px;overflow:hidden">
-        <div style="width:\${pct}%;height:100%;background:\${col};border-radius:3px"></div>
+    const sl = Number(p.stuff_sl) || 0;
+    const col = Number(p.stuff_col) || 0;
+    const pctSL = Math.max(0, Math.min(100, (sl - 80) / 40 * 100));
+    const pctCOL = Math.max(0, Math.min(100, (col - 80) / 40 * 100));
+    const hue = PITCH_COLORS_STUFF[p.pitch_type] || '#64748b';
+    const d = (col - sl).toFixed(1);
+    const dCls = col > sl ? '#22c55e' : col < sl ? '#ef4444' : '#94a3b8';
+    return `<div style="display:flex;align-items:center;gap:8px;font-size:11px;flex-wrap:wrap;width:100%">
+      <span style="font-family:'Courier New',monospace;font-size:9px;color:#64748b;width:26px">${p.pitch_type}</span>
+      <div style="flex:1;min-width:120px;display:flex;flex-direction:column;gap:3px">
+        <div style="display:flex;align-items:center;gap:4px"><span style="font-size:8px;color:#8b5cf6;width:22px">SL</span>
+          <div style="flex:1;height:4px;background:#252535;border-radius:2px;overflow:hidden">
+            <div style="width:${pctSL}%;height:100%;background:#8b5cf6;border-radius:2px;opacity:.85"></div>
+          </div>
+          <span style="font-family:'Courier New',monospace;font-size:10px;color:#e2e8f0;min-width:34px">${sl.toFixed(1)}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:4px"><span style="font-size:8px;color:#14b8a6;width:22px">COL</span>
+          <div style="flex:1;height:4px;background:#252535;border-radius:2px;overflow:hidden">
+            <div style="width:${pctCOL}%;height:100%;background:${hue};border-radius:2px"></div>
+          </div>
+          <span style="font-family:'Courier New',monospace;font-size:10px;color:#e2e8f0;min-width:34px">${col.toFixed(1)}</span>
+        </div>
       </div>
-      <span style="font-family:'Courier New',monospace;color:#f5f5f0;min-width:36px">\${(p.xStuff_COL||0).toFixed(1)}</span>
-      <span style="font-family:'Courier New',monospace;color:\${dCls};min-width:36px">\${d>0?'+':''}\${d}</span>
-      <span style="color:#64748b;min-width:60px">\${(p.avg_velo||0).toFixed(1)} mph</span>
-      <span style="color:#64748b">\${(p.avg_ivb||0).toFixed(1)}" IVB</span>
-    </div>\`;
+      <span style="font-family:'Courier New',monospace;color:${dCls};min-width:40px">${d > 0 ? '+' : ''}${d}</span>
+      <span style="color:#64748b;min-width:52px">${(Number(p.avg_velo) || 0).toFixed(1)} mph</span>
+      <span style="color:#64748b">${(Number(p.avg_ivb) || 0).toFixed(1)}″ IVB</span>
+    </div>`;
   }).join('');
 }
 

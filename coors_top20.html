@@ -137,7 +137,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 <section class="hero">
   <div class="hero-label">COORS FIELD · PITCHER ANALYSIS · 2021–2024</div>
   <h1 class="hero-title">Who Actually <strong>Succeeded</strong> at Coors Field</h1>
-  <p class="hero-sub">Top 20 pitchers ranked by a composite score combining Coors-adjusted Stuff+ (XGBoost model trained on sea-level vs. altitude-corrected pitch physics) and actual outcomes — ERA, FIP, K-BB% — in Denver specifically. These pitchers' characteristics directly shaped the model's feature weights.</p>
+  <p class="hero-sub">Two leaderboards: all pitchers with meaningful Coors samples (450+ pitches, ~30 IP equivalent) and Rockies pitchers at Coors only (150+ pitches, ~10 IP). Rankings use a composite of Coors-adjusted Stuff+ (XGBoost on altitude-corrected pitch physics) plus FanGraphs season outcomes where available.</p>
   <div class="hero-stats">
     <div class="hstat"><span class="hstat-val" id="statPitchers">—</span><span class="hstat-label">QUALIFIED PITCHERS</span></div>
     <div class="hstat"><span class="hstat-val" id="statPitches">—</span><span class="hstat-label">COORS PITCHES SCORED</span></div>
@@ -161,12 +161,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 
 <div class="main">
   <div class="card">
-    <div class="card-header">
-      <span class="card-title">TOP 20 PITCHERS AT COORS</span>
+    <div class="card-header" style="flex-wrap:wrap;gap:.5rem">
+      <span class="card-title">LEADERBOARDS</span>
+      <div class="tab-bar" style="border-bottom:none;margin-left:0">
+        <button type="button" class="tab lb-tab active" data-lb="all">ALL AT COORS</button>
+        <button type="button" class="tab lb-tab" data-lb="rockies">ROCKIES AT COORS</button>
+      </div>
       <div class="tab-bar" style="border-bottom:none;margin-left:auto">
-        <button class="tab active" onclick="switchSort('composite')">COMPOSITE</button>
-        <button class="tab" onclick="switchSort('stuff_col')">STUFF+</button>
-        <button class="tab" onclick="switchSort('ERA')">ERA</button>
+        <button type="button" class="tab sort-tab active" data-sort="coors_composite">COMPOSITE</button>
+        <button type="button" class="tab sort-tab" data-sort="stuff_col">STUFF+</button>
+        <button type="button" class="tab sort-tab" data-sort="ERA">ERA</button>
       </div>
     </div>
     <div style="overflow-x:auto">
@@ -247,7 +251,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
         <h4>FanGraphs Stuff+ / PitchingBot · Grove/Sarris</h4>
         <div class="model-feat">Vertical release point<span class="boost">α×1.08</span></div>
         <div class="model-feat">Horizontal release point<span class="neutral">α×1.00</span></div>
-        <div class="model-feat">Pitch location (x, z)<span class="neutral">α×1.00</span></div>
+        <div class="model-feat">Pitch location<span class="neutral">excluded</span></div>
         <div class="model-feat">Count state (B-S)<span class="neutral">α×1.00</span></div>
         <div class="model-feat">Batter handedness<span class="neutral">α×1.00</span></div>
         <div class="model-feat">Pitch type categorical<span class="neutral">α×1.00</span></div>
@@ -278,7 +282,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 <footer class="page-footer">ROCKIES ANALYTICS · colbymorris08.github.io/rockies-milb-dashboard · DATA: STATCAST 2021–2024 + FANGRAPHS</footer>
 
 <script>
-let allData = [], sortKey = 'coors_composite';
+let allData = [], sortKey = 'coors_composite', activeLb = 'all', stuffChart = null, tabsWired = false;
+window.__DATA_ALL = [];
+window.__DATA_ROCKIES = [];
 const PITCH_COLORS = {
   FF:'#8b5cf6', SI:'#ef4444', SL:'#14b8a6', ST:'#14b8a6',
   CH:'#f59e0b', CU:'#3b82f6', FC:'#22c55e', FS:'#f97316', KC:'#ec4899', XX:'#64748b'
@@ -299,30 +305,54 @@ const MOCK = [
 ];
 
 function loadData(){
-  fetch('data/coors_top20.json')
-    .then(r=>r.json())
-    .then(d=>{ allData=d; init(); })
-    .catch(()=>{ allData=MOCK; init(); });
+  Promise.all([
+    fetch('data/coors_top20.json').then(r=>{ if(!r.ok) throw new Error('top20'); return r.json(); }),
+    fetch('data/coors_pitchers_rockies.json').then(r=>{ if(!r.ok) throw new Error('rockies'); return r.json(); }).catch(()=>[]),
+  ]).then(([allRows, rockRows])=>{
+    window.__DATA_ALL = Array.isArray(allRows) ? allRows : [];
+    window.__DATA_ROCKIES = Array.isArray(rockRows) && rockRows.length ? rockRows : window.__DATA_ALL;
+    allData = activeLb === 'rockies' ? window.__DATA_ROCKIES : window.__DATA_ALL;
+    init();
+  }).catch(()=>{
+    window.__DATA_ALL = MOCK;
+    window.__DATA_ROCKIES = MOCK;
+    allData = MOCK;
+    init();
+  });
 }
 
 function init(){
-  document.getElementById('statPitchers').textContent = allData.length;
+  if (!tabsWired) {
+    tabsWired = true;
+    document.querySelectorAll('.lb-tab').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        activeLb = btn.dataset.lb || 'all';
+        document.querySelectorAll('.lb-tab').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        allData = activeLb === 'rockies' ? window.__DATA_ROCKIES : window.__DATA_ALL;
+        init();
+      });
+    });
+    document.querySelectorAll('.sort-tab').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        sortKey = btn.dataset.sort || 'coors_composite';
+        document.querySelectorAll('.sort-tab').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        renderTable();
+      });
+    });
+  }
+  const n = allData.length;
+  document.getElementById('statPitchers').textContent = n;
   const totalPitches = allData.reduce((a,p)=>a+(p.pitches||0),0);
   document.getElementById('statPitches').textContent = totalPitches.toLocaleString();
-  const avgDelta = (allData.reduce((a,p)=>a+(p.stuff_delta||0),0)/allData.length).toFixed(1);
-  document.getElementById('statAvgDelta').textContent = (avgDelta>0?'+':'')+avgDelta;
-  const topStuff = Math.max(...allData.map(p=>p.stuff_col||0)).toFixed(1);
+  const avgDelta = n ? (allData.reduce((a,p)=>a+(p.stuff_delta||0),0)/n).toFixed(1) : '0.0';
+  document.getElementById('statAvgDelta').textContent = (parseFloat(avgDelta)>0?'+':'')+avgDelta;
+  const topStuff = n ? Math.max(...allData.map(p=>p.stuff_col||0)).toFixed(1) : '—';
   document.getElementById('statTopStuff').textContent = topStuff;
   renderTable();
   renderChart();
   renderBreakdown();
-}
-
-function switchSort(key){
-  sortKey=key;
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  event.target.classList.add('active');
-  renderTable();
 }
 
 function renderTable(){
@@ -350,7 +380,7 @@ function renderTable(){
       <td class="metric">${p.FIP?p.FIP.toFixed(2):'—'}</td>
       <td class="metric">${kbb}</td>
       <td class="metric">${(p.avg_velo||0).toFixed(1)}</td>
-      <td class="metric">${(p.avg_ivb||0).toFixed(1)}"</td>
+      <td class="metric">${(p.avg_ivb||0).toFixed(1)}</td>
       <td class="metric">${(p.avg_ext||0).toFixed(1)} ft</td>
       <td class="metric" style="color:var(--muted)">${(p.pitches||0).toLocaleString()}</td>
     </tr>`;
@@ -358,9 +388,13 @@ function renderTable(){
 }
 
 function renderChart(){
+  const canvas = document.getElementById('stuffChart');
+  if (!canvas || !allData.length) return;
+  const prev = Chart.getChart(canvas);
+  if (prev) prev.destroy();
   const top10=[...allData].sort((a,b)=>(b.coors_composite||0)-(a.coors_composite||0)).slice(0,10);
   const labels=top10.map(p=>p.player_name.split(' ').slice(-1)[0]);
-  new Chart(document.getElementById('stuffChart'),{
+  stuffChart = new Chart(canvas,{
     type:'bar',
     data:{
       labels,
