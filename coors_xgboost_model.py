@@ -11,7 +11,7 @@ import pandas as pd
 import pybaseball as pb
 from xgboost import XGBRegressor
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import root_mean_squared_error
 from sklearn.preprocessing import LabelEncoder
 import json
 import os
@@ -117,8 +117,6 @@ FG_FEATURES = [
     "release_pos_x",        # horizontal release point
     "plate_x",              # horizontal pitch location
     "plate_z",              # vertical pitch location
-    "balls",                # count context
-    "strikes",
     "stand_enc",            # batter handedness
     "pitch_type_enc",       # pitch type categorical
 ]
@@ -190,7 +188,7 @@ model.fit(
 
 train_r2  = model.score(X_train, y_train)
 test_r2   = model.score(X_test, y_test)
-test_rmse = mean_squared_error(y_test, model.predict(X_test), squared=False)
+test_rmse = root_mean_squared_error(y_test, model.predict(X_test))
 
 print(f"\nTrain R²: {train_r2:.4f}")
 print(f"Test  R²: {test_r2:.4f}")
@@ -240,7 +238,7 @@ print(pitcher_summary.sort_values("xStuff_COL", ascending=False).head(10).to_str
 
 
 # ── 11. Export JSON for GitHub Pages ──────────────────────────────────────
-os.makedirs("docs/data", exist_ok=True)
+os.makedirs("data", exist_ok=True)
 
 # pitch-level export (sample for file size)
 pitch_export_cols = [
@@ -255,22 +253,22 @@ pitch_export = coors_pred[
 ].dropna().sample(min(5000, len(coors_pred)), random_state=99)
 
 pitch_export.to_json(
-    "docs/data/coors_xgboost_pitches.json",
+    "data/coors_xgboost_pitches.json",
     orient="records", indent=2, date_format="iso"
 )
 
 # pitcher summary export
 pitcher_summary.to_json(
-    "docs/data/coors_xgboost_pitchers.json",
+    "data/coors_xgboost_pitchers.json",
     orient="records", indent=2
 )
 
 # feature importance export
 importance_export = [
-    {"feature": k, "importance": round(v, 4), "alpha": ALPHA.get(k, 1.0)}
+    {"feature": k, "importance": round(float(v), 4), "alpha": ALPHA.get(k, 1.0)}
     for k, v in sorted(importance.items(), key=lambda x: -x[1])
 ]
-with open("docs/data/coors_feature_importance.json", "w") as f:
+with open("data/coors_feature_importance.json", "w") as f:
     json.dump(importance_export, f, indent=2)
 
 # model metadata
@@ -288,13 +286,13 @@ meta = {
     "training_years": "2021-2024",
     "n_estimators": model.best_iteration,
 }
-with open("docs/data/coors_model_meta.json", "w") as f:
+with open("data/coors_model_meta.json", "w") as f:
     json.dump(meta, f, indent=2)
 
 print("\nExported:")
-print("  docs/data/coors_xgboost_pitches.json")
-print("  docs/data/coors_xgboost_pitchers.json")
-print("  docs/data/coors_feature_importance.json")
-print("  docs/data/coors_model_meta.json")
+print("  data/coors_xgboost_pitches.json")
+print("  data/coors_xgboost_pitchers.json")
+print("  data/coors_feature_importance.json")
+print("  data/coors_model_meta.json")
 print("\nDeploy with:")
-print("  git add docs/data/ && git commit -m 'add Coors XGBoost model output' && git push")
+print("  git add data/ && git commit -m 'add Coors XGBoost model output' && git push")
