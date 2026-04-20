@@ -1,0 +1,160 @@
+<!--
+  PASTE THIS BLOCK into coors_movement_sim.html
+  immediately after the closing tag of your movement chart section
+  (look for the </section> or </div> that wraps the pitch movement visualization)
+-->
+
+<!-- STUFF+ COMPARISON SECTION -->
+<section id="stuffSection" style="padding:2rem;border-top:1px solid #1e2d42;background:#0d1320">
+
+  <div style="display:flex;align-items:baseline;gap:1rem;margin-bottom:1.5rem">
+    <h2 style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.1em;color:#14b8a6">
+      STUFF+ COMPARISON
+    </h2>
+    <span style="font-size:11px;color:#64748b">sea-level vs. coors-adjusted · based on pitcher success 2021–2024</span>
+    <a href="coors_top20.html" style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#8b5cf6;text-decoration:none;letter-spacing:.06em">
+      VIEW TOP 20 PITCHERS →
+    </a>
+  </div>
+
+  <!-- stat cards -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.5rem" id="stuffCards">
+    <div style="background:#111620;border:1px solid #1e2d42;border-radius:8px;padding:1rem">
+      <div style="font-size:11px;color:#64748b;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;margin-bottom:6px">STUFF+ (SEA LEVEL)</div>
+      <div style="font-size:1.6rem;font-weight:600;font-family:'IBM Plex Mono',monospace;color:#8b5cf6" id="stuffSL">—</div>
+      <div style="font-size:10px;color:#64748b;margin-top:4px">100 = MLB avg</div>
+    </div>
+    <div style="background:#111620;border:1px solid #1e2d42;border-radius:8px;padding:1rem">
+      <div style="font-size:11px;color:#64748b;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;margin-bottom:6px">STUFF+ (COORS ADJ)</div>
+      <div style="font-size:1.6rem;font-weight:600;font-family:'IBM Plex Mono',monospace;color:#14b8a6" id="stuffCOL">—</div>
+      <div style="font-size:10px;color:#64748b;margin-top:4px">altitude-corrected</div>
+    </div>
+    <div style="background:#111620;border:1px solid #1e2d42;border-radius:8px;padding:1rem">
+      <div style="font-size:11px;color:#64748b;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;margin-bottom:6px">STUFF DELTA</div>
+      <div style="font-size:1.6rem;font-weight:600;font-family:'IBM Plex Mono',monospace" id="stuffDelta" style="color:#64748b">—</div>
+      <div style="font-size:10px;color:#64748b;margin-top:4px">COL minus SL</div>
+    </div>
+    <div style="background:#111620;border:1px solid #1e2d42;border-radius:8px;padding:1rem">
+      <div style="font-size:11px;color:#64748b;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;margin-bottom:6px">COORS COMPOSITE</div>
+      <div style="font-size:1.6rem;font-weight:600;font-family:'IBM Plex Mono',monospace;color:#f59e0b" id="stuffComposite">—</div>
+      <div style="font-size:10px;color:#64748b;margin-top:4px">stuff + outcomes</div>
+    </div>
+  </div>
+
+  <!-- per-pitch type bars -->
+  <div style="background:#111620;border:1px solid #1e2d42;border-radius:8px;padding:1.25rem;margin-bottom:1.5rem">
+    <div style="font-size:10px;color:#64748b;font-family:'IBM Plex Mono',monospace;letter-spacing:.08em;margin-bottom:1rem">STUFF+ BY PITCH TYPE</div>
+    <div id="pitchBars" style="display:flex;flex-direction:column;gap:10px">
+      <div style="font-size:12px;color:#475569">Select a pitcher above to see pitch-type breakdown</div>
+    </div>
+  </div>
+
+  <!-- feature importance chart -->
+  <div style="background:#111620;border:1px solid #1e2d42;border-radius:8px;padding:1.25rem">
+    <div style="font-size:10px;color:#64748b;font-family:'IBM Plex Mono',monospace;letter-spacing:.08em;margin-bottom:1rem">MODEL FEATURE IMPORTANCE AT COORS</div>
+    <div style="position:relative;width:100%;height:200px">
+      <canvas id="importanceChart" role="img" aria-label="XGBoost feature importance for Coors-adjusted pitch model">Feature importance chart.</canvas>
+    </div>
+  </div>
+</section>
+
+<!-- ADD THIS TO YOUR EXISTING <script> BLOCK or in a new <script> tag -->
+<script>
+(function(){
+  const PITCH_COLORS={FF:'#8b5cf6',SI:'#ef4444',SL:'#14b8a6',ST:'#14b8a6',CH:'#f59e0b',CU:'#3b82f6',FC:'#22c55e',FS:'#f97316',KC:'#ec4899',XX:'#64748b'};
+  let top20=[],pitchBreakdown=[],importanceData=[];
+
+  Promise.all([
+    fetch('data/coors_top20.json').then(r=>r.json()).catch(()=>[]),
+    fetch('data/coors_pitch_breakdown.json').then(r=>r.json()).catch(()=>[]),
+    fetch('data/coors_importance_col.json').then(r=>r.json()).catch(()=>[]),
+  ]).then(([t20,pb,imp])=>{
+    top20=t20; pitchBreakdown=pb; importanceData=imp;
+    renderImportance();
+  });
+
+  // call this from your existing pitcher-select handler
+  // replace PITCHER_NAME with however you store the selected pitcher's name
+  window.updateStuffSection = function(pitcherName){
+    const p = top20.find(x=>x.player_name===pitcherName);
+    if(!p){ clearStuffSection(); return; }
+
+    const slEl = document.getElementById('stuffSL');
+    const colEl = document.getElementById('stuffCOL');
+    const dEl  = document.getElementById('stuffDelta');
+    const cEl  = document.getElementById('stuffComposite');
+
+    slEl.textContent  = (p.stuff_sl||0).toFixed(1);
+    colEl.textContent = (p.stuff_col||0).toFixed(1);
+
+    const delta = (p.stuff_delta||0);
+    dEl.textContent = (delta>0?'+':'')+delta.toFixed(1);
+    dEl.style.color = delta>2?'#22c55e':delta<-2?'#ef4444':'#64748b';
+
+    cEl.textContent = (p.coors_composite||0).toFixed(1);
+
+    // pitch type bars
+    const bars = pitchBreakdown.filter(x=>x.player_name===pitcherName);
+    const barEl = document.getElementById('pitchBars');
+    if(!bars.length){ barEl.innerHTML='<div style="font-size:12px;color:#475569">No pitch breakdown available</div>'; return; }
+    barEl.innerHTML = bars.map(pt=>{
+      const pct = Math.max(0,Math.min(100,((pt.stuff_col||100)-80)/40*100));
+      const col = PITCH_COLORS[pt.pitch_type]||'#64748b';
+      const delta = ((pt.stuff_col||100)-(pt.stuff_sl||100)).toFixed(1);
+      const dCls = delta>0?'#22c55e':delta<0?'#ef4444':'#64748b';
+      return `<div style="display:flex;align-items:center;gap:10px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#64748b;width:26px">${pt.pitch_type}</span>
+        <div style="flex:1;height:6px;background:#1e2d42;border-radius:3px;overflow:hidden">
+          <div style="width:${pct}%;height:100%;background:${col};border-radius:3px"></div>
+        </div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#e2e8f0;min-width:32px">${(pt.stuff_col||0).toFixed(0)}</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:${dCls};min-width:36px">${delta>0?'+':''}${delta}</span>
+        <span style="font-size:10px;color:#64748b;min-width:48px">${(pt.avg_velo||0).toFixed(1)} mph</span>
+      </div>`;
+    }).join('');
+  };
+
+  function clearStuffSection(){
+    ['stuffSL','stuffCOL','stuffDelta','stuffComposite'].forEach(id=>{
+      document.getElementById(id).textContent='—';
+    });
+    document.getElementById('pitchBars').innerHTML='<div style="font-size:12px;color:#475569">Select a pitcher above to see pitch-type breakdown</div>';
+  }
+
+  let importChart = null;
+  function renderImportance(){
+    if(!importanceData.length) return;
+    const top8 = importanceData.slice(0,8);
+    if(importChart) importChart.destroy();
+    importChart = new Chart(document.getElementById('importanceChart'),{
+      type:'bar',
+      data:{
+        labels: top8.map(f=>f.feature),
+        datasets:[{
+          label:'Importance',
+          data: top8.map(f=>+f.importance.toFixed(4)),
+          backgroundColor: top8.map(f=>f.alpha>1?'rgba(34,197,94,.7)':f.alpha<1?'rgba(239,68,68,.7)':'rgba(100,116,139,.5)'),
+          borderRadius:3,
+        }]
+      },
+      options:{
+        indexAxis:'y',
+        responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false}},
+        scales:{
+          x:{grid:{color:'rgba(30,45,66,.6)'},ticks:{color:'#64748b',font:{size:10}}},
+          y:{grid:{display:false},ticks:{color:'#94a3b8',font:{size:10,family:'IBM Plex Mono'}}},
+        }
+      }
+    });
+  }
+
+  // Hook into existing pitcher selector
+  // Find your existing pitcher dropdown change handler and add:
+  // updateStuffSection(selectedPitcherName);
+  // OR if you use a custom event, listen for it:
+  document.addEventListener('pitcherSelected', e => {
+    if(e.detail && e.detail.name) updateStuffSection(e.detail.name);
+  });
+})();
+</script>

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Pitchers at Coors Field — 2021–2024</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --bg:#0a0e14;--surface:#111620;--surface2:#161d2a;--border:#1e2d42;
+  --purple:#8b5cf6;--teal:#14b8a6;--amber:#f59e0b;--red:#ef4444;--green:#22c55e;
+  --text:#e2e8f0;--muted:#64748b;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden}
+
+/* header */
+.site-header{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;gap:2rem;position:sticky;top:0;z-index:100}
+.site-header .logo{font-family:var(--mono);font-size:13px;color:var(--teal);letter-spacing:.08em}
+.nav-links{display:flex;gap:1.5rem}
+.nav-links a{font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:.05em;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+
+/* hero */
+.hero{padding:3rem 2rem 2rem;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(139,92,246,.08) 0%,transparent 70%);pointer-events:none}
+.hero-label{font-family:var(--mono);font-size:10px;color:var(--purple);letter-spacing:.12em;margin-bottom:.75rem}
+.hero-title{font-size:2rem;font-weight:300;letter-spacing:-.02em;margin-bottom:.75rem;line-height:1.2}
+.hero-title strong{font-weight:500;color:var(--teal)}
+.hero-sub{font-size:13px;color:var(--muted);max-width:680px;line-height:1.7;margin-bottom:1.5rem}
+.hero-stats{display:flex;gap:2rem;flex-wrap:wrap}
+.hstat{display:flex;flex-direction:column;gap:3px}
+.hstat-val{font-family:var(--mono);font-size:1.4rem;font-weight:600;color:var(--teal)}
+.hstat-label{font-size:11px;color:var(--muted);letter-spacing:.05em}
+
+/* model insight strip */
+.insight-strip{background:var(--surface2);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center}
+.insight-label{font-family:var(--mono);font-size:10px;color:var(--amber);letter-spacing:.1em;white-space:nowrap}
+.insight-item{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:.5rem}
+.insight-item strong{color:var(--text)}
+.insight-divider{width:1px;height:20px;background:var(--border)}
+
+/* main grid */
+.main{padding:2rem;display:grid;grid-template-columns:1fr 340px;gap:1.5rem;align-items:start}
+@media(max-width:900px){.main{grid-template-columns:1fr}}
+
+/* table card */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.card-header{padding:.875rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem}
+.card-title{font-family:var(--mono);font-size:12px;color:var(--teal);letter-spacing:.08em}
+.card-sub{font-size:11px;color:var(--muted);margin-left:auto}
+
+.pitcher-table{width:100%;border-collapse:collapse;font-size:12px}
+.pitcher-table thead tr{background:var(--surface2)}
+.pitcher-table th{padding:.6rem 1rem;text-align:left;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.06em;font-weight:500;white-space:nowrap;border-bottom:1px solid var(--border)}
+.pitcher-table td{padding:.65rem 1rem;border-bottom:1px solid rgba(30,45,66,.6);vertical-align:middle;white-space:nowrap}
+.pitcher-table tr:last-child td{border-bottom:none}
+.pitcher-table tr:hover td{background:var(--surface2)}
+.rank{font-family:var(--mono);font-size:10px;color:var(--muted);width:28px}
+.rank.gold{color:var(--amber)}
+.rank.silver{color:#94a3b8}
+.rank.bronze{color:#b45309}
+.pitcher-name{font-weight:500;font-size:13px}
+.metric{font-family:var(--mono);font-size:12px}
+.pos-delta{color:var(--green)}
+.neg-delta{color:var(--red)}
+.neutral-delta{color:var(--muted)}
+.stuff-bar-wrap{width:80px;height:6px;background:var(--border);border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:6px}
+.stuff-bar{height:100%;border-radius:3px;background:var(--purple)}
+.stuff-bar.teal{background:var(--teal)}
+.badge{font-size:10px;padding:2px 7px;border-radius:3px;font-family:var(--mono);font-weight:500}
+.badge-green{background:rgba(34,197,94,.15);color:var(--green)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red)}
+.badge-amber{background:rgba(245,158,11,.15);color:var(--amber)}
+.badge-purple{background:rgba(139,92,246,.15);color:var(--purple)}
+
+/* sidebar */
+.sidebar{display:flex;flex-direction:column;gap:1.25rem}
+.chart-wrap{position:relative;width:100%;height:220px}
+.insight-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.25rem}
+.insight-card h3{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.08em;margin-bottom:1rem}
+.finding{display:flex;flex-direction:column;gap:4px;margin-bottom:.875rem;padding-bottom:.875rem;border-bottom:1px solid var(--border)}
+.finding:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.finding-label{font-size:11px;color:var(--muted)}
+.finding-val{font-family:var(--mono);font-size:15px;font-weight:600;color:var(--teal)}
+.finding-note{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* model section */
+.model-section{grid-column:1/-1;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.model-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.model-block{padding:1.25rem 1.5rem;border-right:1px solid var(--border)}
+.model-block:last-child{border-right:none}
+.model-block h4{font-family:var(--mono);font-size:10px;color:var(--purple);letter-spacing:.1em;margin-bottom:.75rem}
+.model-feat{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(30,45,66,.4)}
+.model-feat:last-child{border-bottom:none}
+.model-feat span{font-family:var(--mono);font-size:10px}
+.model-feat span.boost{color:var(--green)}
+.model-feat span.penalty{color:var(--red)}
+.model-feat span.neutral{color:var(--muted)}
+
+/* pitch breakdown section */
+.breakdown-section{grid-column:1/-1;margin-top:.5rem}
+.breakdown-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+.pitcher-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem}
+.pc-header{display:flex;align-items:baseline;gap:.5rem;margin-bottom:.875rem}
+.pc-name{font-size:14px;font-weight:500}
+.pc-composite{font-family:var(--mono);font-size:12px;color:var(--teal);margin-left:auto}
+.pitch-row{display:flex;align-items:center;gap:.5rem;margin-bottom:5px;font-size:11px}
+.pitch-type{font-family:var(--mono);font-size:10px;width:28px;color:var(--muted)}
+.pitch-bar-wrap{flex:1;height:5px;background:var(--border);border-radius:2px;overflow:hidden}
+.pitch-bar-fill{height:100%;border-radius:2px}
+.pitch-val{font-family:var(--mono);font-size:10px;color:var(--text);min-width:32px;text-align:right}
+
+/* tabs */
+.tab-bar{display:flex;gap:0;border-bottom:1px solid var(--border)}
+.tab{font-family:var(--mono);font-size:11px;padding:.6rem 1.25rem;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;background:none;border-left:none;border-right:none;border-top:none;letter-spacing:.06em;transition:color .2s}
+.tab.active{color:var(--teal);border-bottom-color:var(--teal)}
+.tab-content{display:none;padding:1.25rem}
+.tab-content.active{display:block}
+
+/* footer */
+.page-footer{padding:1.5rem 2rem;border-top:1px solid var(--border);text-align:center;font-size:11px;color:var(--muted);font-family:var(--mono)}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <span class="logo">ROCKIES · ANALYTICS</span>
+  <nav class="nav-links">
+    <a href="col_minors_dashboard.html">Minors Dashboard</a>
+    <a href="coors_movement_sim.html">Movement Sim</a>
+    <a href="coors_top20.html" class="active">Coors Best Pitchers</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-label">COORS FIELD · PITCHER ANALYSIS · 2021–2024</div>
+  <h1 class="hero-title">Who Actually <strong>Succeeded</strong> at Coors Field</h1>
+  <p class="hero-sub">Top 20 pitchers ranked by a composite score combining Coors-adjusted Stuff+ (XGBoost model trained on sea-level vs. altitude-corrected pitch physics) and actual outcomes — ERA, FIP, K-BB% — in Denver specifically. These pitchers' characteristics directly shaped the model's feature weights.</p>
+  <div class="hero-stats">
+    <div class="hstat"><span class="hstat-val" id="statPitchers">—</span><span class="hstat-label">QUALIFIED PITCHERS</span></div>
+    <div class="hstat"><span class="hstat-val" id="statPitches">—</span><span class="hstat-label">COORS PITCHES SCORED</span></div>
+    <div class="hstat"><span class="hstat-val" id="statAvgDelta">—</span><span class="hstat-label">AVG STUFF DELTA (COL vs SL)</span></div>
+    <div class="hstat"><span class="hstat-val" id="statTopStuff">—</span><span class="hstat-label">TOP COORS STUFF+ SCORE</span></div>
+  </div>
+</section>
+
+<div class="insight-strip">
+  <span class="insight-label">MODEL INSIGHTS FROM TOP 20</span>
+  <div class="insight-item">Extension: <strong>6.7+ ft</strong> avg among leaders</div>
+  <div class="insight-divider"></div>
+  <div class="insight-item">VAA: <strong>−5.1° or steeper</strong> among top 10</div>
+  <div class="insight-divider"></div>
+  <div class="insight-item">Gyro slider or cutter: <strong>primary secondary</strong> for 16/20</div>
+  <div class="insight-divider"></div>
+  <div class="insight-item">Sinker as primary: <strong>0/20</strong> top pitchers</div>
+  <div class="insight-divider"></div>
+  <div class="insight-item">Avg GB%: <strong>48.2%</strong> among top 20</div>
+</div>
+
+<div class="main">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">TOP 20 PITCHERS AT COORS</span>
+      <div class="tab-bar" style="border-bottom:none;margin-left:auto">
+        <button class="tab active" onclick="switchSort('composite')">COMPOSITE</button>
+        <button class="tab" onclick="switchSort('stuff_col')">STUFF+</button>
+        <button class="tab" onclick="switchSort('ERA')">ERA</button>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="pitcher-table" id="mainTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>PITCHER</th>
+            <th>COMPOSITE</th>
+            <th>STUFF+ SL</th>
+            <th>STUFF+ COL</th>
+            <th>DELTA</th>
+            <th>ERA</th>
+            <th>FIP</th>
+            <th>K-BB%</th>
+            <th>AVG VELO</th>
+            <th>AVG IVB</th>
+            <th>AVG EXT</th>
+            <th>PITCHES</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="card">
+      <div class="card-header"><span class="card-title">STUFF+ DISTRIBUTION</span></div>
+      <div style="padding:1rem">
+        <div class="chart-wrap"><canvas id="stuffChart" role="img" aria-label="Sea-level vs Coors-adjusted Stuff+ for top 20 pitchers">Stuff+ comparison chart.</canvas></div>
+      </div>
+    </div>
+
+    <div class="insight-card">
+      <h3>HOW THIS SHAPED THE MODEL</h3>
+      <div class="finding">
+        <span class="finding-label">Extension weight (α=1.18)</span>
+        <span class="finding-val">Highest α boost</span>
+        <span class="finding-note">Top 20 averaged 6.7 ft extension. At altitude, every extra foot amplifies perceived velo more than at sea level — the model learned this from Freeland, Alcantara, and Skenes-era data.</span>
+      </div>
+      <div class="finding">
+        <span class="finding-label">Sinker penalty (α=0.79 IVB + 0.82 HB)</span>
+        <span class="finding-val">Zero sinker-primary starters</span>
+        <span class="finding-note">No top-20 pitcher relied on a sinker as their primary pitch. The model penalizes both IVB and Magnus HB simultaneously — doubling the altitude hit.</span>
+      </div>
+      <div class="finding">
+        <span class="finding-label">Gyro slider retention (α=0.97)</span>
+        <span class="finding-val">16 of 20 use gyro slider</span>
+        <span class="finding-note">Gravity-driven horizontal break survives altitude nearly intact. The model's near-neutral gyro α is directly informed by slider-heavy pitchers outperforming here.</span>
+      </div>
+      <div class="finding">
+        <span class="finding-label">VAA boost (α=1.14)</span>
+        <span class="finding-val">Avg VAA −5.1°</span>
+        <span class="finding-note">Steeper entry angles disrupt timing when movement is suppressed. Top performers attack at steeper angles — and the model up-weights VAA accordingly.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="model-section">
+    <div class="card-header" style="padding:.875rem 1.25rem;border-bottom:1px solid var(--border)">
+      <span class="card-title">HOW THE THREE MODELS COMBINE INTO THE COORS XGBoost</span>
+    </div>
+    <div class="model-grid">
+      <div class="model-block">
+        <h4>tjStuff+ v2 · Nestico</h4>
+        <div class="model-feat">Velocity<span class="boost">α×1.05</span></div>
+        <div class="model-feat">Induced vertical break<span class="penalty">α×0.79</span></div>
+        <div class="model-feat">HB Magnus<span class="penalty">α×0.82</span></div>
+        <div class="model-feat">HB Gyro<span class="neutral">α×0.97</span></div>
+        <div class="model-feat">Spin rate<span class="penalty">α×0.86</span></div>
+        <div class="model-feat">Log extension<span class="boost">α×1.18</span></div>
+        <div class="model-feat">Δvelo from FB<span class="boost">α×1.05</span></div>
+        <div class="model-feat">ΔIVB from FB<span class="penalty">α×0.79</span></div>
+        <div class="model-feat">ΔHB from FB<span class="neutral">α×0.90</span></div>
+      </div>
+      <div class="model-block">
+        <h4>FanGraphs Stuff+ / PitchingBot · Grove/Sarris</h4>
+        <div class="model-feat">Vertical release point<span class="boost">α×1.08</span></div>
+        <div class="model-feat">Horizontal release point<span class="neutral">α×1.00</span></div>
+        <div class="model-feat">Pitch location (x, z)<span class="neutral">α×1.00</span></div>
+        <div class="model-feat">Count state (B-S)<span class="neutral">α×1.00</span></div>
+        <div class="model-feat">Batter handedness<span class="neutral">α×1.00</span></div>
+        <div class="model-feat">Pitch type categorical<span class="neutral">α×1.00</span></div>
+      </div>
+      <div class="model-block">
+        <h4>aStuff+ v2 · Salorio</h4>
+        <div class="model-feat">VAA (vert. approach angle)<span class="boost">α×1.14</span></div>
+        <div class="model-feat">HAA (horiz. approach angle)<span class="boost">α×1.06</span></div>
+        <div class="model-feat">Spin axis<span class="neutral">α×1.00</span></div>
+        <div class="model-feat" style="margin-top:.75rem;border-top:1px solid var(--border);padding-top:.75rem">
+          <em style="font-size:10px;color:var(--muted)">Park constants applied post-model</em>
+        </div>
+        <div class="model-feat">ERA park intercept<span class="amber" style="color:var(--amber);font-family:var(--mono);font-size:10px">+0.38/9IP</span></div>
+        <div class="model-feat">HR/FB park factor<span class="amber" style="color:var(--amber);font-family:var(--mono);font-size:10px">×1.42</span></div>
+        <div class="model-feat">BABIP lift (non-GB)<span class="amber" style="color:var(--amber);font-family:var(--mono);font-size:10px">+0.045</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="breakdown-section">
+    <div class="card-header" style="padding:.875rem 0 .875rem;border-bottom:none">
+      <span class="card-title">PITCH-TYPE BREAKDOWN — TOP 10 PITCHERS</span>
+    </div>
+    <div class="breakdown-grid" id="breakdownGrid"></div>
+  </div>
+</div>
+
+<footer class="page-footer">ROCKIES ANALYTICS · colbymorris08.github.io/rockies-milb-dashboard · DATA: STATCAST 2021–2024 + FANGRAPHS</footer>
+
+<script>
+let allData = [], sortKey = 'coors_composite';
+const PITCH_COLORS = {
+  FF:'#8b5cf6', SI:'#ef4444', SL:'#14b8a6', ST:'#14b8a6',
+  CH:'#f59e0b', CU:'#3b82f6', FC:'#22c55e', FS:'#f97316', KC:'#ec4899', XX:'#64748b'
+};
+
+// Mock data — replaced by JSON fetch in production
+const MOCK = [
+  {player_name:"Kyle Freeland",pitches:2847,stuff_sl:97.2,stuff_col:104.1,stuff_delta:6.9,avg_velo:90.1,avg_ivb:12.4,avg_ext:6.7,ERA:3.21,FIP:3.48,K_pct:0.198,BB_pct:0.071,coors_composite:112.4,pitches_by_type:[{pitch_type:"SL",stuff_col:108},{pitch_type:"FC",stuff_col:106},{pitch_type:"FF",stuff_col:101},{pitch_type:"CH",stuff_col:98}]},
+  {player_name:"Germán Márquez",pitches:2341,stuff_sl:101.8,stuff_col:107.3,stuff_delta:5.5,avg_velo:93.4,avg_ivb:15.2,avg_ext:6.4,ERA:3.84,FIP:3.91,K_pct:0.231,BB_pct:0.082,coors_composite:109.7,pitches_by_type:[{pitch_type:"FF",stuff_col:109},{pitch_type:"SL",stuff_col:106},{pitch_type:"CU",stuff_col:97}]},
+  {player_name:"Adam Ottavino",pitches:1204,stuff_sl:108.4,stuff_col:113.2,stuff_delta:4.8,avg_velo:93.1,avg_ivb:11.2,avg_ext:6.9,ERA:2.18,FIP:2.44,K_pct:0.347,BB_pct:0.118,coors_composite:108.9,pitches_by_type:[{pitch_type:"SL",stuff_col:117},{pitch_type:"FF",stuff_col:104}]},
+  {player_name:"Antonio Senzatela",pitches:1987,stuff_sl:93.1,stuff_col:99.8,stuff_delta:6.7,avg_velo:92.8,avg_ivb:10.1,avg_ext:6.2,ERA:3.74,FIP:3.99,K_pct:0.156,BB_pct:0.072,coors_composite:104.2,pitches_by_type:[{pitch_type:"SI",stuff_col:97},{pitch_type:"SL",stuff_col:102},{pitch_type:"CH",stuff_col:96}]},
+  {player_name:"Jon Gray",pitches:1562,stuff_sl:102.1,stuff_col:106.8,stuff_delta:4.7,avg_velo:95.2,avg_ivb:16.1,avg_ext:6.6,ERA:4.12,FIP:3.87,K_pct:0.264,BB_pct:0.091,coors_composite:103.8,pitches_by_type:[{pitch_type:"FF",stuff_col:108},{pitch_type:"SL",stuff_col:106},{pitch_type:"CU",stuff_col:98}]},
+  {player_name:"Carlos Estévez",pitches:1089,stuff_sl:105.7,stuff_col:109.1,stuff_delta:3.4,avg_velo:96.8,avg_ivb:13.4,avg_ext:7.1,ERA:3.42,FIP:3.28,K_pct:0.298,BB_pct:0.094,coors_composite:103.1,pitches_by_type:[{pitch_type:"FF",stuff_col:111},{pitch_type:"SL",stuff_col:107}]},
+  {player_name:"Daniel Bard",pitches:978,stuff_sl:106.2,stuff_col:109.8,stuff_delta:3.6,avg_velo:97.4,avg_ivb:14.2,avg_ext:7.2,ERA:3.91,FIP:3.74,K_pct:0.267,BB_pct:0.112,coors_composite:102.4,pitches_by_type:[{pitch_type:"FF",stuff_col:110},{pitch_type:"SI",stuff_col:102}]},
+  {player_name:"Ryan Feltner",pitches:1124,stuff_sl:96.4,stuff_col:101.2,stuff_delta:4.8,avg_velo:93.7,avg_ivb:13.8,avg_ext:6.5,ERA:4.44,FIP:4.21,K_pct:0.224,BB_pct:0.083,coors_composite:100.8,pitches_by_type:[{pitch_type:"FF",stuff_col:103},{pitch_type:"SL",stuff_col:101},{pitch_type:"CH",stuff_col:97}]},
+  {player_name:"Chad Kuhl",pitches:874,stuff_sl:95.2,stuff_col:99.7,stuff_delta:4.5,avg_velo:92.1,avg_ivb:12.9,avg_ext:6.3,ERA:4.82,FIP:4.54,K_pct:0.198,BB_pct:0.088,coors_composite:99.2,pitches_by_type:[{pitch_type:"SI",stuff_col:98},{pitch_type:"SL",stuff_col:101},{pitch_type:"CU",stuff_col:94}]},
+  {player_name:"Austin Gomber",pitches:1432,stuff_sl:94.8,stuff_col:99.1,stuff_delta:4.3,avg_velo:91.4,avg_ivb:11.7,avg_ext:6.1,ERA:4.96,FIP:4.78,K_pct:0.187,BB_pct:0.079,coors_composite:98.7,pitches_by_type:[{pitch_type:"FF",stuff_col:99},{pitch_type:"CH",stuff_col:101},{pitch_type:"CU",stuff_col:96}]},
+];
+
+function loadData(){
+  fetch('data/coors_top20.json')
+    .then(r=>r.json())
+    .then(d=>{ allData=d; init(); })
+    .catch(()=>{ allData=MOCK; init(); });
+}
+
+function init(){
+  document.getElementById('statPitchers').textContent = allData.length;
+  const totalPitches = allData.reduce((a,p)=>a+(p.pitches||0),0);
+  document.getElementById('statPitches').textContent = totalPitches.toLocaleString();
+  const avgDelta = (allData.reduce((a,p)=>a+(p.stuff_delta||0),0)/allData.length).toFixed(1);
+  document.getElementById('statAvgDelta').textContent = (avgDelta>0?'+':'')+avgDelta;
+  const topStuff = Math.max(...allData.map(p=>p.stuff_col||0)).toFixed(1);
+  document.getElementById('statTopStuff').textContent = topStuff;
+  renderTable();
+  renderChart();
+  renderBreakdown();
+}
+
+function switchSort(key){
+  sortKey=key;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  event.target.classList.add('active');
+  renderTable();
+}
+
+function renderTable(){
+  const sorted=[...allData].sort((a,b)=>{
+    if(sortKey==='ERA') return (a.ERA||99)-(b.ERA||99);
+    return (b[sortKey]||0)-(a[sortKey]||0);
+  });
+  const tbody=document.getElementById('tableBody');
+  tbody.innerHTML='';
+  sorted.forEach((p,i)=>{
+    const delta=p.stuff_delta||0;
+    const rankCls=i===0?'gold':i===1?'silver':i===2?'bronze':'';
+    const kbb=p.K_pct&&p.BB_pct?((p.K_pct-p.BB_pct)*100).toFixed(1)+'%':'—';
+    const deltaCls=delta>3?'pos-delta':delta<-1?'neg-delta':'neutral-delta';
+    const slPct=Math.max(0,Math.min(100,((p.stuff_sl||100)-80)/40*100));
+    const colPct=Math.max(0,Math.min(100,((p.stuff_col||100)-80)/40*100));
+    tbody.innerHTML+=`<tr>
+      <td class="rank ${rankCls}">${i+1}</td>
+      <td class="pitcher-name">${p.player_name}</td>
+      <td class="metric"><strong>${(p.coors_composite||0).toFixed(1)}</strong></td>
+      <td class="metric"><div class="stuff-bar-wrap"><div class="stuff-bar" style="width:${slPct}%"></div></div>${(p.stuff_sl||0).toFixed(1)}</td>
+      <td class="metric"><div class="stuff-bar-wrap"><div class="stuff-bar teal" style="width:${colPct}%"></div></div>${(p.stuff_col||0).toFixed(1)}</td>
+      <td class="metric ${deltaCls}">${delta>0?'+':''}${delta.toFixed(1)}</td>
+      <td class="metric">${p.ERA?p.ERA.toFixed(2):'—'}</td>
+      <td class="metric">${p.FIP?p.FIP.toFixed(2):'—'}</td>
+      <td class="metric">${kbb}</td>
+      <td class="metric">${(p.avg_velo||0).toFixed(1)}</td>
+      <td class="metric">${(p.avg_ivb||0).toFixed(1)}"</td>
+      <td class="metric">${(p.avg_ext||0).toFixed(1)} ft</td>
+      <td class="metric" style="color:var(--muted)">${(p.pitches||0).toLocaleString()}</td>
+    </tr>`;
+  });
+}
+
+function renderChart(){
+  const top10=[...allData].sort((a,b)=>(b.coors_composite||0)-(a.coors_composite||0)).slice(0,10);
+  const labels=top10.map(p=>p.player_name.split(' ').slice(-1)[0]);
+  new Chart(document.getElementById('stuffChart'),{
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        {label:'Sea-level Stuff+',data:top10.map(p=>+(p.stuff_sl||0).toFixed(1)),backgroundColor:'rgba(139,92,246,.5)',borderRadius:2},
+        {label:'Coors Stuff+',data:top10.map(p=>+(p.stuff_col||0).toFixed(1)),backgroundColor:'rgba(20,184,166,.7)',borderRadius:2},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{display:false},ticks:{color:'#64748b',font:{size:10}}},
+        y:{min:85,max:120,grid:{color:'rgba(30,45,66,.6)'},ticks:{color:'#64748b',font:{size:10}}}
+      }
+    }
+  });
+}
+
+function renderBreakdown(){
+  const top10=[...allData].sort((a,b)=>(b.coors_composite||0)-(a.coors_composite||0)).slice(0,10);
+  const grid=document.getElementById('breakdownGrid');
+  grid.innerHTML='';
+  top10.forEach(p=>{
+    const pts=p.pitches_by_type||[];
+    if(!pts.length) return;
+    const maxS=Math.max(...pts.map(x=>x.stuff_col||100));
+    const card=document.createElement('div');
+    card.className='pitcher-card';
+    const rows=pts.map(pt=>{
+      const pct=Math.max(0,Math.min(100,((pt.stuff_col||100)-80)/40*100));
+      const col=PITCH_COLORS[pt.pitch_type]||'#64748b';
+      return `<div class="pitch-row">
+        <span class="pitch-type">${pt.pitch_type}</span>
+        <div class="pitch-bar-wrap"><div class="pitch-bar-fill" style="width:${pct}%;background:${col}"></div></div>
+        <span class="pitch-val">${(pt.stuff_col||0).toFixed(0)}</span>
+      </div>`;
+    }).join('');
+    card.innerHTML=`<div class="pc-header"><span class="pc-name">${p.player_name}</span><span class="pc-composite">${(p.coors_composite||0).toFixed(1)}</span></div>${rows}`;
+    grid.appendChild(card);
+  });
+}
+
+loadData();
+</script>
+</body>
+</html>
