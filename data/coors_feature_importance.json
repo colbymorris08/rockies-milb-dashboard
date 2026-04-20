@@ -1,0 +1,92 @@
+[
+  {
+    "feature": "plate_x",
+    "importance": 0.1495,
+    "alpha": 1.0
+  },
+  {
+    "feature": "plate_z",
+    "importance": 0.1383,
+    "alpha": 1.0
+  },
+  {
+    "feature": "delta_velo",
+    "importance": 0.1357,
+    "alpha": 1.05
+  },
+  {
+    "feature": "stand_enc",
+    "importance": 0.0751,
+    "alpha": 1.0
+  },
+  {
+    "feature": "vaa",
+    "importance": 0.0694,
+    "alpha": 1.14
+  },
+  {
+    "feature": "delta_ivb",
+    "importance": 0.0659,
+    "alpha": 0.79
+  },
+  {
+    "feature": "delta_hb",
+    "importance": 0.0463,
+    "alpha": 0.9
+  },
+  {
+    "feature": "haa",
+    "importance": 0.0416,
+    "alpha": 1.06
+  },
+  {
+    "feature": "pitch_type_enc",
+    "importance": 0.0413,
+    "alpha": 1.0
+  },
+  {
+    "feature": "pfx_x_magnus",
+    "importance": 0.0339,
+    "alpha": 0.82
+  },
+  {
+    "feature": "pfx_z",
+    "importance": 0.033,
+    "alpha": 0.79
+  },
+  {
+    "feature": "release_speed",
+    "importance": 0.032,
+    "alpha": 1.05
+  },
+  {
+    "feature": "release_spin_rate",
+    "importance": 0.0297,
+    "alpha": 0.86
+  },
+  {
+    "feature": "pfx_x_gyro",
+    "importance": 0.0285,
+    "alpha": 0.97
+  },
+  {
+    "feature": "spin_axis",
+    "importance": 0.0249,
+    "alpha": 1.0
+  },
+  {
+    "feature": "release_pos_z",
+    "importance": 0.0203,
+    "alpha": 1.08
+  },
+  {
+    "feature": "release_pos_x",
+    "importance": 0.0185,
+    "alpha": 1.0
+  },
+  {
+    "feature": "log_ext",
+    "importance": 0.016,
+    "alpha": 1.18
+  }
+]

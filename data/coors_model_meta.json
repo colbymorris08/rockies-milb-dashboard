@@ -1,0 +1,51 @@
+{
+  "train_r2": 0.1022,
+  "test_r2": 0.0893,
+  "test_rmse": 0.3532,
+  "n_features": 18,
+  "features": [
+    "release_speed",
+    "pfx_z",
+    "pfx_x_magnus",
+    "pfx_x_gyro",
+    "release_spin_rate",
+    "log_ext",
+    "delta_velo",
+    "delta_ivb",
+    "delta_hb",
+    "release_pos_z",
+    "release_pos_x",
+    "plate_x",
+    "plate_z",
+    "stand_enc",
+    "pitch_type_enc",
+    "vaa",
+    "haa",
+    "spin_axis"
+  ],
+  "models_used": [
+    "tjStuff+ v2",
+    "FanGraphs Stuff+/PitchingBot",
+    "aStuff+ v2"
+  ],
+  "coors_adjustments": {
+    "release_speed": 1.05,
+    "pfx_z": 0.79,
+    "pfx_x_magnus": 0.82,
+    "pfx_x_gyro": 0.97,
+    "release_spin_rate": 0.86,
+    "log_ext": 1.18,
+    "vaa": 1.14,
+    "haa": 1.06,
+    "delta_velo": 1.05,
+    "delta_ivb": 0.79,
+    "delta_hb": 0.9,
+    "release_pos_z": 1.08,
+    "release_pos_x": 1.0
+  },
+  "park_intercept": 0.042222222222222223,
+  "hr_park_factor": 1.42,
+  "babip_lift": 0.045,
+  "training_years": "2021-2024",
+  "n_estimators": 496
+}
