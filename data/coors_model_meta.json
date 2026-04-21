@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-21T15:25:04.299900",
+  "generated": "2026-04-21T16:56:02.511310",
   "training_years": "2021-2024",
   "career_coors_statcast_years": "2015-2024",
   "features": [
@@ -22,11 +22,11 @@
     "haa",
     "spin_axis"
   ],
-  "models": [
-    "tjStuff+ v2",
-    "FanGraphs Stuff+/PitchingBot",
-    "aStuff+ v2"
-  ],
+  "stuff_model": {
+    "name": "Internal dual-XGBoost Coors Stuff index",
+    "summary": "Two gradient-boosted models on Statcast pitch features (estimated wOBA target): one trained on all parks and one on Coors-adjusted (\u03b1-scaled) movement, extension, and approach inputs. Outputs standardized to a 100/10 scale for leaderboard use.",
+    "informed_by_public_research": "Broad pitching-analytics threads\u2014velocity and movement decomposition, release-side and count context, horizontal/vertical approach angles, spin axis\u2014used as conceptual inspiration only; weights, stacking, and implementation are original to this pipeline."
+  },
   "coors_alpha": {
     "release_speed": 1.05,
     "pfx_z": 0.79,
@@ -54,48 +54,59 @@
   },
   "performance_inputs": "xFIP_if_available_else_FIP_plus_K_minus_BB_percent",
   "top20_names": [
-    "McGee, Jake",
+    "Bumgarner, Madison",
     "Gallen, Zac",
+    "McGee, Jake",
     "Gomber, Austin",
     "Stephenson, Robert",
-    "Greinke, Zack",
-    "Hale, David",
-    "Kershaw, Clayton",
-    "Lawrence, Justin",
-    "Bumgarner, Madison",
-    "Gray, Jon",
-    "Wood, Alex",
-    "Flexen, Chris",
-    "Freeland, Kyle",
+    "Suter, Brent",
     "Kuhl, Chad",
+    "Lawrence, Justin",
+    "Kershaw, Clayton",
+    "Wood, Alex",
+    "Bard, Daniel",
+    "Gray, Jon",
     "Anderson, Tyler",
+    "Freeland, Kyle",
     "Chac\u00edn, Jhoulys",
+    "Est\u00e9vez, Carlos",
+    "Ottavino, Adam",
     "Lyles, Jordan",
-    "Almonte, Yency",
-    "Gilbreath, Lucas",
-    "Est\u00e9vez, Carlos"
+    "Blach, Ty",
+    "M\u00e1rquez, Germ\u00e1n"
   ],
   "rockies_top20_names": [
     "Gomber, Austin",
-    "Gray, Jon",
     "Lawrence, Justin",
+    "Bard, Daniel",
+    "Gray, Jon",
     "Freeland, Kyle",
     "Est\u00e9vez, Carlos",
-    "M\u00e1rquez, Germ\u00e1n",
-    "Lambert, Peter",
-    "Senzatela, Antonio",
+    "Blach, Ty",
     "Feltner, Ryan",
-    "Bard, Daniel",
+    "M\u00e1rquez, Germ\u00e1n",
     "Bird, Jake",
     "Kinley, Tyler",
+    "Lambert, Peter",
+    "Senzatela, Antonio",
     "Quantrill, Cal",
-    "Gonz\u00e1lez, Chi Chi",
-    "Blach, Ty"
+    "Gonz\u00e1lez, Chi Chi"
   ],
   "top20_key_findings": {
-    "avg_stuff_delta": 0.28,
-    "avg_vaa": 0.51,
-    "avg_ivb": 0.54,
-    "avg_ext": 6.33
-  }
+    "avg_stuff_delta": 0.18,
+    "avg_vaa_release": -1.54,
+    "avg_ff_vaa": -1.93,
+    "avg_haa": 0.08,
+    "avg_arm_angle": 35.84,
+    "avg_ext": 6.27,
+    "avg_pct_sl_st": 20.88,
+    "primary_pitch_counts": {
+      "FF": 11,
+      "SI": 4,
+      "SL": 3,
+      "FC": 1,
+      "ST": 1
+    }
+  },
+  "mechanics_note": "VAA/HAA from Statcast vx0,vy0,vz0 at release (Tangotiger-style); avg_ff_vaa is mean VAA on four-seamers only; arm_angle is Statcast release arm angle (\u00b0)."
 }
