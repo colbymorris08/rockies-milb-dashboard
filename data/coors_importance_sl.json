@@ -1,43 +1,43 @@
 [
   {
     "feature": "strikes",
-    "importance": 0.5647,
+    "importance": 0.5693,
     "alpha": 1.0,
     "model": "sea_level"
   },
   {
     "feature": "balls",
-    "importance": 0.3341,
+    "importance": 0.3271,
     "alpha": 1.0,
     "model": "sea_level"
   },
   {
     "feature": "delta_velo",
-    "importance": 0.0119,
+    "importance": 0.0114,
     "alpha": 1.05,
     "model": "sea_level"
   },
   {
     "feature": "pitch_type_enc",
-    "importance": 0.0102,
+    "importance": 0.0092,
     "alpha": 1.0,
     "model": "sea_level"
   },
   {
     "feature": "vaa",
-    "importance": 0.0081,
+    "importance": 0.0083,
     "alpha": 1.14,
     "model": "sea_level"
   },
   {
     "feature": "delta_ivb",
-    "importance": 0.0078,
+    "importance": 0.008,
     "alpha": 0.79,
     "model": "sea_level"
   },
   {
     "feature": "stand_enc",
-    "importance": 0.007,
+    "importance": 0.0077,
     "alpha": 1.0,
     "model": "sea_level"
   },
@@ -49,20 +49,26 @@
   },
   {
     "feature": "release_speed",
-    "importance": 0.0062,
+    "importance": 0.0063,
     "alpha": 1.05,
     "model": "sea_level"
   },
   {
-    "feature": "pfx_x_magnus",
-    "importance": 0.006,
-    "alpha": 0.82,
+    "feature": "haa",
+    "importance": 0.0062,
+    "alpha": 1.06,
     "model": "sea_level"
   },
   {
-    "feature": "haa",
-    "importance": 0.0055,
-    "alpha": 1.06,
+    "feature": "release_spin_rate",
+    "importance": 0.0057,
+    "alpha": 0.86,
+    "model": "sea_level"
+  },
+  {
+    "feature": "pfx_x_magnus",
+    "importance": 0.0054,
+    "alpha": 0.82,
     "model": "sea_level"
   },
   {
@@ -72,39 +78,33 @@
     "model": "sea_level"
   },
   {
-    "feature": "release_spin_rate",
-    "importance": 0.0053,
-    "alpha": 0.86,
-    "model": "sea_level"
-  },
-  {
     "feature": "spin_axis",
-    "importance": 0.0045,
+    "importance": 0.0048,
     "alpha": 1.0,
     "model": "sea_level"
   },
   {
     "feature": "release_pos_z",
-    "importance": 0.0043,
+    "importance": 0.0048,
     "alpha": 1.08,
     "model": "sea_level"
   },
   {
     "feature": "log_ext",
-    "importance": 0.0042,
+    "importance": 0.0045,
     "alpha": 1.18,
     "model": "sea_level"
   },
   {
-    "feature": "pfx_x_gyro",
-    "importance": 0.0041,
-    "alpha": 0.97,
+    "feature": "release_pos_x",
+    "importance": 0.0045,
+    "alpha": 1.0,
     "model": "sea_level"
   },
   {
-    "feature": "release_pos_x",
-    "importance": 0.0041,
-    "alpha": 1.0,
+    "feature": "pfx_x_gyro",
+    "importance": 0.0045,
+    "alpha": 0.97,
     "model": "sea_level"
   }
 ]

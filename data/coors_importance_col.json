@@ -1,61 +1,55 @@
 [
   {
     "feature": "strikes",
-    "importance": 0.5426,
+    "importance": 0.565,
     "alpha": 1.0,
     "model": "coors_adj"
   },
   {
     "feature": "balls",
-    "importance": 0.3542,
+    "importance": 0.3309,
     "alpha": 1.0,
     "model": "coors_adj"
   },
   {
     "feature": "delta_velo",
-    "importance": 0.0118,
+    "importance": 0.0117,
     "alpha": 1.05,
     "model": "coors_adj"
   },
   {
-    "feature": "pitch_type_enc",
-    "importance": 0.01,
-    "alpha": 1.0,
-    "model": "coors_adj"
-  },
-  {
     "feature": "vaa",
-    "importance": 0.0094,
+    "importance": 0.0099,
     "alpha": 1.14,
     "model": "coors_adj"
   },
   {
+    "feature": "pitch_type_enc",
+    "importance": 0.0087,
+    "alpha": 1.0,
+    "model": "coors_adj"
+  },
+  {
     "feature": "delta_ivb",
-    "importance": 0.008,
+    "importance": 0.0081,
     "alpha": 0.79,
     "model": "coors_adj"
   },
   {
     "feature": "stand_enc",
-    "importance": 0.0071,
+    "importance": 0.0075,
     "alpha": 1.0,
     "model": "coors_adj"
   },
   {
     "feature": "haa",
-    "importance": 0.0062,
+    "importance": 0.0066,
     "alpha": 1.06,
     "model": "coors_adj"
   },
   {
-    "feature": "pfx_x_magnus",
-    "importance": 0.006,
-    "alpha": 0.82,
-    "model": "coors_adj"
-  },
-  {
     "feature": "release_speed",
-    "importance": 0.0059,
+    "importance": 0.0062,
     "alpha": 1.05,
     "model": "coors_adj"
   },
@@ -66,15 +60,21 @@
     "model": "coors_adj"
   },
   {
+    "feature": "pfx_z",
+    "importance": 0.0055,
+    "alpha": 0.79,
+    "model": "coors_adj"
+  },
+  {
     "feature": "delta_hb",
     "importance": 0.0055,
     "alpha": 0.9,
     "model": "coors_adj"
   },
   {
-    "feature": "pfx_z",
+    "feature": "pfx_x_magnus",
     "importance": 0.0054,
-    "alpha": 0.79,
+    "alpha": 0.82,
     "model": "coors_adj"
   },
   {
@@ -85,25 +85,25 @@
   },
   {
     "feature": "release_pos_z",
-    "importance": 0.0046,
+    "importance": 0.0047,
     "alpha": 1.08,
     "model": "coors_adj"
   },
   {
     "feature": "pfx_x_gyro",
-    "importance": 0.0044,
+    "importance": 0.0046,
     "alpha": 0.97,
     "model": "coors_adj"
   },
   {
     "feature": "release_pos_x",
-    "importance": 0.0043,
+    "importance": 0.0046,
     "alpha": 1.0,
     "model": "coors_adj"
   },
   {
     "feature": "log_ext",
-    "importance": 0.0043,
+    "importance": 0.0045,
     "alpha": 1.18,
     "model": "coors_adj"
   }
