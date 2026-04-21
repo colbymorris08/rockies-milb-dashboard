@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Best Pitchers at Coors Field — 2021–2024</title>
+<title>Coors Field Stuff+ — 2021–2024</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
@@ -131,14 +131,14 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
   <nav class="site-nav" aria-label="Rockies analytics">
     <a class="nav-page" href="col_minors_dashboard.html">MiLB 2026</a>
     <a class="nav-page" href="coors_movement_sim.html">Coors movement</a>
-    <a class="nav-page active" href="coors_top20.html">Top 20 at Coors</a>
+    <a class="nav-page active" href="coors_top20.html">Coors Field Stuff+</a>
   </nav>
 </header>
 
 <section class="hero">
   <div class="hero-label">COORS FIELD · PITCHER ANALYSIS · 2021–2024</div>
   <h1 class="hero-title">Who Actually <strong>Succeeded</strong> at Coors Field</h1>
-  <p class="hero-sub">Two leaderboards: all pitchers with meaningful Coors samples (450+ pitches, ~30 IP equivalent) and Rockies pitchers at Coors only (150+ pitches, ~10 IP). Rankings use a composite of Coors-adjusted Stuff+ (XGBoost on altitude-corrected pitch physics) plus FanGraphs season outcomes where available.</p>
+  <p class="hero-sub">Two leaderboards: all pitchers with meaningful Coors samples (450+ pitches, ~30 IP equivalent) and Rockies pitchers at Coors Field only (150+ pitches, ~10 IP). Rankings blend Coors-adjusted Stuff+ with FanGraphs <strong>2021–24 season</strong> MLB totals (ERA / FIP / K−BB%) where names match. <strong>@ Coors (window)</strong> uses Statcast PAs at Coors in <strong>2021–24</strong> only (same years as the Stuff+ model). <strong>Career @ Coors</strong> uses Statcast at Coors from <strong>2015–24</strong> (Statcast era through the model window). R/9 is plate runs per 9 outs (not official ERA).</p>
   <div class="hero-stats">
     <div class="hstat"><span class="hstat-val" id="statPitchers">—</span><span class="hstat-label">QUALIFIED PITCHERS</span></div>
     <div class="hstat"><span class="hstat-val" id="statPitches">—</span><span class="hstat-label">COORS PITCHES SCORED</span></div>
@@ -163,15 +163,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 <div class="main">
   <div class="card">
     <div class="card-header" style="flex-wrap:wrap;gap:.5rem">
-      <span class="card-title">LEADERBOARDS</span>
+      <span class="card-title">COORS FIELD STUFF+</span>
       <div class="tab-bar" style="border-bottom:none;margin-left:0">
-        <button type="button" class="tab lb-tab active" data-lb="all">ALL AT COORS</button>
-        <button type="button" class="tab lb-tab" data-lb="rockies">ROCKIES AT COORS</button>
+        <button type="button" class="tab lb-tab active" data-lb="all">All pitchers at Coors</button>
+        <button type="button" class="tab lb-tab" data-lb="rockies">Rockies at Coors Field</button>
       </div>
       <div class="tab-bar" style="border-bottom:none;margin-left:auto">
         <button type="button" class="tab sort-tab active" data-sort="coors_composite">COMPOSITE</button>
         <button type="button" class="tab sort-tab" data-sort="stuff_col">STUFF+</button>
-        <button type="button" class="tab sort-tab" data-sort="ERA">ERA</button>
+        <button type="button" class="tab sort-tab" data-sort="coors_ra9">COORS R/9</button>
       </div>
     </div>
     <div style="overflow-x:auto">
@@ -184,9 +184,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
             <th>STUFF+ SL</th>
             <th>STUFF+ COL</th>
             <th>DELTA</th>
-            <th>ERA</th>
-            <th>FIP</th>
-            <th>K-BB%</th>
+            <th title="FanGraphs 2021–24 season">MLB ERA</th>
+            <th title="FanGraphs 2021–24 season">MLB FIP</th>
+            <th title="FanGraphs 2021–24 season">MLB K−BB%</th>
+            <th title="Statcast PAs at Coors, 2021–24 only">@ Coors R/9</th>
+            <th title="Statcast at Coors, 2021–24">@ Coors FIP</th>
+            <th title="Statcast PAs at Coors, 2021–24">@ Coors K−BB%</th>
+            <th title="Statcast PAs at Coors, 2015–24">Career @ Coors R/9</th>
+            <th title="Statcast at Coors, 2015–24">Career @ Coors FIP</th>
+            <th title="Statcast PAs at Coors, 2015–24">Career @ Coors K−BB%</th>
             <th>AVG VELO</th>
             <th>AVG IVB</th>
             <th>AVG EXT</th>
@@ -293,16 +299,16 @@ const PITCH_COLORS = {
 
 // Mock data — replaced by JSON fetch in production
 const MOCK = [
-  {player_name:"Kyle Freeland",pitches:2847,stuff_sl:97.2,stuff_col:104.1,stuff_delta:6.9,avg_velo:90.1,avg_ivb:12.4,avg_ext:6.7,ERA:3.21,FIP:3.48,K_pct:0.198,BB_pct:0.071,coors_composite:112.4,pitches_by_type:[{pitch_type:"SL",stuff_col:108},{pitch_type:"FC",stuff_col:106},{pitch_type:"FF",stuff_col:101},{pitch_type:"CH",stuff_col:98}]},
-  {player_name:"Germán Márquez",pitches:2341,stuff_sl:101.8,stuff_col:107.3,stuff_delta:5.5,avg_velo:93.4,avg_ivb:15.2,avg_ext:6.4,ERA:3.84,FIP:3.91,K_pct:0.231,BB_pct:0.082,coors_composite:109.7,pitches_by_type:[{pitch_type:"FF",stuff_col:109},{pitch_type:"SL",stuff_col:106},{pitch_type:"CU",stuff_col:97}]},
-  {player_name:"Adam Ottavino",pitches:1204,stuff_sl:108.4,stuff_col:113.2,stuff_delta:4.8,avg_velo:93.1,avg_ivb:11.2,avg_ext:6.9,ERA:2.18,FIP:2.44,K_pct:0.347,BB_pct:0.118,coors_composite:108.9,pitches_by_type:[{pitch_type:"SL",stuff_col:117},{pitch_type:"FF",stuff_col:104}]},
-  {player_name:"Antonio Senzatela",pitches:1987,stuff_sl:93.1,stuff_col:99.8,stuff_delta:6.7,avg_velo:92.8,avg_ivb:10.1,avg_ext:6.2,ERA:3.74,FIP:3.99,K_pct:0.156,BB_pct:0.072,coors_composite:104.2,pitches_by_type:[{pitch_type:"SI",stuff_col:97},{pitch_type:"SL",stuff_col:102},{pitch_type:"CH",stuff_col:96}]},
-  {player_name:"Jon Gray",pitches:1562,stuff_sl:102.1,stuff_col:106.8,stuff_delta:4.7,avg_velo:95.2,avg_ivb:16.1,avg_ext:6.6,ERA:4.12,FIP:3.87,K_pct:0.264,BB_pct:0.091,coors_composite:103.8,pitches_by_type:[{pitch_type:"FF",stuff_col:108},{pitch_type:"SL",stuff_col:106},{pitch_type:"CU",stuff_col:98}]},
-  {player_name:"Carlos Estévez",pitches:1089,stuff_sl:105.7,stuff_col:109.1,stuff_delta:3.4,avg_velo:96.8,avg_ivb:13.4,avg_ext:7.1,ERA:3.42,FIP:3.28,K_pct:0.298,BB_pct:0.094,coors_composite:103.1,pitches_by_type:[{pitch_type:"FF",stuff_col:111},{pitch_type:"SL",stuff_col:107}]},
-  {player_name:"Daniel Bard",pitches:978,stuff_sl:106.2,stuff_col:109.8,stuff_delta:3.6,avg_velo:97.4,avg_ivb:14.2,avg_ext:7.2,ERA:3.91,FIP:3.74,K_pct:0.267,BB_pct:0.112,coors_composite:102.4,pitches_by_type:[{pitch_type:"FF",stuff_col:110},{pitch_type:"SI",stuff_col:102}]},
-  {player_name:"Ryan Feltner",pitches:1124,stuff_sl:96.4,stuff_col:101.2,stuff_delta:4.8,avg_velo:93.7,avg_ivb:13.8,avg_ext:6.5,ERA:4.44,FIP:4.21,K_pct:0.224,BB_pct:0.083,coors_composite:100.8,pitches_by_type:[{pitch_type:"FF",stuff_col:103},{pitch_type:"SL",stuff_col:101},{pitch_type:"CH",stuff_col:97}]},
-  {player_name:"Chad Kuhl",pitches:874,stuff_sl:95.2,stuff_col:99.7,stuff_delta:4.5,avg_velo:92.1,avg_ivb:12.9,avg_ext:6.3,ERA:4.82,FIP:4.54,K_pct:0.198,BB_pct:0.088,coors_composite:99.2,pitches_by_type:[{pitch_type:"SI",stuff_col:98},{pitch_type:"SL",stuff_col:101},{pitch_type:"CU",stuff_col:94}]},
-  {player_name:"Austin Gomber",pitches:1432,stuff_sl:94.8,stuff_col:99.1,stuff_delta:4.3,avg_velo:91.4,avg_ivb:11.7,avg_ext:6.1,ERA:4.96,FIP:4.78,K_pct:0.187,BB_pct:0.079,coors_composite:98.7,pitches_by_type:[{pitch_type:"FF",stuff_col:99},{pitch_type:"CH",stuff_col:101},{pitch_type:"CU",stuff_col:96}]},
+  {player_name:"Freeland, Kyle",pitches:2847,stuff_sl:97.2,stuff_col:104.1,stuff_delta:6.9,avg_velo:90.1,avg_ivb:12.4,avg_ext:6.7,ERA:3.21,FIP:3.48,K_pct:0.198,BB_pct:0.071,coors_ra9:4.1,coors_fip:3.55,coors_k_bb_pct:12.7,career_coors_ra9:4.35,career_coors_fip:3.62,career_coors_k_bb_pct:11.9,coors_composite:112.4,pitches_by_type:[{pitch_type:"SL",stuff_col:108},{pitch_type:"FC",stuff_col:106},{pitch_type:"FF",stuff_col:101},{pitch_type:"CH",stuff_col:98}]},
+  {player_name:"Márquez, Germán",pitches:2341,stuff_sl:101.8,stuff_col:107.3,stuff_delta:5.5,avg_velo:93.4,avg_ivb:15.2,avg_ext:6.4,ERA:3.84,FIP:3.91,K_pct:0.231,BB_pct:0.082,coors_ra9:4.5,coors_fip:3.7,coors_k_bb_pct:14.9,career_coors_ra9:4.62,career_coors_fip:3.78,career_coors_k_bb_pct:14.2,coors_composite:109.7,pitches_by_type:[{pitch_type:"FF",stuff_col:109},{pitch_type:"SL",stuff_col:106},{pitch_type:"CU",stuff_col:97}]},
+  {player_name:"Ottavino, Adam",pitches:1204,stuff_sl:108.4,stuff_col:113.2,stuff_delta:4.8,avg_velo:93.1,avg_ivb:11.2,avg_ext:6.9,ERA:2.18,FIP:2.44,K_pct:0.347,BB_pct:0.118,coors_ra9:3.2,coors_fip:2.9,coors_k_bb_pct:22.9,career_coors_ra9:3.41,career_coors_fip:3.05,career_coors_k_bb_pct:20.1,coors_composite:108.9,pitches_by_type:[{pitch_type:"SL",stuff_col:117},{pitch_type:"FF",stuff_col:104}]},
+  {player_name:"Senzatela, Antonio",pitches:1987,stuff_sl:93.1,stuff_col:99.8,stuff_delta:6.7,avg_velo:92.8,avg_ivb:10.1,avg_ext:6.2,ERA:3.74,FIP:3.99,K_pct:0.156,BB_pct:0.072,coors_ra9:5.2,coors_fip:4.2,coors_k_bb_pct:8.4,career_coors_ra9:5.45,career_coors_fip:4.28,career_coors_k_bb_pct:8.1,coors_composite:104.2,pitches_by_type:[{pitch_type:"SI",stuff_col:97},{pitch_type:"SL",stuff_col:102},{pitch_type:"CH",stuff_col:96}]},
+  {player_name:"Gray, Jon",pitches:1562,stuff_sl:102.1,stuff_col:106.8,stuff_delta:4.7,avg_velo:95.2,avg_ivb:16.1,avg_ext:6.6,ERA:4.12,FIP:3.87,K_pct:0.264,BB_pct:0.091,coors_ra9:4.8,coors_fip:3.9,coors_k_bb_pct:17.3,career_coors_ra9:5.05,career_coors_fip:4.02,career_coors_k_bb_pct:15.8,coors_composite:103.8,pitches_by_type:[{pitch_type:"FF",stuff_col:108},{pitch_type:"SL",stuff_col:106},{pitch_type:"CU",stuff_col:98}]},
+  {player_name:"Estévez, Carlos",pitches:1089,stuff_sl:105.7,stuff_col:109.1,stuff_delta:3.4,avg_velo:96.8,avg_ivb:13.4,avg_ext:7.1,ERA:3.42,FIP:3.28,K_pct:0.298,BB_pct:0.094,coors_ra9:3.9,coors_fip:3.4,coors_k_bb_pct:20.4,career_coors_ra9:4.12,career_coors_fip:3.52,career_coors_k_bb_pct:18.6,coors_composite:103.1,pitches_by_type:[{pitch_type:"FF",stuff_col:111},{pitch_type:"SL",stuff_col:107}]},
+  {player_name:"Bard, Daniel",pitches:978,stuff_sl:106.2,stuff_col:109.8,stuff_delta:3.6,avg_velo:97.4,avg_ivb:14.2,avg_ext:7.2,ERA:3.91,FIP:3.74,K_pct:0.267,BB_pct:0.112,coors_ra9:4.2,coors_fip:3.6,coors_k_bb_pct:15.5,career_coors_ra9:4.35,career_coors_fip:3.68,career_coors_k_bb_pct:14.9,coors_composite:102.4,pitches_by_type:[{pitch_type:"FF",stuff_col:110},{pitch_type:"SI",stuff_col:102}]},
+  {player_name:"Feltner, Ryan",pitches:1124,stuff_sl:96.4,stuff_col:101.2,stuff_delta:4.8,avg_velo:93.7,avg_ivb:13.8,avg_ext:6.5,ERA:4.44,FIP:4.21,K_pct:0.224,BB_pct:0.083,coors_ra9:5.5,coors_fip:4.4,coors_k_bb_pct:14.1,career_coors_ra9:5.62,career_coors_fip:4.48,career_coors_k_bb_pct:13.5,coors_composite:100.8,pitches_by_type:[{pitch_type:"FF",stuff_col:103},{pitch_type:"SL",stuff_col:101},{pitch_type:"CH",stuff_col:97}]},
+  {player_name:"Kuhl, Chad",pitches:874,stuff_sl:95.2,stuff_col:99.7,stuff_delta:4.5,avg_velo:92.1,avg_ivb:12.9,avg_ext:6.3,ERA:4.82,FIP:4.54,K_pct:0.198,BB_pct:0.088,coors_ra9:6.1,coors_fip:4.8,coors_k_bb_pct:11.0,career_coors_ra9:6.25,career_coors_fip:4.85,career_coors_k_bb_pct:10.6,coors_composite:99.2,pitches_by_type:[{pitch_type:"SI",stuff_col:98},{pitch_type:"SL",stuff_col:101},{pitch_type:"CU",stuff_col:94}]},
+  {player_name:"Gomber, Austin",pitches:1432,stuff_sl:94.8,stuff_col:99.1,stuff_delta:4.3,avg_velo:91.4,avg_ivb:11.7,avg_ext:6.1,ERA:4.96,FIP:4.78,K_pct:0.187,BB_pct:0.079,coors_ra9:5.8,coors_fip:4.6,coors_k_bb_pct:10.8,career_coors_ra9:5.92,career_coors_fip:4.65,career_coors_k_bb_pct:10.4,coors_composite:98.7,pitches_by_type:[{pitch_type:"FF",stuff_col:99},{pitch_type:"CH",stuff_col:101},{pitch_type:"CU",stuff_col:96}]},
 ];
 
 function loadData(){
@@ -356,9 +362,13 @@ function init(){
   renderBreakdown();
 }
 
+function fmtCoorsNum(v, d) {
+  if (v === undefined || v === null || Number.isNaN(Number(v))) return '—';
+  return Number(v).toFixed(d);
+}
 function renderTable(){
   const sorted=[...allData].sort((a,b)=>{
-    if(sortKey==='ERA') return (a.ERA||99)-(b.ERA||99);
+    if(sortKey==='coors_ra9') return (a.coors_ra9??999)-(b.coors_ra9??999);
     return (b[sortKey]||0)-(a[sortKey]||0);
   });
   const tbody=document.getElementById('tableBody');
@@ -377,9 +387,15 @@ function renderTable(){
       <td class="metric"><div class="stuff-bar-wrap"><div class="stuff-bar" style="width:${slPct}%"></div></div>${(p.stuff_sl||0).toFixed(1)}</td>
       <td class="metric"><div class="stuff-bar-wrap"><div class="stuff-bar teal" style="width:${colPct}%"></div></div>${(p.stuff_col||0).toFixed(1)}</td>
       <td class="metric ${deltaCls}">${delta>0?'+':''}${delta.toFixed(1)}</td>
-      <td class="metric">${p.ERA?p.ERA.toFixed(2):'—'}</td>
-      <td class="metric">${p.FIP?p.FIP.toFixed(2):'—'}</td>
+      <td class="metric">${p.ERA!=null&&!Number.isNaN(Number(p.ERA))?Number(p.ERA).toFixed(2):'—'}</td>
+      <td class="metric">${p.FIP!=null&&!Number.isNaN(Number(p.FIP))?Number(p.FIP).toFixed(2):'—'}</td>
       <td class="metric">${kbb}</td>
+      <td class="metric">${fmtCoorsNum(p.coors_ra9, 2)}</td>
+      <td class="metric">${fmtCoorsNum(p.coors_fip, 2)}</td>
+      <td class="metric">${p.coors_k_bb_pct!=null&&!Number.isNaN(Number(p.coors_k_bb_pct))?Number(p.coors_k_bb_pct).toFixed(1)+'%':'—'}</td>
+      <td class="metric">${fmtCoorsNum(p.career_coors_ra9, 2)}</td>
+      <td class="metric">${fmtCoorsNum(p.career_coors_fip, 2)}</td>
+      <td class="metric">${p.career_coors_k_bb_pct!=null&&!Number.isNaN(Number(p.career_coors_k_bb_pct))?Number(p.career_coors_k_bb_pct).toFixed(1)+'%':'—'}</td>
       <td class="metric">${(p.avg_velo||0).toFixed(1)}</td>
       <td class="metric">${(p.avg_ivb||0).toFixed(1)}</td>
       <td class="metric">${(p.avg_ext||0).toFixed(1)} ft</td>
@@ -394,7 +410,11 @@ function renderChart(){
   const prev = Chart.getChart(canvas);
   if (prev) prev.destroy();
   const top10=[...allData].sort((a,b)=>(b.coors_composite||0)-(a.coors_composite||0)).slice(0,10);
-  const labels=top10.map(p=>p.player_name.split(' ').slice(-1)[0]);
+  const labels=top10.map(p=>{
+    const s=p.player_name||'';
+    const i=s.indexOf(', ');
+    return i>0?s.slice(0,i):s.split(' ').slice(-1)[0]||s;
+  });
   stuffChart = new Chart(canvas,{
     type:'bar',
     data:{

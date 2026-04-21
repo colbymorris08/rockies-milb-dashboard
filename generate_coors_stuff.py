@@ -14,6 +14,7 @@ from sklearn.metrics import root_mean_squared_error
 from sklearn.preprocessing import LabelEncoder
 import json, os, warnings
 from collections import defaultdict
+from typing import Any
 warnings.filterwarnings("ignore")
 
 pb.cache.enable()
@@ -35,6 +36,137 @@ ALPHA = {
     "release_pos_x":     1.00,
 }
 PARK_INTERCEPT = 0.38 / 9
+FIP_LEAGUE_C = 3.10  # constant term for FIP on same scale as typical MLB FIP
+
+# Statcast `events` → outs recorded on that play (used when outs_when_up delta is 0)
+EVENT_OUTS: dict[str, int] = {
+    "strikeout": 1,
+    "field_out": 1,
+    "force_out": 1,
+    "sac_fly": 1,
+    "sac_bunt": 1,
+    "grounded_into_double_play": 2,
+    "double_play": 2,
+    "triple_play": 3,
+    "fielders_choice_out": 1,
+    "field_error": 0,
+    "home_run": 0,
+    "walk": 0,
+    "intent_walk": 0,
+    "hit_by_pitch": 0,
+    "single": 0,
+    "double": 0,
+    "triple": 0,
+}
+
+
+def fangraphs_name_to_statcast(name: str) -> str:
+    """FanGraphs 'Andrew Abbott' → Statcast 'Abbott, Andrew'."""
+    s = str(name).strip()
+    if not s:
+        return s
+    parts = s.split()
+    if len(parts) == 1:
+        return parts[0]
+    return f"{parts[-1]}, {' '.join(parts[:-1])}"
+
+
+def compute_coors_pitching_rates(coors_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Per pitcher, aggregate plate appearances at Coors (home_team == COL only)
+    to get IP (from outs), runs allowed in those PAs, K/BB/HR, FIP, and K−BB%.
+    Note: 'coors_ra9' is runs per 9 (Statcast plate runs), not official earned runs.
+    """
+    d = coors_df.copy()
+    if d.empty or "player_name" not in d.columns:
+        return pd.DataFrame(
+            columns=["player_name", "coors_bf", "coors_ip", "coors_ra9", "coors_fip", "coors_k_bb_pct"]
+        )
+    need = {
+        "game_pk",
+        "inning",
+        "inning_topbot",
+        "at_bat_number",
+        "pitch_number",
+        "events",
+        "player_name",
+        "away_score",
+        "home_score",
+        "post_away_score",
+        "post_home_score",
+        "outs_when_up",
+    }
+    miss = need - set(d.columns)
+    if miss:
+        print(f"  [coors rates] missing columns {miss}, skipping Coors PA aggregates")
+        return pd.DataFrame(
+            columns=["player_name", "coors_bf", "coors_ip", "coors_ra9", "coors_fip", "coors_k_bb_pct"]
+        )
+
+    d = d.sort_values(["game_pk", "inning", "inning_topbot", "at_bat_number", "pitch_number"])
+    keys = ["game_pk", "inning", "inning_topbot", "at_bat_number"]
+    rows: list[dict[str, Any]] = []
+    for _, grp in d.groupby(keys, sort=False):
+        g = grp.sort_values("pitch_number")
+        last = g.iloc[-1]
+        ev = last.get("events")
+        if pd.isna(ev) or str(ev).strip() in ("", "truncated_pa"):
+            continue
+        evs = str(ev)
+        first = g.iloc[0]
+        pname = str(last["player_name"]).strip()
+        if last["inning_topbot"] == "Top":
+            runs = float(last["post_away_score"]) - float(first["away_score"])
+        else:
+            runs = float(last["post_home_score"]) - float(first["home_score"])
+        delta_o = max(0, int(last["outs_when_up"]) - int(first["outs_when_up"]))
+        eo = int(EVENT_OUTS.get(evs, 0))
+        outs = max(delta_o, eo)
+        k = 1 if evs == "strikeout" else 0
+        bb = 1 if evs in ("walk", "intent_walk") else 0
+        hbp = 1 if evs == "hit_by_pitch" else 0
+        hr = 1 if evs == "home_run" else 0
+        rows.append(
+            {
+                "player_name": pname,
+                "runs": runs,
+                "outs": outs,
+                "k": k,
+                "bb": bb,
+                "hbp": hbp,
+                "hr": hr,
+            }
+        )
+    if not rows:
+        return pd.DataFrame(
+            columns=["player_name", "coors_bf", "coors_ip", "coors_ra9", "coors_fip", "coors_k_bb_pct"]
+        )
+    pa = pd.DataFrame(rows)
+    agg = (
+        pa.groupby("player_name", as_index=False)
+        .agg(
+            runs=("runs", "sum"),
+            outs=("outs", "sum"),
+            k=("k", "sum"),
+            bb=("bb", "sum"),
+            hbp=("hbp", "sum"),
+            hr=("hr", "sum"),
+            coors_bf=("runs", "count"),
+        )
+    )
+    agg["coors_ip"] = agg["outs"] / 3.0
+    agg["coors_ra9"] = np.where(agg["coors_ip"] > 0, agg["runs"] * 9.0 / agg["coors_ip"], np.nan)
+    agg["coors_fip"] = np.where(
+        agg["coors_ip"] > 0,
+        (13.0 * agg["hr"] + 3.0 * (agg["bb"] + agg["hbp"]) - 2.0 * agg["k"]) / agg["coors_ip"] + FIP_LEAGUE_C,
+        np.nan,
+    )
+    agg["coors_k_bb_pct"] = np.where(
+        agg["coors_bf"] > 0, (agg["k"] - agg["bb"]) / agg["coors_bf"] * 100.0, np.nan
+    )
+    out = agg[["player_name", "coors_bf", "coors_ip", "coors_ra9", "coors_fip", "coors_k_bb_pct"]].copy()
+    return out.round({"coors_ip": 1, "coors_ra9": 2, "coors_fip": 2, "coors_k_bb_pct": 1})
+
 
 # ── 1. Pull Statcast 2021-2024 ─────────────────────────────────────────────
 print("Pulling Statcast data...")
@@ -76,7 +208,7 @@ FEATURES = [f for f in FEATURES if f in df.columns]
 TARGET = "estimated_woba_using_speedangle"
 
 # ── 3. Pull pitcher-level Coors SUCCESS stats via FanGraphs ───────────────
-print("Pulling FanGraphs Coors splits 2021-2024...")
+print("Pulling FanGraphs season stats 2021-2024 (for MLB row + composite)...")
 try:
     fg = pb.pitching_stats(2021, 2024, qual=20)
     fg = fg[["Name","ERA","FIP","K%","BB%","WHIP","WAR","xFIP","BABIP","LOB%","HR/9"]].copy()
@@ -189,11 +321,70 @@ pitcher_agg_rockies = aggregate_pitchers(
     combined_scores[combined_scores["is_rockies_pitch"]], MIN_PITCHES_ROCKIES
 )
 
-# merge FanGraphs success stats if available
+print("  Coors Field PA aggregates (Statcast 2021-2024 games at Coors)...")
+coors_rates = compute_coors_pitching_rates(coors)
+pitcher_agg = pitcher_agg.merge(coors_rates, on="player_name", how="left")
+pitcher_agg_rockies = pitcher_agg_rockies.merge(coors_rates, on="player_name", how="left")
+
+print("  Career Coors PA rates (Statcast 2015-2024, COL home regular season)...")
+_career_cols = [
+    "player_name",
+    "career_coors_bf",
+    "career_coors_ip",
+    "career_coors_ra9",
+    "career_coors_fip",
+    "career_coors_k_bb_pct",
+]
+try:
+    df_pre = pb.statcast(start_dt="2015-01-01", end_dt="2020-12-31")
+    df_pre = df_pre[df_pre["game_type"] == "R"].copy()
+    coors_pre = df_pre[df_pre["home_team"] == "COL"].copy()
+    coors_career = pd.concat([coors_pre, coors], ignore_index=True)
+    career_rates = compute_coors_pitching_rates(coors_career).rename(
+        columns={
+            "coors_bf": "career_coors_bf",
+            "coors_ip": "career_coors_ip",
+            "coors_ra9": "career_coors_ra9",
+            "coors_fip": "career_coors_fip",
+            "coors_k_bb_pct": "career_coors_k_bb_pct",
+        }
+    )
+    pitcher_agg = pitcher_agg.merge(career_rates, on="player_name", how="left")
+    pitcher_agg_rockies = pitcher_agg_rockies.merge(career_rates, on="player_name", how="left")
+    print(f"    merged career Coors lines for {len(career_rates)} pitchers")
+except Exception as e:
+    print(f"    career Coors pull/merge failed ({e}); exporting without career columns")
+    for c in _career_cols[1:]:
+        if c not in pitcher_agg.columns:
+            pitcher_agg[c] = np.nan
+        if c not in pitcher_agg_rockies.columns:
+            pitcher_agg_rockies[c] = np.nan
+
+# merge FanGraphs success stats if available (names are First Last; Statcast uses Last, First)
 if have_fg:
-    fg_cols = ["player_name", "ERA", "FIP", "K_pct", "BB_pct", "WHIP", "WAR", "xFIP", "success_score"]
-    pitcher_agg = pitcher_agg.merge(fg[fg_cols], on="player_name", how="left").round(3)
-    pitcher_agg_rockies = pitcher_agg_rockies.merge(fg[fg_cols], on="player_name", how="left").round(3)
+    fg = fg.copy()
+    fg["statcast_name"] = fg["player_name"].apply(fangraphs_name_to_statcast)
+    fg_cols = [
+        "statcast_name",
+        "ERA",
+        "FIP",
+        "K_pct",
+        "BB_pct",
+        "WHIP",
+        "WAR",
+        "xFIP",
+        "success_score",
+    ]
+    pitcher_agg = (
+        pitcher_agg.merge(fg[fg_cols], left_on="player_name", right_on="statcast_name", how="left")
+        .drop(columns=["statcast_name"], errors="ignore")
+        .round(3)
+    )
+    pitcher_agg_rockies = (
+        pitcher_agg_rockies.merge(fg[fg_cols], left_on="player_name", right_on="statcast_name", how="left")
+        .drop(columns=["statcast_name"], errors="ignore")
+        .round(3)
+    )
 
 # composite Coors success score (stuff_col + success_score weighted equally)
 if "success_score" in pitcher_agg.columns:
@@ -273,6 +464,7 @@ importance_col = get_importance(m_col, "coors_adj")
 meta = {
     "generated": pd.Timestamp.now().isoformat(),
     "training_years": "2021-2024",
+    "career_coors_statcast_years": "2015-2024",
     "features": FEATURES,
     "models": ["tjStuff+ v2", "FanGraphs Stuff+/PitchingBot", "aStuff+ v2"],
     "coors_alpha": ALPHA,
