@@ -39,6 +39,7 @@
     align-items: center;
   }
   .site-nav .nav-page {
+    font-family: 'Courier New', monospace;
     font-size: 11px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -49,11 +50,13 @@
     border: 1px solid #5a6986;
     background: #2c3850;
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+    transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.12s;
   }
   .site-nav .nav-page:hover {
-    color: var(--white);
+    color: #eef6ff;
     background: #384764;
     border-color: #8b9aba;
+    transform: translateY(-1px);
   }
   .site-nav .nav-page.active {
     color: #efe8ff;

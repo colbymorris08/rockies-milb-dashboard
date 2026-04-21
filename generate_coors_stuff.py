@@ -17,6 +17,7 @@ from sklearn.preprocessing import LabelEncoder
 import gc
 import json, os, warnings
 import time
+from datetime import datetime, timedelta
 from collections import defaultdict
 from typing import Any
 warnings.filterwarnings("ignore")
@@ -27,7 +28,7 @@ MODEL_START = "2021-01-01"
 MODEL_END = "2024-12-31"
 COORS_PERF_START = "2015-01-01"
 COORS_PERF_END = "2024-12-31"
-MIN_COORS_IP_LAST10 = 20.0
+MIN_COORS_IP_LAST10 = 30.0
 PERF_WEIGHT = 0.50
 STUFF_WEIGHT = 0.50
 
@@ -221,6 +222,64 @@ def safe_statcast_pull(start_dt: str, end_dt: str, team: str | None = None, trie
     raise RuntimeError(f"statcast pull failed after {tries} attempts for {start_dt}..{end_dt}") from last_err
 
 
+def _daterange_chunks(start_dt: str, end_dt: str, chunk_days: int) -> list[tuple[str, str]]:
+    s = datetime.strptime(start_dt, "%Y-%m-%d").date()
+    e = datetime.strptime(end_dt, "%Y-%m-%d").date()
+    out: list[tuple[str, str]] = []
+    cur = s
+    while cur < e:
+        nxt = min(cur + timedelta(days=chunk_days), e)
+        out.append((cur.isoformat(), nxt.isoformat()))
+        cur = nxt
+    return out
+
+
+def safe_statcast_pull_adaptive(start_dt: str, end_dt: str, team: str | None = None) -> pd.DataFrame:
+    """
+    Pull Statcast robustly:
+      1) try full window
+      2) on timeout/failure, split into 14-day chunks
+      3) if a 14-day chunk still fails, split that chunk into 7-day chunks
+      4) if a 7-day chunk still fails, split that chunk into 1-day chunks
+    """
+    try:
+        return safe_statcast_pull(start_dt, end_dt, team=team)
+    except Exception as first_err:
+        print(f"    adaptive split for {start_dt}..{end_dt} after error: {first_err}")
+
+    pieces_14: list[pd.DataFrame] = []
+    for s14, e14 in _daterange_chunks(start_dt, end_dt, 14):
+        try:
+            d14 = safe_statcast_pull(s14, e14, team=team)
+            if not d14.empty:
+                pieces_14.append(d14)
+            continue
+        except Exception as err14:
+            print(f"    14-day chunk failed {s14}..{e14}: {err14}; retrying weekly")
+
+        for s7, e7 in _daterange_chunks(s14, e14, 7):
+            try:
+                d7 = safe_statcast_pull(s7, e7, team=team)
+                if not d7.empty:
+                    pieces_14.append(d7)
+                continue
+            except Exception as err7:
+                print(f"    7-day chunk failed {s7}..{e7}: {err7}; retrying daily")
+
+            for s1, e1 in _daterange_chunks(s7, e7, 1):
+                try:
+                    d1 = safe_statcast_pull(s1, e1, team=team)
+                    if not d1.empty:
+                        pieces_14.append(d1)
+                except Exception as err1:
+                    # Do not abort full model generation on a stubborn day-sized timeout.
+                    print(f"    daily chunk failed {s1}..{e1}: {err1}; skipping day")
+
+    if not pieces_14:
+        return pd.DataFrame()
+    return pd.concat(pieces_14, ignore_index=True)
+
+
 def pull_statcast_yearly(start_year: int, end_year: int, team: str | None = None) -> pd.DataFrame:
     chunks: list[pd.DataFrame] = []
     for year in range(start_year, end_year + 1):
@@ -232,7 +291,7 @@ def pull_statcast_yearly(start_year: int, end_year: int, team: str | None = None
                 end_dt = f"{year}-12-31"
             else:
                 end_dt = f"{year}-{month+1:02d}-01"
-            y = safe_statcast_pull(start_dt, end_dt, team=team)
+            y = safe_statcast_pull_adaptive(start_dt, end_dt, team=team)
             if not y.empty:
                 month_chunks.append(y)
         if month_chunks:
@@ -254,7 +313,11 @@ def pull_coors_last10_rates_efficient(start_year: int, end_year: int) -> pd.Data
     season_totals: list[pd.DataFrame] = []
     for year in range(start_year, end_year + 1):
         print(f"    pulling Coors season {year}...")
-        y = safe_statcast_pull(f"{year}-01-01", f"{year}-12-31")
+        # Full-season single query can timeout; use adaptive chunked pulls.
+        y = safe_statcast_pull_adaptive(f"{year}-01-01", f"{year}-12-31")
+        if y.empty:
+            print(f"    no Statcast rows for {year}; skipping")
+            continue
         y = y[(y["game_type"] == "R") & (y["home_team"] == "COL")].copy()
         t = _coors_pa_totals_from_pitch_data(y)
         if not t.empty:
@@ -529,6 +592,12 @@ def get_importance(model, label):
 importance_sl  = get_importance(m_sl,  "sea_level")
 importance_col = get_importance(m_col, "coors_adj")
 
+def _safe_mean(series: pd.Series, ndigits: int = 2) -> float | None:
+    s = pd.to_numeric(series, errors="coerce").dropna()
+    if s.empty:
+        return None
+    return float(round(float(s.mean()), ndigits))
+
 # ── 10. Model metadata ─────────────────────────────────────────────────────
 meta = {
     "generated": pd.Timestamp.now().isoformat(),
@@ -546,10 +615,10 @@ meta = {
     "top20_names": top20["player_name"].tolist(),
     "rockies_top20_names": top20_rockies["player_name"].tolist(),
     "top20_key_findings": {
-        "avg_stuff_delta": float(round(float(top20["stuff_delta"].mean()), 2)),
-        "avg_vaa": float(round(float(top20["avg_vaa"].mean()), 2)),
-        "avg_ivb": float(round(float(top20["avg_ivb"].mean()), 2)),
-        "avg_ext": float(round(float(top20["avg_ext"].mean()), 2)),
+        "avg_stuff_delta": _safe_mean(top20["stuff_delta"]),
+        "avg_vaa": _safe_mean(top20["avg_vaa"]),
+        "avg_ivb": _safe_mean(top20["avg_ivb"]),
+        "avg_ext": _safe_mean(top20["avg_ext"]),
     }
 }
 

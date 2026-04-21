@@ -19,12 +19,10 @@
 body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden}
 
 /* header */
-.site-header{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;position:sticky;top:0;z-index:100}
-.site-header .logo{font-family:var(--mono);font-size:13px;color:var(--teal);letter-spacing:.08em;flex-shrink:0}
-.site-nav{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-left:auto}
-.site-nav .nav-page{font-family:var(--mono);font-size:11px;color:#b8c4d6;text-decoration:none;letter-spacing:.06em;text-transform:uppercase;padding:10px 16px;border-radius:10px;border:1px solid #55627a;background:#2a3448;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);transition:background .15s,color .15s,border-color .15s,transform .12s}
-.site-nav .nav-page:hover{color:#eef6ff;background:#34405a;border-color:#7a8aa6;transform:translateY(-1px)}
-.site-nav .nav-page.active{color:#7ef0df;background:rgba(20,184,166,.22);border-color:var(--teal);box-shadow:0 0 0 1px rgba(20,184,166,.25),0 4px 14px rgba(20,184,166,.12)}
+.site-nav{display:flex;gap:6px;padding:10px 32px 12px;background:#21293b;border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center}
+.site-nav .nav-page{font-family:'Courier New',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#b8c4d6;text-decoration:none;padding:10px 16px;border-radius:10px;border:1px solid #5a6986;background:#2c3850;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);transition:background .15s,color .15s,border-color .15s,transform .12s}
+.site-nav .nav-page:hover{color:#eef6ff;background:#384764;border-color:#8b9aba;transform:translateY(-1px)}
+.site-nav .nav-page.active{color:#efe8ff;background:rgba(139,92,246,.28);border-color:#9e7bff;box-shadow:0 0 0 1px rgba(139,92,246,.25),0 4px 14px rgba(139,92,246,.14)}
 
 /* hero */
 .hero{padding:3rem 2rem 2rem;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
@@ -129,19 +127,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 </head>
 <body>
 
-<header class="site-header">
-  <span class="logo">ROCKIES · ANALYTICS</span>
-  <nav class="site-nav" aria-label="Rockies analytics">
-    <a class="nav-page" href="col_minors_dashboard.html">MiLB 2026</a>
-    <a class="nav-page" href="coors_movement_sim.html">Coors movement</a>
-    <a class="nav-page active" href="coors_top20.html">Coors Field Stuff+</a>
-  </nav>
-</header>
+<nav class="site-nav" aria-label="Rockies analytics">
+  <a class="nav-page" href="col_minors_dashboard.html">MiLB 2026</a>
+  <a class="nav-page" href="coors_movement_sim.html">Coors movement</a>
+  <a class="nav-page active" href="coors_top20.html">Coors Field Stuff+</a>
+</nav>
 
 <section class="hero">
   <div class="hero-label">COORS FIELD · PITCHER ANALYSIS · 2021–2024</div>
   <h1 class="hero-title">Who Actually <strong>Succeeded</strong> at Coors Field</h1>
-  <p class="hero-sub">Two leaderboards: all pitchers and Rockies pitchers at Coors, each requiring <strong>20+ Coors innings</strong> over the last 10 Statcast seasons (2015-24). Stuff is modeled on the existing <strong>2021-24</strong> window, while ranking is balanced: <strong>50% pure Coors performance</strong> (xFIP if available, otherwise Coors FIP, plus Coors K-BB%) + <strong>50% Coors Stuff+</strong>. Use the sort tabs to isolate Composite, Coors Stuff, or Pure Performance.</p>
+  <p class="hero-sub">Two leaderboards: all pitchers and Rockies pitchers at Coors, each requiring <strong>30+ Coors innings</strong> over the last 10 Statcast seasons (2015-24). Stuff is modeled on the existing <strong>2021-24</strong> window, while ranking is balanced: <strong>50% pure Coors performance</strong> (xFIP if available, otherwise Coors FIP, plus Coors K-BB%) + <strong>50% Coors Stuff+</strong>. Use the sort tabs to isolate Composite, Coors Stuff, or Pure Performance.</p>
   <div class="hero-stats">
     <div class="hstat"><span class="hstat-val" id="statPitchers">—</span><span class="hstat-label">QUALIFIED PITCHERS</span></div>
     <div class="hstat"><span class="hstat-val" id="statPitches">—</span><span class="hstat-label">COORS PITCHES SCORED</span></div>
@@ -155,7 +150,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
   <span class="insight-label">MODEL INSIGHTS FROM TOP 20</span>
   <div class="insight-item">Extension avg: <strong id="insExtAvg">—</strong> among leaders</div>
   <div class="insight-divider"></div>
-  <div class="insight-item">Top-10 VAA avg: <strong id="insVaaTop10">—</strong></div>
+  <div class="insight-item">Top-10 10Y Coors FIP: <strong id="insTop10Fip">—</strong></div>
   <div class="insight-divider"></div>
   <div class="insight-item">Mean Coors K-BB%: <strong id="insKbbAvg">—</strong></div>
   <div class="insight-divider"></div>
@@ -234,7 +229,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
       </div>
       <div class="finding">
         <span class="finding-label">Sample guardrail</span>
-        <span class="finding-val">10+ Coors IP minimum</span>
+        <span class="finding-val">30+ Coors IP minimum</span>
         <span class="finding-note">The qualification floor keeps short-sample spikes out, so these traits reflect repeatable Coors performance patterns.</span>
       </div>
     </div>
@@ -360,11 +355,11 @@ function init(){
   document.getElementById('statInnings').textContent = totalInnings.toFixed(1);
   const top10=[...allData].sort((a,b)=>(b.coors_composite||0)-(a.coors_composite||0)).slice(0,10);
   const extAvg = n ? (allData.reduce((a,p)=>a+(Number(p.avg_ext)||0),0)/n) : null;
-  const vaaAvgTop10 = top10.length ? (top10.reduce((a,p)=>a+(Number(p.avg_vaa)||0),0)/top10.length) : null;
+  const top10Fip = top10.length ? (top10.reduce((a,p)=>a+(Number(p.career_coors_fip)||0),0)/top10.length) : null;
   const kbbAvg = n ? (allData.reduce((a,p)=>a+(Number(p.career_coors_k_bb_pct)||0),0)/n) : null;
   const fipAvg = n ? (allData.reduce((a,p)=>a+(Number(p.career_coors_fip)||0),0)/n) : null;
   document.getElementById('insExtAvg').textContent = extAvg==null ? '—' : `${extAvg.toFixed(2)} ft`;
-  document.getElementById('insVaaTop10').textContent = vaaAvgTop10==null ? '—' : `${vaaAvgTop10.toFixed(2)}°`;
+  document.getElementById('insTop10Fip').textContent = top10Fip==null ? '—' : top10Fip.toFixed(2);
   document.getElementById('insKbbAvg').textContent = kbbAvg==null ? '—' : `${kbbAvg.toFixed(1)}%`;
   document.getElementById('insFipAvg').textContent = fipAvg==null ? '—' : fipAvg.toFixed(2);
   document.getElementById('insTotalIp').textContent = totalInnings.toFixed(1);
