@@ -14,7 +14,9 @@ from xgboost import XGBRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import root_mean_squared_error
 from sklearn.preprocessing import LabelEncoder
+import gc
 import json, os, warnings
+import time
 from collections import defaultdict
 from typing import Any
 warnings.filterwarnings("ignore")
@@ -25,7 +27,7 @@ MODEL_START = "2021-01-01"
 MODEL_END = "2024-12-31"
 COORS_PERF_START = "2015-01-01"
 COORS_PERF_END = "2024-12-31"
-MIN_COORS_IP_LAST10 = 20.0
+MIN_COORS_IP_LAST10 = 10.0
 PERF_WEIGHT = 0.65
 STUFF_WEIGHT = 0.35
 
@@ -81,7 +83,7 @@ def fangraphs_name_to_statcast(name: str) -> str:
     return f"{parts[-1]}, {' '.join(parts[:-1])}"
 
 
-def compute_coors_pitching_rates(coors_df: pd.DataFrame) -> pd.DataFrame:
+def _coors_pa_totals_from_pitch_data(coors_df: pd.DataFrame) -> pd.DataFrame:
     """
     Per pitcher, aggregate plate appearances at Coors (home_team == COL only)
     to get IP (from outs), runs allowed in those PAs, K/BB/HR, FIP, and K−BB%.
@@ -174,13 +176,104 @@ def compute_coors_pitching_rates(coors_df: pd.DataFrame) -> pd.DataFrame:
     agg["coors_k_bb_pct"] = np.where(
         agg["coors_bf"] > 0, (agg["k"] - agg["bb"]) / agg["coors_bf"] * 100.0, np.nan
     )
+    return agg[["player_name", "runs", "outs", "k", "bb", "hbp", "hr", "coors_bf"]].copy()
+
+
+def _rates_from_totals(totals_df: pd.DataFrame) -> pd.DataFrame:
+    if totals_df.empty:
+        return pd.DataFrame(
+            columns=["player_name", "coors_bf", "coors_ip", "coors_ra9", "coors_fip", "coors_k_bb_pct"]
+        )
+    agg = totals_df.copy()
+    agg["coors_ip"] = agg["outs"] / 3.0
+    agg["coors_ra9"] = np.where(agg["coors_ip"] > 0, agg["runs"] * 9.0 / agg["coors_ip"], np.nan)
+    agg["coors_fip"] = np.where(
+        agg["coors_ip"] > 0,
+        (13.0 * agg["hr"] + 3.0 * (agg["bb"] + agg["hbp"]) - 2.0 * agg["k"]) / agg["coors_ip"] + FIP_LEAGUE_C,
+        np.nan,
+    )
+    agg["coors_k_bb_pct"] = np.where(
+        agg["coors_bf"] > 0, (agg["k"] - agg["bb"]) / agg["coors_bf"] * 100.0, np.nan
+    )
     out = agg[["player_name", "coors_bf", "coors_ip", "coors_ra9", "coors_fip", "coors_k_bb_pct"]].copy()
     return out.round({"coors_ip": 1, "coors_ra9": 2, "coors_fip": 2, "coors_k_bb_pct": 1})
 
 
+def compute_coors_pitching_rates(coors_df: pd.DataFrame) -> pd.DataFrame:
+    totals = _coors_pa_totals_from_pitch_data(coors_df)
+    return _rates_from_totals(totals)
+
+
+def safe_statcast_pull(start_dt: str, end_dt: str, team: str | None = None, tries: int = 4) -> pd.DataFrame:
+    """
+    Retry wrapper around pybaseball.statcast to handle intermittent malformed CSV
+    responses (e.g., pandas ParserError from partial/non-CSV payloads).
+    """
+    last_err: Exception | None = None
+    for attempt in range(1, tries + 1):
+        try:
+            return pb.statcast(start_dt=start_dt, end_dt=end_dt, team=team, parallel=False)
+        except Exception as e:
+            last_err = e
+            print(f"    statcast pull failed {start_dt}..{end_dt} (attempt {attempt}/{tries}): {e}")
+            if attempt < tries:
+                time.sleep(2.0 * attempt)
+    raise RuntimeError(f"statcast pull failed after {tries} attempts for {start_dt}..{end_dt}") from last_err
+
+
+def pull_statcast_yearly(start_year: int, end_year: int, team: str | None = None) -> pd.DataFrame:
+    chunks: list[pd.DataFrame] = []
+    for year in range(start_year, end_year + 1):
+        print(f"  pulling Statcast season {year}...")
+        y = safe_statcast_pull(f"{year}-01-01", f"{year}-12-31", team=team)
+        if not y.empty:
+            chunks.append(y)
+    if not chunks:
+        return pd.DataFrame()
+    return pd.concat(chunks, ignore_index=True)
+
+
+def pull_coors_last10_rates_efficient(start_year: int, end_year: int) -> pd.DataFrame:
+    """
+    Memory-safe Coors pull:
+      1) pull one season at a time
+      2) immediately filter to COL home games
+      3) aggregate to PA totals and discard raw pitch table
+      4) prefilter to pitchers with at least 2 Coors BF
+      5) final filter to MIN_COORS_IP_LAST10 for ranking eligibility
+    """
+    season_totals: list[pd.DataFrame] = []
+    for year in range(start_year, end_year + 1):
+        print(f"    pulling Coors season {year}...")
+        y = safe_statcast_pull(f"{year}-01-01", f"{year}-12-31")
+        y = y[(y["game_type"] == "R") & (y["home_team"] == "COL")].copy()
+        t = _coors_pa_totals_from_pitch_data(y)
+        if not t.empty:
+            season_totals.append(t)
+        del y
+        del t
+        gc.collect()
+
+    if not season_totals:
+        return pd.DataFrame(
+            columns=["player_name", "coors_bf", "coors_ip", "coors_ra9", "coors_fip", "coors_k_bb_pct"]
+        )
+
+    totals = (
+        pd.concat(season_totals, ignore_index=True)
+        .groupby("player_name", as_index=False)[["runs", "outs", "k", "bb", "hbp", "hr", "coors_bf"]]
+        .sum()
+    )
+    # Early sample-size filter per your request.
+    totals = totals[totals["coors_bf"] >= 2].copy()
+    rates = _rates_from_totals(totals)
+    rates = rates[rates["coors_ip"] >= MIN_COORS_IP_LAST10].copy()
+    return rates
+
+
 # ── 1. Pull Statcast model window (2021-2024) ──────────────────────────────
 print("Pulling Statcast data...")
-df = pb.statcast(start_dt=MODEL_START, end_dt=MODEL_END)
+df = pull_statcast_yearly(2021, 2024)
 df = df[df["game_type"] == "R"].copy()
 print(f"  {len(df):,} pitches")
 
@@ -327,10 +420,7 @@ _career_cols = [
     "career_coors_k_bb_pct",
 ]
 try:
-    df_10y = pb.statcast(start_dt=COORS_PERF_START, end_dt=COORS_PERF_END)
-    df_10y = df_10y[df_10y["game_type"] == "R"].copy()
-    coors_career = df_10y[df_10y["home_team"] == "COL"].copy()
-    career_rates = compute_coors_pitching_rates(coors_career).rename(
+    career_rates = pull_coors_last10_rates_efficient(2015, 2024).rename(
         columns={
             "coors_bf": "career_coors_bf",
             "coors_ip": "career_coors_ip",

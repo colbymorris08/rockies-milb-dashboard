@@ -141,10 +141,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 <section class="hero">
   <div class="hero-label">COORS FIELD · PITCHER ANALYSIS · 2021–2024</div>
   <h1 class="hero-title">Who Actually <strong>Succeeded</strong> at Coors Field</h1>
-  <p class="hero-sub">Two leaderboards: all pitchers and Rockies pitchers at Coors, each requiring <strong>20+ Coors innings</strong> over the last 10 Statcast seasons (2015-24). Stuff is modeled on the existing <strong>2021-24</strong> window, while ranking is performance-heavy: <strong>65% pure Coors performance</strong> (xFIP if available, otherwise Coors FIP, plus Coors K-BB%) + <strong>35% Coors Stuff+</strong>. Use the sort tabs to isolate Composite, Coors Stuff, or Pure Performance.</p>
+  <p class="hero-sub">Two leaderboards: all pitchers and Rockies pitchers at Coors, each requiring <strong>10+ Coors innings</strong> over the last 10 Statcast seasons (2015-24). Stuff is modeled on the existing <strong>2021-24</strong> window, while ranking is performance-heavy: <strong>65% pure Coors performance</strong> (xFIP if available, otherwise Coors FIP, plus Coors K-BB%) + <strong>35% Coors Stuff+</strong>. Use the sort tabs to isolate Composite, Coors Stuff, or Pure Performance.</p>
   <div class="hero-stats">
     <div class="hstat"><span class="hstat-val" id="statPitchers">—</span><span class="hstat-label">QUALIFIED PITCHERS</span></div>
     <div class="hstat"><span class="hstat-val" id="statPitches">—</span><span class="hstat-label">COORS PITCHES SCORED</span></div>
+    <div class="hstat"><span class="hstat-val" id="statInnings">—</span><span class="hstat-label">TOTAL COORS IP</span></div>
     <div class="hstat"><span class="hstat-val" id="statAvgDelta">—</span><span class="hstat-label">AVG STUFF DELTA (COL vs SL)</span></div>
     <div class="hstat"><span class="hstat-val" id="statTopStuff">—</span><span class="hstat-label">TOP COORS STUFF+ SCORE</span></div>
   </div>
@@ -217,24 +218,24 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
     <div class="insight-card">
       <h3>HOW THIS SHAPED THE MODEL</h3>
       <div class="finding">
-        <span class="finding-label">Extension weight (α=1.18)</span>
-        <span class="finding-val">Highest α boost</span>
-        <span class="finding-note">Top 20 averaged 6.7 ft extension. At altitude, every extra foot amplifies perceived velo more than at sea level — the model learned this from Freeland, Alcantara, and Skenes-era data.</span>
+        <span class="finding-label">Top composite trait analysis</span>
+        <span class="finding-val">Performance + Stuff balance wins</span>
+        <span class="finding-note">By analyzing general traits of top composite performers, the strongest profiles pair reliable Coors run prevention with above-average Coors Stuff+ rather than relying on one dimension alone.</span>
       </div>
       <div class="finding">
-        <span class="finding-label">Sinker penalty (α=0.79 IVB + 0.82 HB)</span>
-        <span class="finding-val">Zero sinker-primary starters</span>
-        <span class="finding-note">No top-20 pitcher relied on a sinker as their primary pitch. The model penalizes both IVB and Magnus HB simultaneously — doubling the altitude hit.</span>
+        <span class="finding-label">Pitch-shape tendency</span>
+        <span class="finding-val">Less sinker dependence</span>
+        <span class="finding-note">Top composite groups generally avoid sinker-heavy usage and lean on shapes that keep more functional movement at altitude.</span>
       </div>
       <div class="finding">
-        <span class="finding-label">Gyro slider retention (α=0.97)</span>
-        <span class="finding-val">16 of 20 use gyro slider</span>
-        <span class="finding-note">Gravity-driven horizontal break survives altitude nearly intact. The model's near-neutral gyro α is directly informed by slider-heavy pitchers outperforming here.</span>
+        <span class="finding-label">Outcome separator</span>
+        <span class="finding-val">K-BB% stability matters most</span>
+        <span class="finding-note">With performance weighted most heavily, pitchers who sustain strikeout-minus-walk advantage in Coors samples consistently move up the composite board.</span>
       </div>
       <div class="finding">
-        <span class="finding-label">VAA boost (α=1.14)</span>
-        <span class="finding-val">Avg VAA −5.1°</span>
-        <span class="finding-note">Steeper entry angles disrupt timing when movement is suppressed. Top performers attack at steeper angles — and the model up-weights VAA accordingly.</span>
+        <span class="finding-label">Sample guardrail</span>
+        <span class="finding-val">10+ Coors IP minimum</span>
+        <span class="finding-note">The qualification floor keeps short-sample spikes out, so these traits reflect repeatable Coors performance patterns.</span>
       </div>
     </div>
   </div>
@@ -355,6 +356,8 @@ function init(){
   document.getElementById('statPitchers').textContent = n;
   const totalPitches = allData.reduce((a,p)=>a+(p.pitches||0),0);
   document.getElementById('statPitches').textContent = totalPitches.toLocaleString();
+  const totalInnings = allData.reduce((a,p)=>a+(Number(p.career_coors_ip)||0),0);
+  document.getElementById('statInnings').textContent = totalInnings.toFixed(1);
   const avgDelta = n ? (allData.reduce((a,p)=>a+(p.stuff_delta||0),0)/n).toFixed(1) : '0.0';
   document.getElementById('statAvgDelta').textContent = (parseFloat(avgDelta)>0?'+':'')+avgDelta;
   const topStuff = n ? Math.max(...allData.map(p=>p.stuff_col||0)).toFixed(1) : '—';
