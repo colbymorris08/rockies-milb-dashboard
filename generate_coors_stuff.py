@@ -27,9 +27,9 @@ MODEL_START = "2021-01-01"
 MODEL_END = "2024-12-31"
 COORS_PERF_START = "2015-01-01"
 COORS_PERF_END = "2024-12-31"
-MIN_COORS_IP_LAST10 = 10.0
-PERF_WEIGHT = 0.65
-STUFF_WEIGHT = 0.35
+MIN_COORS_IP_LAST10 = 20.0
+PERF_WEIGHT = 0.50
+STUFF_WEIGHT = 0.50
 
 # ── Coors alpha multipliers ────────────────────────────────────────────────
 ALPHA = {
@@ -225,9 +225,18 @@ def pull_statcast_yearly(start_year: int, end_year: int, team: str | None = None
     chunks: list[pd.DataFrame] = []
     for year in range(start_year, end_year + 1):
         print(f"  pulling Statcast season {year}...")
-        y = safe_statcast_pull(f"{year}-01-01", f"{year}-12-31", team=team)
-        if not y.empty:
-            chunks.append(y)
+        month_chunks: list[pd.DataFrame] = []
+        for month in range(1, 13):
+            start_dt = f"{year}-{month:02d}-01"
+            if month == 12:
+                end_dt = f"{year}-12-31"
+            else:
+                end_dt = f"{year}-{month+1:02d}-01"
+            y = safe_statcast_pull(start_dt, end_dt, team=team)
+            if not y.empty:
+                month_chunks.append(y)
+        if month_chunks:
+            chunks.append(pd.concat(month_chunks, ignore_index=True))
     if not chunks:
         return pd.DataFrame()
     return pd.concat(chunks, ignore_index=True)

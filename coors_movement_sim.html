@@ -11,14 +11,14 @@
 :root{
   --purple:#33006F;--silver:#C4CED4;--accent:#8B5CF6;--white:#f5f5f0;
   --good:#22c55e;--warn:#f59e0b;--bad:#ef4444;--mid:#94a3b8;
-  --bg:#161625;--card:#1c1c2a;--border:#2a2a3d;--b2:#3d3d55;
+  --bg:#1b2131;--card:#242b3e;--border:#3a4560;--b2:#55627a;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--white);font-family:'Courier New',monospace;min-height:100vh;}
-.site-nav{display:flex;gap:6px;padding:8px 28px 10px;background:#1e1e2e;border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center}
-.site-nav .nav-page{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);text-decoration:none;padding:8px 14px;border-radius:6px;border:1px solid transparent}
-.site-nav .nav-page:hover{color:var(--white);background:rgba(139,92,246,.12);border-color:rgba(139,92,246,.35)}
-.site-nav .nav-page.active{color:#c084fc;background:rgba(139,92,246,.2);border-color:#6b4fc4}
+.site-nav{display:flex;gap:6px;padding:10px 28px 12px;background:#21293b;border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center}
+.site-nav .nav-page{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#b8c4d6;text-decoration:none;padding:10px 16px;border-radius:10px;border:1px solid #5a6986;background:#2c3850;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)}
+.site-nav .nav-page:hover{color:var(--white);background:#384764;border-color:#8b9aba}
+.site-nav .nav-page.active{color:#efe8ff;background:rgba(139,92,246,.28);border-color:#9e7bff;box-shadow:0 0 0 1px rgba(139,92,246,.25),0 4px 14px rgba(139,92,246,.14)}
 
 /* EQUATION BAR */
 .eq-bar{background:#1a1a28;border-bottom:1px solid #3d2070;padding:7px 28px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;}
@@ -79,6 +79,21 @@ tbody td{padding:6px 7px;white-space:nowrap;}
 .neg{color:var(--bad);font-weight:700;}
 .pos{color:var(--good);font-weight:700;}
 .zer{color:var(--mid);}
+.adj-pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:56px;
+  padding:2px 6px;
+  border-radius:999px;
+  font-weight:700;
+  font-size:10px;
+  letter-spacing:.03em;
+  border:1px solid transparent;
+}
+.adj-pill.neg{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.45);}
+.adj-pill.pos{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.45);}
+.adj-pill.zer{background:rgba(148,163,184,.12);border-color:rgba(148,163,184,.35);}
 
 .phc{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;}
 .pht{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--accent);margin-bottom:8px;text-transform:uppercase;}
@@ -104,6 +119,11 @@ tbody td{padding:6px 7px;white-space:nowrap;}
 </head>
 <body>
 
+<nav class="site-nav" aria-label="Rockies analytics">
+  <a class="nav-page" href="col_minors_dashboard.html">MiLB 2026</a>
+  <a class="nav-page active" href="coors_movement_sim.html">Coors movement</a>
+  <a class="nav-page" href="coors_top20.html">Coors Field Stuff+</a>
+</nav>
 <!-- PERMANENT EQUATION BAR -->
 <div class="eq-bar">
   <span class="eq-tag">Physics:</span>
@@ -121,12 +141,6 @@ tbody td{padding:6px 7px;white-space:nowrap;}
     <p>PITCHER'S VIEW · STATCAST PROFILES → ALTITUDE-ADJUSTED MOVEMENT · VELOCITY + EXTENSION + SPIN MODEL · 5,280 FT</p>
   </div>
 </header>
-
-<nav class="site-nav" aria-label="Rockies analytics">
-  <a class="nav-page" href="col_minors_dashboard.html">MiLB 2026</a>
-  <a class="nav-page active" href="coors_movement_sim.html">Coors movement</a>
-  <a class="nav-page" href="coors_top20.html">Coors Field Stuff+</a>
-</nav>
 
 <div class="controls">
   <span class="ctrl-label">Team</span>
@@ -910,8 +924,8 @@ function buildTable(ps) {
       <td style="color:var(--mid)">${p.z}"</td>
       <td style="color:#c084fc">${p.cx}"</td>
       <td style="color:#c084fc">${p.cz}"</td>
-      <td class="${dx<-.3?'neg':dx>.3?'pos':'zer'}">${dx>0?'+':''}${dx}"</td>
-      <td class="${dz<-.3?'neg':dz>.3?'pos':'zer'}">${dz>0?'+':''}${dz}"</td>
+      <td><span class="adj-pill ${dx<-.3?'neg':dx>.3?'pos':'zer'}">${dx>0?'↑':dx<0?'↓':'→'} ${dx>0?'+':''}${dx}"</span></td>
+      <td><span class="adj-pill ${dz<-.3?'neg':dz>.3?'pos':'zer'}">${dz>0?'↑':dz<0?'↓':'→'} ${dz>0?'+':''}${dz}"</span></td>
       <td style="color:var(--mid)">${Math.round(p.spinEff*100)}%</td>
       <td style="color:var(--warn)">${(p.factor*100).toFixed(1)}%</td>
     </tr>`;
@@ -921,7 +935,7 @@ function buildTable(ps) {
       <th>Type</th><th>Pitch</th><th>Velo</th><th>Ext</th><th>Dist</th>
       <th>t_sl</th><th>t_coors</th>
       <th>H Brk</th><th>V Brk</th><th>H Coors</th><th>V Coors</th>
-      <th>ΔH</th><th>ΔV</th><th>Spin Eff</th><th>Move Kept</th>
+      <th>ΔH (ARROW)</th><th>ΔV (ARROW)</th><th>Spin Eff</th><th>Move Kept</th>
     </tr></thead>
     <tbody>${rows}</tbody>
   </table>`;

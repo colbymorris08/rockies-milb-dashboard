@@ -18,9 +18,9 @@
     --warn: #f59e0b;
     --bad: #ef4444;
     --mid: #94a3b8;
-    --bg: #161625;
-    --card: #1c1c2a;
-    --border: #2e2e42;
+    --bg: #1b2030;
+    --card: #242b3d;
+    --border: #3c4761;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -33,7 +33,7 @@
     display: flex;
     gap: 6px;
     padding: 10px 32px 12px;
-    background: #1e1e2e;
+    background: #21293b;
     border-bottom: 1px solid var(--border);
     flex-wrap: wrap;
     align-items: center;
@@ -42,21 +42,39 @@
     font-size: 11px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--mid);
+    color: #b8c4d6;
     text-decoration: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    border: 1px solid transparent;
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px solid #5a6986;
+    background: #2c3850;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
   }
   .site-nav .nav-page:hover {
     color: var(--white);
-    background: rgba(139, 92, 246, 0.12);
-    border-color: rgba(139, 92, 246, 0.35);
+    background: #384764;
+    border-color: #8b9aba;
   }
   .site-nav .nav-page.active {
+    color: #efe8ff;
+    background: rgba(139, 92, 246, 0.28);
+    border-color: #9e7bff;
+    box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.25), 0 4px 14px rgba(139, 92, 246, 0.14);
+  }
+  .update-banner {
+    margin: 12px 32px 0;
+    padding: 10px 12px;
+    border: 1px solid rgba(139,92,246,.45);
+    border-radius: 8px;
+    background: rgba(139,92,246,.08);
+    font-size: 11px;
+    color: var(--mid);
+    letter-spacing: 0.03em;
+  }
+  .update-banner a {
     color: #c4b5fd;
-    background: rgba(139, 92, 246, 0.2);
-    border-color: var(--accent);
+    text-decoration: none;
+    font-weight: 700;
   }
   header {
     padding: 24px 32px 0;
@@ -223,19 +241,19 @@
 </head>
 <body>
 
-<header>
-  <div class="logo">COL</div>
-  <div class="header-text">
-    <h1>COLORADO ROCKIES — MINOR LEAGUE 2026</h1>
-    <p>LIVE DATA · FANGRAPHS · ALL LEVELS · QUALIFIED PITCHERS & HITTERS</p>
-  </div>
-</header>
-
 <nav class="site-nav" aria-label="Rockies analytics">
   <a class="nav-page active" href="col_minors_dashboard.html">MiLB 2026</a>
   <a class="nav-page" href="coors_movement_sim.html">Coors movement</a>
   <a class="nav-page" href="coors_top20.html">Coors Field Stuff+</a>
 </nav>
+<header>
+  <div class="logo">COL</div>
+  <div class="header-text">
+    <h1>COLORADO ROCKIES — MINOR LEAGUE 2026</h1>
+    <p>LIVE DATA · FANGRAPHS · ALL LEVELS · QUALIFIED PITCHERS & HITTERS · UPDATED COORS MODEL LINKS</p>
+  </div>
+</header>
+<div class="update-banner">Coors model update is live: performance-weighted composite, Coors Stuff isolation, and pure performance view. <a href="coors_top20.html">Open leaderboard</a>.</div>
 
 <div class="tab-bar">
   <div class="tab-group">
