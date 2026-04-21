@@ -136,7 +136,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 <section class="hero">
   <div class="hero-label">COORS FIELD · PITCHER ANALYSIS · 2021–2024</div>
   <h1 class="hero-title">Who Actually <strong>Succeeded</strong> at Coors Field</h1>
-  <p class="hero-sub">Two leaderboards: all pitchers and Rockies pitchers at Coors, each requiring <strong>30+ Coors innings</strong> over the last 10 Statcast seasons (2015-24). Stuff is modeled on the existing <strong>2021-24</strong> window, while ranking is balanced: <strong>50% pure Coors performance</strong> (xFIP if available, otherwise Coors FIP, plus Coors K-BB%) + <strong>50% Coors Stuff+</strong>. Use the sort tabs to isolate Composite, Coors Stuff, or Pure Performance.</p>
+  <p class="hero-sub">Two leaderboards: all pitchers and Rockies pitchers at Coors over the last 10 Statcast seasons (2015-24), with separate qualification floors of <strong>40+ Coors innings (all pitchers)</strong> and <strong>80+ Coors innings (Rockies)</strong>. Stuff is modeled on the existing <strong>2021-24</strong> window, while ranking is balanced: <strong>50% pure Coors performance</strong> (xFIP if available, otherwise Coors FIP, plus Coors K-BB%) + <strong>50% Coors Stuff+</strong>. Use the sort tabs to isolate Composite, Coors Stuff, or Pure Performance.</p>
   <div class="hero-stats">
     <div class="hstat"><span class="hstat-val" id="statPitchers">—</span><span class="hstat-label">QUALIFIED PITCHERS</span></div>
     <div class="hstat"><span class="hstat-val" id="statPitches">—</span><span class="hstat-label">COORS PITCHES SCORED</span></div>
@@ -148,15 +148,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 
 <div class="insight-strip">
   <span class="insight-label">MODEL INSIGHTS FROM TOP 20</span>
-  <div class="insight-item">Extension avg: <strong id="insExtAvg">—</strong> among leaders</div>
+  <div class="insight-item">Avg sea-level Stuff+: <strong id="insStuffSlAvg">—</strong></div>
   <div class="insight-divider"></div>
-  <div class="insight-item">Top-10 10Y Coors FIP: <strong id="insTop10Fip">—</strong></div>
+  <div class="insight-item">Avg Coors Stuff+: <strong id="insStuffColAvg">—</strong></div>
   <div class="insight-divider"></div>
-  <div class="insight-item">Mean Coors K-BB%: <strong id="insKbbAvg">—</strong></div>
+  <div class="insight-item">Avg Stuff delta: <strong id="insStuffDeltaAvg">—</strong></div>
   <div class="insight-divider"></div>
-  <div class="insight-item">Mean 10Y Coors FIP: <strong id="insFipAvg">—</strong></div>
+  <div class="insight-item">Top Coors Stuff+: <strong id="insTopStuffCol">—</strong></div>
   <div class="insight-divider"></div>
-  <div class="insight-item">Total Coors IP: <strong id="insTotalIp">—</strong></div>
+  <div class="insight-item">Top sea-level Stuff+: <strong id="insTopStuffSl">—</strong></div>
 </div>
 
 <div class="main">
@@ -213,24 +213,24 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
     <div class="insight-card">
       <h3>HOW THIS SHAPED THE MODEL</h3>
       <div class="finding">
-        <span class="finding-label">Top composite trait analysis</span>
-        <span class="finding-val">Performance + Stuff balance wins</span>
-        <span class="finding-note">By analyzing general traits of top composite performers, the strongest profiles pair reliable Coors run prevention with above-average Coors Stuff+ rather than relying on one dimension alone.</span>
+        <span class="finding-label">Stuff floor under altitude stress</span>
+        <span class="finding-val">Leaders sustain 100+ Coors Stuff</span>
+        <span class="finding-note">Top leaderboard names keep usable movement/shape quality at Coors instead of relying on one pitch-type spike.</span>
       </div>
       <div class="finding">
-        <span class="finding-label">Pitch-shape tendency</span>
-        <span class="finding-val">Less sinker dependence</span>
-        <span class="finding-note">Top composite groups generally avoid sinker-heavy usage and lean on shapes that keep more functional movement at altitude.</span>
+        <span class="finding-label">Shape retention pattern</span>
+        <span class="finding-val">Smaller sea-level to Coors drop</span>
+        <span class="finding-note">Arms that carry Stuff best to altitude (smaller Stuff delta loss) are consistently overrepresented near the top.</span>
       </div>
       <div class="finding">
-        <span class="finding-label">Outcome separator</span>
-        <span class="finding-val">K-BB% stability matters most</span>
-        <span class="finding-note">With performance weighted most heavily, pitchers who sustain strikeout-minus-walk advantage in Coors samples consistently move up the composite board.</span>
+        <span class="finding-label">Pitch mix quality</span>
+        <span class="finding-val">More above-average secondaries</span>
+        <span class="finding-note">Top composite profiles usually bring multiple pitch types with positive Coors Stuff, reducing reliance on a single offering.</span>
       </div>
       <div class="finding">
-        <span class="finding-label">Sample guardrail</span>
-        <span class="finding-val">30+ Coors IP minimum</span>
-        <span class="finding-note">The qualification floor keeps short-sample spikes out, so these traits reflect repeatable Coors performance patterns.</span>
+        <span class="finding-label">Qualification guardrails</span>
+        <span class="finding-val">40 IP all, 80 IP Rockies</span>
+        <span class="finding-note">Higher inning thresholds reduce noise so the displayed Stuff patterns are based on repeatable Coors workloads.</span>
       </div>
     </div>
   </div>
@@ -353,16 +353,16 @@ function init(){
   document.getElementById('statPitches').textContent = totalPitches.toLocaleString();
   const totalInnings = allData.reduce((a,p)=>a+(Number(p.career_coors_ip)||0),0);
   document.getElementById('statInnings').textContent = totalInnings.toFixed(1);
-  const top10=[...allData].sort((a,b)=>(b.coors_composite||0)-(a.coors_composite||0)).slice(0,10);
-  const extAvg = n ? (allData.reduce((a,p)=>a+(Number(p.avg_ext)||0),0)/n) : null;
-  const top10Fip = top10.length ? (top10.reduce((a,p)=>a+(Number(p.career_coors_fip)||0),0)/top10.length) : null;
-  const kbbAvg = n ? (allData.reduce((a,p)=>a+(Number(p.career_coors_k_bb_pct)||0),0)/n) : null;
-  const fipAvg = n ? (allData.reduce((a,p)=>a+(Number(p.career_coors_fip)||0),0)/n) : null;
-  document.getElementById('insExtAvg').textContent = extAvg==null ? '—' : `${extAvg.toFixed(2)} ft`;
-  document.getElementById('insTop10Fip').textContent = top10Fip==null ? '—' : top10Fip.toFixed(2);
-  document.getElementById('insKbbAvg').textContent = kbbAvg==null ? '—' : `${kbbAvg.toFixed(1)}%`;
-  document.getElementById('insFipAvg').textContent = fipAvg==null ? '—' : fipAvg.toFixed(2);
-  document.getElementById('insTotalIp').textContent = totalInnings.toFixed(1);
+  const stuffSlAvg = n ? (allData.reduce((a,p)=>a+(Number(p.stuff_sl)||0),0)/n) : null;
+  const stuffColAvg = n ? (allData.reduce((a,p)=>a+(Number(p.stuff_col)||0),0)/n) : null;
+  const stuffDeltaAvg = n ? (allData.reduce((a,p)=>a+(Number(p.stuff_delta)||0),0)/n) : null;
+  const topStuffCol = n ? Math.max(...allData.map(p=>Number(p.stuff_col)||0)) : null;
+  const topStuffSl = n ? Math.max(...allData.map(p=>Number(p.stuff_sl)||0)) : null;
+  document.getElementById('insStuffSlAvg').textContent = stuffSlAvg==null ? '—' : stuffSlAvg.toFixed(1);
+  document.getElementById('insStuffColAvg').textContent = stuffColAvg==null ? '—' : stuffColAvg.toFixed(1);
+  document.getElementById('insStuffDeltaAvg').textContent = stuffDeltaAvg==null ? '—' : `${stuffDeltaAvg>=0?'+':''}${stuffDeltaAvg.toFixed(2)}`;
+  document.getElementById('insTopStuffCol').textContent = topStuffCol==null ? '—' : topStuffCol.toFixed(1);
+  document.getElementById('insTopStuffSl').textContent = topStuffSl==null ? '—' : topStuffSl.toFixed(1);
   const avgDelta = n ? (allData.reduce((a,p)=>a+(p.stuff_delta||0),0)/n).toFixed(1) : '0.0';
   document.getElementById('statAvgDelta').textContent = (parseFloat(avgDelta)>0?'+':'')+avgDelta;
   const topStuff = n ? Math.max(...allData.map(p=>p.stuff_col||0)).toFixed(1) : '—';
