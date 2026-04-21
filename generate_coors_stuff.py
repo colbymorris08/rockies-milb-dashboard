@@ -453,8 +453,8 @@ top20_rockies["pitches_by_type"] = top20_rockies["player_name"].map(lambda n: _p
 # ── 9. Feature importance for both models ─────────────────────────────────
 def get_importance(model, label):
     imp = dict(zip(FEATURES, model.feature_importances_))
-    return [{"feature": k, "importance": round(v,4),
-             "alpha": ALPHA.get(k,1.0), "model": label}
+    return [{"feature": str(k), "importance": float(round(float(v), 4)),
+             "alpha": float(ALPHA.get(k,1.0)), "model": str(label)}
             for k,v in sorted(imp.items(), key=lambda x:-x[1])]
 
 importance_sl  = get_importance(m_sl,  "sea_level")
@@ -474,10 +474,10 @@ meta = {
     "top20_names": top20["player_name"].tolist(),
     "rockies_top20_names": top20_rockies["player_name"].tolist(),
     "top20_key_findings": {
-        "avg_stuff_delta": round(top20["stuff_delta"].mean(), 2),
-        "avg_vaa": round(top20["avg_vaa"].mean(), 2),
-        "avg_ivb": round(top20["avg_ivb"].mean(), 2),
-        "avg_ext": round(top20["avg_ext"].mean(), 2),
+        "avg_stuff_delta": float(round(float(top20["stuff_delta"].mean()), 2)),
+        "avg_vaa": float(round(float(top20["avg_vaa"].mean()), 2)),
+        "avg_ivb": float(round(float(top20["avg_ivb"].mean()), 2)),
+        "avg_ext": float(round(float(top20["avg_ext"].mean()), 2)),
     }
 }
 
