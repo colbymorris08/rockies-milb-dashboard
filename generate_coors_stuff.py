@@ -1,7 +1,9 @@
 """
 generate_coors_stuff.py
-Generates sea-level Stuff+ and Coors-adjusted Stuff+ scores
-informed by actual pitcher SUCCESS at Coors Field (ERA, wOBA, K-BB%)
+Generates sea-level Stuff+ and Coors-adjusted Stuff+ scores.
+Ranks pitchers using a performance-heavy composite built from:
+  - Stuff model scores on the existing model window (2021-2024)
+  - Coors performance over the last 10 Statcast seasons (2015-2024)
 Outputs JSON files for the dashboard website
 """
 
@@ -18,6 +20,14 @@ from typing import Any
 warnings.filterwarnings("ignore")
 
 pb.cache.enable()
+
+MODEL_START = "2021-01-01"
+MODEL_END = "2024-12-31"
+COORS_PERF_START = "2015-01-01"
+COORS_PERF_END = "2024-12-31"
+MIN_COORS_IP_LAST10 = 20.0
+PERF_WEIGHT = 0.65
+STUFF_WEIGHT = 0.35
 
 # ── Coors alpha multipliers ────────────────────────────────────────────────
 ALPHA = {
@@ -168,9 +178,9 @@ def compute_coors_pitching_rates(coors_df: pd.DataFrame) -> pd.DataFrame:
     return out.round({"coors_ip": 1, "coors_ra9": 2, "coors_fip": 2, "coors_k_bb_pct": 1})
 
 
-# ── 1. Pull Statcast 2021-2024 ─────────────────────────────────────────────
+# ── 1. Pull Statcast model window (2021-2024) ──────────────────────────────
 print("Pulling Statcast data...")
-df = pb.statcast(start_dt="2021-01-01", end_dt="2024-12-31")
+df = pb.statcast(start_dt=MODEL_START, end_dt=MODEL_END)
 df = df[df["game_type"] == "R"].copy()
 print(f"  {len(df):,} pitches")
 
@@ -206,25 +216,6 @@ FEATURES = [
 ]
 FEATURES = [f for f in FEATURES if f in df.columns]
 TARGET = "estimated_woba_using_speedangle"
-
-# ── 3. Pull pitcher-level Coors SUCCESS stats via FanGraphs ───────────────
-print("Pulling FanGraphs season stats 2021-2024 (for MLB row + composite)...")
-try:
-    fg = pb.pitching_stats(2021, 2024, qual=20)
-    fg = fg[["Name","ERA","FIP","K%","BB%","WHIP","WAR","xFIP","BABIP","LOB%","HR/9"]].copy()
-    fg.columns = ["player_name","ERA","FIP","K_pct","BB_pct","WHIP","WAR","xFIP","BABIP","LOB_pct","HR_9"]
-    fg["KB_diff"] = fg["K_pct"] - fg["BB_pct"]
-    # normalize for success score (lower ERA better, higher KB_diff better)
-    fg["era_z"]  = (fg["ERA"].mean()  - fg["ERA"])  / fg["ERA"].std()
-    fg["fip_z"]  = (fg["FIP"].mean()  - fg["FIP"])  / fg["FIP"].std()
-    fg["kbb_z"]  = (fg["KB_diff"]     - fg["KB_diff"].mean()) / fg["KB_diff"].std()
-    fg["war_z"]  = (fg["WAR"]         - fg["WAR"].mean())     / fg["WAR"].std()
-    fg["success_score"] = (fg["era_z"] + fg["fip_z"] + fg["kbb_z"] + fg["war_z"]) / 4
-    have_fg = True
-    print(f"  {len(fg)} pitchers from FanGraphs")
-except Exception as e:
-    print(f"  FanGraphs pull failed ({e}), using Statcast-only success proxy")
-    have_fg = False
 
 # ── 4. Coors vs. other split ───────────────────────────────────────────────
 coors = df[df["home_team"] == "COL"].copy()
@@ -291,8 +282,8 @@ if "inning_topbot" in coors.columns:
 else:
     combined_scores["is_rockies_pitch"] = pd.Series(False, index=combined_scores.index)
 
-MIN_PITCHES_ALL = 450   # ~30 IP at ~15 pitches/IP
-MIN_PITCHES_ROCKIES = 150  # ~10 IP
+MIN_PITCHES_ALL = 1
+MIN_PITCHES_ROCKIES = 1
 
 # ── 7. Pitcher-level aggregation ───────────────────────────────────────────
 def aggregate_pitchers(sub: pd.DataFrame, min_pitches: int) -> pd.DataFrame:
@@ -326,7 +317,7 @@ coors_rates = compute_coors_pitching_rates(coors)
 pitcher_agg = pitcher_agg.merge(coors_rates, on="player_name", how="left")
 pitcher_agg_rockies = pitcher_agg_rockies.merge(coors_rates, on="player_name", how="left")
 
-print("  Career Coors PA rates (Statcast 2015-2024, COL home regular season)...")
+print("  Last-10-years Coors PA rates (Statcast 2015-2024, COL home regular season)...")
 _career_cols = [
     "player_name",
     "career_coors_bf",
@@ -336,10 +327,9 @@ _career_cols = [
     "career_coors_k_bb_pct",
 ]
 try:
-    df_pre = pb.statcast(start_dt="2015-01-01", end_dt="2020-12-31")
-    df_pre = df_pre[df_pre["game_type"] == "R"].copy()
-    coors_pre = df_pre[df_pre["home_team"] == "COL"].copy()
-    coors_career = pd.concat([coors_pre, coors], ignore_index=True)
+    df_10y = pb.statcast(start_dt=COORS_PERF_START, end_dt=COORS_PERF_END)
+    df_10y = df_10y[df_10y["game_type"] == "R"].copy()
+    coors_career = df_10y[df_10y["home_team"] == "COL"].copy()
     career_rates = compute_coors_pitching_rates(coors_career).rename(
         columns={
             "coors_bf": "career_coors_bf",
@@ -360,63 +350,43 @@ except Exception as e:
         if c not in pitcher_agg_rockies.columns:
             pitcher_agg_rockies[c] = np.nan
 
-# merge FanGraphs success stats if available (names are First Last; Statcast uses Last, First)
-if have_fg:
-    fg = fg.copy()
-    fg["statcast_name"] = fg["player_name"].apply(fangraphs_name_to_statcast)
-    fg_cols = [
-        "statcast_name",
-        "ERA",
-        "FIP",
-        "K_pct",
-        "BB_pct",
-        "WHIP",
-        "WAR",
-        "xFIP",
-        "success_score",
-    ]
-    pitcher_agg = (
-        pitcher_agg.merge(fg[fg_cols], left_on="player_name", right_on="statcast_name", how="left")
-        .drop(columns=["statcast_name"], errors="ignore")
-        .round(3)
-    )
-    pitcher_agg_rockies = (
-        pitcher_agg_rockies.merge(fg[fg_cols], left_on="player_name", right_on="statcast_name", how="left")
-        .drop(columns=["statcast_name"], errors="ignore")
-        .round(3)
-    )
+def add_performance_composite(d: pd.DataFrame) -> pd.DataFrame:
+    out = d.copy()
+    out = out[out["career_coors_ip"].fillna(0) >= MIN_COORS_IP_LAST10].copy()
+    if out.empty:
+        out["coors_composite"] = np.nan
+        return out
 
-# composite Coors success score (stuff_col + success_score weighted equally)
-if "success_score" in pitcher_agg.columns:
-    _std_col = pitcher_agg["stuff_col"].std() or 1.0
-    stuff_z   = (pitcher_agg["stuff_col"] - pitcher_agg["stuff_col"].mean()) / _std_col
-    success_z = pitcher_agg["success_score"].fillna(0)
-    pitcher_agg["coors_composite"] = ((stuff_z + success_z) / 2 * 10 + 100).round(1)
-else:
-    pitcher_agg["coors_composite"] = pitcher_agg["stuff_col"]
+    # Prefer xFIP if available from any merged source; otherwise use Coors FIP.
+    perf_fip = out["xFIP"] if "xFIP" in out.columns else out["career_coors_fip"]
+    perf_kbb = out["career_coors_k_bb_pct"]
+    fip_std = perf_fip.std() or 1.0
+    kbb_std = perf_kbb.std() or 1.0
+    fip_z = (perf_fip.mean() - perf_fip) / fip_std
+    kbb_z = (perf_kbb - perf_kbb.mean()) / kbb_std
+    perf_score = (fip_z + kbb_z) / 2.0
 
+    stuff_std = out["stuff_col"].std() or 1.0
+    stuff_z = (out["stuff_col"] - out["stuff_col"].mean()) / stuff_std
+    out["coors_perf_score"] = perf_score.round(4)
+    out["coors_composite"] = (
+        (STUFF_WEIGHT * stuff_z + PERF_WEIGHT * perf_score) * 10.0 + 100.0
+    ).round(1)
+    return out
+
+pitcher_agg = add_performance_composite(pitcher_agg)
 pitcher_agg = pitcher_agg.sort_values("coors_composite", ascending=False)
 top20 = pitcher_agg.head(20).copy()
 
-if "success_score" in pitcher_agg_rockies.columns:
-    stuff_z_r = (pitcher_agg_rockies["stuff_col"] - pitcher_agg_rockies["stuff_col"].mean()) / (
-        pitcher_agg_rockies["stuff_col"].std() or 1.0
-    )
-    success_z_r = pitcher_agg_rockies["success_score"].fillna(0)
-    pitcher_agg_rockies["coors_composite"] = ((stuff_z_r + success_z_r) / 2 * 10 + 100).round(1)
-else:
-    pitcher_agg_rockies["coors_composite"] = pitcher_agg_rockies["stuff_col"]
-
+pitcher_agg_rockies = add_performance_composite(pitcher_agg_rockies)
 pitcher_agg_rockies = pitcher_agg_rockies.sort_values("coors_composite", ascending=False)
 top20_rockies = pitcher_agg_rockies.head(20).copy()
 
-print(f"\nTop 20 Coors pitchers (all, min {MIN_PITCHES_ALL} pitches):")
+print(f"\nTop 20 Coors pitchers (all, min {MIN_COORS_IP_LAST10:.0f} Coors IP in 2015-2024):")
 _cols = ["player_name", "pitches", "stuff_sl", "stuff_col", "stuff_delta", "avg_velo", "avg_ivb", "coors_composite"]
-if "ERA" in top20.columns:
-    _cols.insert(-1, "ERA")
 print(top20[[c for c in _cols if c in top20.columns]].to_string(index=False))
 
-print(f"\nTop Rockies pitchers at Coors (min {MIN_PITCHES_ROCKIES} pitches):")
+print(f"\nTop Rockies pitchers at Coors (min {MIN_COORS_IP_LAST10:.0f} Coors IP in 2015-2024):")
 print(top20_rockies[[c for c in _cols if c in top20_rockies.columns]].to_string(index=False))
 
 # ── 8. Pitch-type breakdown per top pitcher ────────────────────────────────
@@ -471,6 +441,9 @@ meta = {
     "park_intercept": PARK_INTERCEPT,
     "min_pitches_all_pitchers": MIN_PITCHES_ALL,
     "min_pitches_rockies_at_coors": MIN_PITCHES_ROCKIES,
+    "min_coors_ip_last10y_for_ranking": MIN_COORS_IP_LAST10,
+    "composite_weights": {"stuff": STUFF_WEIGHT, "coors_performance": PERF_WEIGHT},
+    "performance_inputs": "xFIP_if_available_else_FIP_plus_K_minus_BB_percent",
     "top20_names": top20["player_name"].tolist(),
     "rockies_top20_names": top20_rockies["player_name"].tolist(),
     "top20_key_findings": {

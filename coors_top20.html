@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Coors Field Stuff+ leaderboard with MLB ERA/FIP/K-BB% and Coors-specific performance splits.">
+<meta name="description" content="Coors Field Stuff+ leaderboard weighted toward 10-year Coors performance and paired with Coors-era stuff metrics.">
 <meta property="og:site_name" content="Rockies Analytics">
 <meta property="og:type" content="website">
 <title>Coors Field Stuff+ — 2021–2024</title>
@@ -141,7 +141,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 <section class="hero">
   <div class="hero-label">COORS FIELD · PITCHER ANALYSIS · 2021–2024</div>
   <h1 class="hero-title">Who Actually <strong>Succeeded</strong> at Coors Field</h1>
-  <p class="hero-sub">Two leaderboards: all pitchers with meaningful Coors samples (450+ pitches, ~30 IP equivalent) and Rockies pitchers at Coors Field only (150+ pitches, ~10 IP). Rankings blend Coors-adjusted Stuff+ with FanGraphs <strong>2021–24 season</strong> MLB totals (ERA / FIP / K−BB%) where names match. <strong>@ Coors (window)</strong> uses Statcast PAs at Coors in <strong>2021–24</strong> only (same years as the Stuff+ model). <strong>Career @ Coors</strong> uses Statcast at Coors from <strong>2015–24</strong> (Statcast era through the model window). R/9 is plate runs per 9 outs (not official ERA).</p>
+  <p class="hero-sub">Two leaderboards: all pitchers and Rockies pitchers at Coors, each requiring <strong>20+ Coors innings</strong> over the last 10 Statcast seasons (2015-24). Stuff is modeled on the existing <strong>2021-24</strong> window, while ranking is performance-heavy: <strong>65% pure Coors performance</strong> (xFIP if available, otherwise Coors FIP, plus Coors K-BB%) + <strong>35% Coors Stuff+</strong>. Use the sort tabs to isolate Composite, Coors Stuff, or Pure Performance.</p>
   <div class="hero-stats">
     <div class="hstat"><span class="hstat-val" id="statPitchers">—</span><span class="hstat-label">QUALIFIED PITCHERS</span></div>
     <div class="hstat"><span class="hstat-val" id="statPitches">—</span><span class="hstat-label">COORS PITCHES SCORED</span></div>
@@ -173,8 +173,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
       </div>
       <div class="tab-bar" style="border-bottom:none;margin-left:auto">
         <button type="button" class="tab sort-tab active" data-sort="coors_composite">COMPOSITE</button>
-        <button type="button" class="tab sort-tab" data-sort="stuff_col">STUFF+</button>
-        <button type="button" class="tab sort-tab" data-sort="coors_ra9">COORS R/9</button>
+        <button type="button" class="tab sort-tab" data-sort="stuff_col">COORS STUFF</button>
+        <button type="button" class="tab sort-tab" data-sort="coors_perf_score">PERFORMANCE</button>
+        <button type="button" class="tab sort-tab" data-sort="career_coors_ra9">10Y COORS R/9</button>
       </div>
     </div>
     <div style="overflow-x:auto">
@@ -184,18 +185,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
             <th>#</th>
             <th>PITCHER</th>
             <th>COMPOSITE</th>
+            <th title="Performance component used in composite">PERF SCORE</th>
             <th>STUFF+ SL</th>
             <th>STUFF+ COL</th>
             <th>DELTA</th>
-            <th title="FanGraphs 2021–24 season">MLB ERA</th>
-            <th title="FanGraphs 2021–24 season">MLB FIP</th>
-            <th title="FanGraphs 2021–24 season">MLB K−BB%</th>
+            <th title="Statcast PAs at Coors, 2015-24">10Y Coors R/9</th>
+            <th title="Statcast at Coors, 2015-24">10Y Coors FIP</th>
+            <th title="Statcast PAs at Coors, 2015-24">10Y Coors K−BB%</th>
             <th title="Statcast PAs at Coors, 2021–24 only">@ Coors R/9</th>
             <th title="Statcast at Coors, 2021–24">@ Coors FIP</th>
             <th title="Statcast PAs at Coors, 2021–24">@ Coors K−BB%</th>
-            <th title="Statcast PAs at Coors, 2015–24">Career @ Coors R/9</th>
-            <th title="Statcast at Coors, 2015–24">Career @ Coors FIP</th>
-            <th title="Statcast PAs at Coors, 2015–24">Career @ Coors K−BB%</th>
             <th>AVG VELO</th>
             <th>AVG IVB</th>
             <th>AVG EXT</th>
@@ -372,6 +371,7 @@ function fmtCoorsNum(v, d) {
 function renderTable(){
   const sorted=[...allData].sort((a,b)=>{
     if(sortKey==='coors_ra9') return (a.coors_ra9??999)-(b.coors_ra9??999);
+    if(sortKey==='career_coors_ra9') return (a.career_coors_ra9??999)-(b.career_coors_ra9??999);
     return (b[sortKey]||0)-(a[sortKey]||0);
   });
   const tbody=document.getElementById('tableBody');
@@ -379,7 +379,7 @@ function renderTable(){
   sorted.forEach((p,i)=>{
     const delta=p.stuff_delta||0;
     const rankCls=i===0?'gold':i===1?'silver':i===2?'bronze':'';
-    const kbb=p.K_pct&&p.BB_pct?((p.K_pct-p.BB_pct)*100).toFixed(1)+'%':'—';
+    const kbb=p.career_coors_k_bb_pct!=null&&!Number.isNaN(Number(p.career_coors_k_bb_pct))?Number(p.career_coors_k_bb_pct).toFixed(1)+'%':'—';
     const deltaCls=delta>3?'pos-delta':delta<-1?'neg-delta':'neutral-delta';
     const slPct=Math.max(0,Math.min(100,((p.stuff_sl||100)-80)/40*100));
     const colPct=Math.max(0,Math.min(100,((p.stuff_col||100)-80)/40*100));
@@ -387,18 +387,16 @@ function renderTable(){
       <td class="rank ${rankCls}">${i+1}</td>
       <td class="pitcher-name">${p.player_name}</td>
       <td class="metric"><strong>${(p.coors_composite||0).toFixed(1)}</strong></td>
+      <td class="metric">${p.coors_perf_score!=null&&!Number.isNaN(Number(p.coors_perf_score))?Number(p.coors_perf_score).toFixed(2):'—'}</td>
       <td class="metric"><div class="stuff-bar-wrap"><div class="stuff-bar" style="width:${slPct}%"></div></div>${(p.stuff_sl||0).toFixed(1)}</td>
       <td class="metric"><div class="stuff-bar-wrap"><div class="stuff-bar teal" style="width:${colPct}%"></div></div>${(p.stuff_col||0).toFixed(1)}</td>
       <td class="metric ${deltaCls}">${delta>0?'+':''}${delta.toFixed(1)}</td>
-      <td class="metric">${p.ERA!=null&&!Number.isNaN(Number(p.ERA))?Number(p.ERA).toFixed(2):'—'}</td>
-      <td class="metric">${p.FIP!=null&&!Number.isNaN(Number(p.FIP))?Number(p.FIP).toFixed(2):'—'}</td>
+      <td class="metric">${fmtCoorsNum(p.career_coors_ra9, 2)}</td>
+      <td class="metric">${fmtCoorsNum(p.career_coors_fip, 2)}</td>
       <td class="metric">${kbb}</td>
       <td class="metric">${fmtCoorsNum(p.coors_ra9, 2)}</td>
       <td class="metric">${fmtCoorsNum(p.coors_fip, 2)}</td>
       <td class="metric">${p.coors_k_bb_pct!=null&&!Number.isNaN(Number(p.coors_k_bb_pct))?Number(p.coors_k_bb_pct).toFixed(1)+'%':'—'}</td>
-      <td class="metric">${fmtCoorsNum(p.career_coors_ra9, 2)}</td>
-      <td class="metric">${fmtCoorsNum(p.career_coors_fip, 2)}</td>
-      <td class="metric">${p.career_coors_k_bb_pct!=null&&!Number.isNaN(Number(p.career_coors_k_bb_pct))?Number(p.career_coors_k_bb_pct).toFixed(1)+'%':'—'}</td>
       <td class="metric">${(p.avg_velo||0).toFixed(1)}</td>
       <td class="metric">${(p.avg_ivb||0).toFixed(1)}</td>
       <td class="metric">${(p.avg_ext||0).toFixed(1)} ft</td>
