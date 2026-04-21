@@ -1,0 +1,110 @@
+[
+  {
+    "feature": "strikes",
+    "importance": 0.5426,
+    "alpha": 1.0,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "balls",
+    "importance": 0.3542,
+    "alpha": 1.0,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "delta_velo",
+    "importance": 0.0118,
+    "alpha": 1.05,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "pitch_type_enc",
+    "importance": 0.01,
+    "alpha": 1.0,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "vaa",
+    "importance": 0.0094,
+    "alpha": 1.14,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "delta_ivb",
+    "importance": 0.008,
+    "alpha": 0.79,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "stand_enc",
+    "importance": 0.0071,
+    "alpha": 1.0,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "haa",
+    "importance": 0.0062,
+    "alpha": 1.06,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "pfx_x_magnus",
+    "importance": 0.006,
+    "alpha": 0.82,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "release_speed",
+    "importance": 0.0059,
+    "alpha": 1.05,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "release_spin_rate",
+    "importance": 0.0057,
+    "alpha": 0.86,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "delta_hb",
+    "importance": 0.0055,
+    "alpha": 0.9,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "pfx_z",
+    "importance": 0.0054,
+    "alpha": 0.79,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "spin_axis",
+    "importance": 0.0048,
+    "alpha": 1.0,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "release_pos_z",
+    "importance": 0.0046,
+    "alpha": 1.08,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "pfx_x_gyro",
+    "importance": 0.0044,
+    "alpha": 0.97,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "release_pos_x",
+    "importance": 0.0043,
+    "alpha": 1.0,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "log_ext",
+    "importance": 0.0043,
+    "alpha": 1.18,
+    "model": "coors_adj"
+  }
+]
