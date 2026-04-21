@@ -255,12 +255,15 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
   </div>
 
   <div class="model-section">
-    <div class="card-header" style="padding:.875rem 1.25rem;border-bottom:1px solid var(--border)">
-      <span class="card-title">HOW THE THREE MODELS COMBINE INTO THE COORS XGBoost</span>
+    <div class="card-header" style="padding:.875rem 1.25rem;border-bottom:1px solid var(--border);flex-direction:column;align-items:stretch;gap:.75rem">
+      <span class="card-title">COORS STUFF MODEL (INTERNAL XGBOOST)</span>
+      <p style="font-size:12px;color:var(--muted);line-height:1.65;max-width:920px;font-weight:400">
+        Two gradient-boosted models predict pitch quality from Statcast: one on all parks (“sea-level” features) and one on the same pitch rows with <strong>Coors-specific scaling (α)</strong> on movement, extension, and approach metrics. Outputs are standardized to a 100/10 “Stuff-style” scale, then paired with long-run Coors performance for the composite leaderboard. The feature set is <strong>informed by</strong> common public research threads—velocity and movement decomposition, release-side context, count and handedness, approach angles, spin axis—but it is <strong>not</strong> a direct port or credit to any single external Stuff product; weights and stacking are mine.
+      </p>
     </div>
     <div class="model-grid">
       <div class="model-block">
-        <h4>tjStuff+ v2 · Nestico</h4>
+        <h4>Velocity, movement &amp; extension</h4>
         <div class="model-feat">Velocity<span class="boost">α×1.05</span></div>
         <div class="model-feat">Induced vertical break<span class="penalty">α×0.79</span></div>
         <div class="model-feat">HB Magnus<span class="penalty">α×0.82</span></div>
@@ -272,7 +275,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
         <div class="model-feat">ΔHB from FB<span class="neutral">α×0.90</span></div>
       </div>
       <div class="model-block">
-        <h4>FanGraphs Stuff+ / PitchingBot · Grove/Sarris</h4>
+        <h4>Release &amp; game context</h4>
         <div class="model-feat">Vertical release point<span class="boost">α×1.08</span></div>
         <div class="model-feat">Horizontal release point<span class="neutral">α×1.00</span></div>
         <div class="model-feat">Pitch location<span class="neutral">excluded</span></div>
@@ -281,7 +284,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
         <div class="model-feat">Pitch type categorical<span class="neutral">α×1.00</span></div>
       </div>
       <div class="model-block">
-        <h4>aStuff+ v2 · Salorio</h4>
+        <h4>Approach angles &amp; park layer</h4>
         <div class="model-feat">VAA (vert. approach angle)<span class="boost">α×1.14</span></div>
         <div class="model-feat">HAA (horiz. approach angle)<span class="boost">α×1.06</span></div>
         <div class="model-feat">Spin axis<span class="neutral">α×1.00</span></div>
