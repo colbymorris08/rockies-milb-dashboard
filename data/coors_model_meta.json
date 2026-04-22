@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-21T22:24:47.789956",
+  "generated": "2026-04-21T22:46:01.932853",
   "training_years": "2021-2024",
   "career_coors_statcast_years": "2015-2024",
   "features": [
@@ -52,24 +52,24 @@
   "top20_names": [
     "McGee, Jake",
     "Gomber, Austin",
-    "Gallen, Zac",
     "Stephenson, Robert",
+    "Gallen, Zac",
     "Greinke, Zack",
-    "Kershaw, Clayton",
     "Hale, David",
-    "M\u00e1rquez, Germ\u00e1n",
+    "Kershaw, Clayton",
     "Bumgarner, Madison",
+    "M\u00e1rquez, Germ\u00e1n",
     "Lawrence, Justin",
     "Chac\u00edn, Jhoulys",
     "Gray, Jon",
     "Almonte, Yency",
-    "Kuhl, Chad",
     "Blach, Ty",
+    "Kuhl, Chad",
     "Gilbreath, Lucas",
-    "Anderson, Tyler",
     "Lambert, Peter",
-    "Freeland, Kyle",
-    "Flexen, Chris"
+    "Anderson, Tyler",
+    "Flexen, Chris",
+    "Freeland, Kyle"
   ],
   "rockies_top20_names": [
     "Gomber, Austin",
@@ -99,7 +99,7 @@
     "primary_pitch_counts": {
       "FF": 13,
       "SL": 3,
-      "SI": 3,
+      "SI/2S": 3,
       "FC": 1
     }
   },

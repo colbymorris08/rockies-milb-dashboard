@@ -25,7 +25,7 @@
     "career_coors_ra9":8.04,
     "career_coors_fip":4.95,
     "career_coors_k_bb_pct":13.7,
-    "coors_perf_score":-0.0885,
+    "coors_perf_score":-0.1011,
     "coors_composite":113.5,
     "pitches_by_type":[
 
@@ -59,8 +59,8 @@
     "career_coors_ra9":5.35,
     "career_coors_fip":4.9,
     "career_coors_k_bb_pct":9.7,
-    "coors_perf_score":-0.4633,
-    "coors_composite":107.0,
+    "coors_perf_score":-0.4758,
+    "coors_composite":106.9,
     "pitches_by_type":[
       {
         "pitch_type":"CH",
@@ -81,59 +81,6 @@
         "pitch_type":"SL",
         "stuff_sl":96.5999984741,
         "stuff_col":97.5999984741
-      }
-    ],
-    "primary_pitch":"FF",
-    "primary_fastball_family":"FF"
-  },
-  {
-    "player_name":"Gallen, Zac",
-    "pitches":497,
-    "stuff_sl":99.2600021362,
-    "stuff_col":98.5,
-    "stuff_delta":-0.7599999905,
-    "avg_velo":89.67,
-    "avg_ivb":0.53,
-    "avg_hb":-0.03,
-    "avg_spin":2373.84,
-    "avg_ext":6.6,
-    "avg_arm_angle":43.09,
-    "avg_ff_ext":6.6,
-    "avg_ff_vaa":-5.43,
-    "pct_sl_st":2.4,
-    "has_gyro_slider":0,
-    "coors_bf":115,
-    "coors_ip":30.7,
-    "coors_ra9":2.64,
-    "coors_fip":1.31,
-    "coors_k_bb_pct":31.3,
-    "career_coors_bf":164.0,
-    "career_coors_ip":41.3,
-    "career_coors_ra9":2.83,
-    "career_coors_fip":1.67,
-    "career_coors_k_bb_pct":27.4,
-    "coors_perf_score":3.2269,
-    "coors_composite":106.9,
-    "pitches_by_type":[
-      {
-        "pitch_type":"CH",
-        "stuff_sl":94.5500030518,
-        "stuff_col":94.5599975586
-      },
-      {
-        "pitch_type":"FC",
-        "stuff_sl":95.8700027466,
-        "stuff_col":94.0299987793
-      },
-      {
-        "pitch_type":"FF",
-        "stuff_sl":102.8700027466,
-        "stuff_col":101.6999969482
-      },
-      {
-        "pitch_type":"KC",
-        "stuff_sl":93.5299987793,
-        "stuff_col":94.0
       }
     ],
     "primary_pitch":"FF",
@@ -165,8 +112,8 @@
     "career_coors_ra9":6.63,
     "career_coors_fip":3.54,
     "career_coors_k_bb_pct":20.6,
-    "coors_perf_score":1.4389,
-    "coors_composite":106.8,
+    "coors_perf_score":1.3954,
+    "coors_composite":106.2,
     "pitches_by_type":[
       {
         "pitch_type":"CU",
@@ -182,6 +129,59 @@
         "pitch_type":"SL",
         "stuff_sl":96.5899963379,
         "stuff_col":96.3499984741
+      }
+    ],
+    "primary_pitch":"FF",
+    "primary_fastball_family":"FF"
+  },
+  {
+    "player_name":"Gallen, Zac",
+    "pitches":497,
+    "stuff_sl":99.2600021362,
+    "stuff_col":98.5,
+    "stuff_delta":-0.7599999905,
+    "avg_velo":89.67,
+    "avg_ivb":0.53,
+    "avg_hb":-0.03,
+    "avg_spin":2373.84,
+    "avg_ext":6.6,
+    "avg_arm_angle":43.09,
+    "avg_ff_ext":6.6,
+    "avg_ff_vaa":-5.43,
+    "pct_sl_st":2.4,
+    "has_gyro_slider":0,
+    "coors_bf":115,
+    "coors_ip":30.7,
+    "coors_ra9":2.64,
+    "coors_fip":1.31,
+    "coors_k_bb_pct":31.3,
+    "career_coors_bf":164.0,
+    "career_coors_ip":41.3,
+    "career_coors_ra9":2.83,
+    "career_coors_fip":1.67,
+    "career_coors_k_bb_pct":27.4,
+    "coors_perf_score":3.1433,
+    "coors_composite":105.9,
+    "pitches_by_type":[
+      {
+        "pitch_type":"CH",
+        "stuff_sl":94.5500030518,
+        "stuff_col":94.5599975586
+      },
+      {
+        "pitch_type":"FC",
+        "stuff_sl":95.8700027466,
+        "stuff_col":94.0299987793
+      },
+      {
+        "pitch_type":"FF",
+        "stuff_sl":102.8700027466,
+        "stuff_col":101.6999969482
+      },
+      {
+        "pitch_type":"KC",
+        "stuff_sl":93.5299987793,
+        "stuff_col":94.0
       }
     ],
     "primary_pitch":"FF",
@@ -213,61 +213,13 @@
     "career_coors_ra9":5.2,
     "career_coors_fip":3.3,
     "career_coors_k_bb_pct":15.6,
-    "coors_perf_score":1.0748,
-    "coors_composite":105.0,
+    "coors_perf_score":1.0279,
+    "coors_composite":104.4,
     "pitches_by_type":[
       {
         "pitch_type":"SL",
         "stuff_sl":95.7900009155,
         "stuff_col":96.0899963379
-      }
-    ],
-    "primary_pitch":"SL",
-    "primary_fastball_family":"FF"
-  },
-  {
-    "player_name":"Kershaw, Clayton",
-    "pitches":402,
-    "stuff_sl":99.9800033569,
-    "stuff_col":100.7300033569,
-    "stuff_delta":0.7599999905,
-    "avg_velo":85.98,
-    "avg_ivb":0.51,
-    "avg_hb":-0.19,
-    "avg_spin":2529.45,
-    "avg_ext":6.34,
-    "avg_arm_angle":60.7,
-    "avg_ff_ext":6.38,
-    "avg_ff_vaa":-5.82,
-    "pct_sl_st":43.3,
-    "has_gyro_slider":1,
-    "coors_bf":96,
-    "coors_ip":20.0,
-    "coors_ra9":7.65,
-    "coors_fip":4.35,
-    "coors_k_bb_pct":5.2,
-    "career_coors_bf":297.0,
-    "career_coors_ip":68.7,
-    "career_coors_ra9":5.37,
-    "career_coors_fip":3.81,
-    "career_coors_k_bb_pct":14.1,
-    "coors_perf_score":0.623,
-    "coors_composite":104.1,
-    "pitches_by_type":[
-      {
-        "pitch_type":"CU",
-        "stuff_sl":96.8499984741,
-        "stuff_col":98.4400024414
-      },
-      {
-        "pitch_type":"FF",
-        "stuff_sl":102.3199996948,
-        "stuff_col":103.1600036621
-      },
-      {
-        "pitch_type":"SL",
-        "stuff_sl":99.3099975586,
-        "stuff_col":99.6399993896
       }
     ],
     "primary_pitch":"SL",
@@ -299,10 +251,106 @@
     "career_coors_ra9":6.88,
     "career_coors_fip":4.38,
     "career_coors_k_bb_pct":14.3,
-    "coors_perf_score":0.3077,
-    "coors_composite":104.1,
+    "coors_perf_score":0.2832,
+    "coors_composite":103.7,
     "pitches_by_type":[
 
+    ],
+    "primary_pitch":"FF",
+    "primary_fastball_family":"FF"
+  },
+  {
+    "player_name":"Kershaw, Clayton",
+    "pitches":402,
+    "stuff_sl":99.9800033569,
+    "stuff_col":100.7300033569,
+    "stuff_delta":0.7599999905,
+    "avg_velo":85.98,
+    "avg_ivb":0.51,
+    "avg_hb":-0.19,
+    "avg_spin":2529.45,
+    "avg_ext":6.34,
+    "avg_arm_angle":60.7,
+    "avg_ff_ext":6.38,
+    "avg_ff_vaa":-5.82,
+    "pct_sl_st":43.3,
+    "has_gyro_slider":1,
+    "coors_bf":96,
+    "coors_ip":20.0,
+    "coors_ra9":7.65,
+    "coors_fip":4.35,
+    "coors_k_bb_pct":5.2,
+    "career_coors_bf":297.0,
+    "career_coors_ip":68.7,
+    "career_coors_ra9":5.37,
+    "career_coors_fip":3.81,
+    "career_coors_k_bb_pct":14.1,
+    "coors_perf_score":0.587,
+    "coors_composite":103.6,
+    "pitches_by_type":[
+      {
+        "pitch_type":"CU",
+        "stuff_sl":96.8499984741,
+        "stuff_col":98.4400024414
+      },
+      {
+        "pitch_type":"FF",
+        "stuff_sl":102.3199996948,
+        "stuff_col":103.1600036621
+      },
+      {
+        "pitch_type":"SL",
+        "stuff_sl":99.3099975586,
+        "stuff_col":99.6399993896
+      }
+    ],
+    "primary_pitch":"SL",
+    "primary_fastball_family":"FF"
+  },
+  {
+    "player_name":"Bumgarner, Madison",
+    "pitches":297,
+    "stuff_sl":101.7900009155,
+    "stuff_col":101.7300033569,
+    "stuff_delta":-0.0599999987,
+    "avg_velo":86.83,
+    "avg_ivb":0.71,
+    "avg_hb":0.21,
+    "avg_spin":2374.08,
+    "avg_ext":6.57,
+    "avg_arm_angle":27.08,
+    "avg_ff_ext":6.69,
+    "avg_ff_vaa":-5.48,
+    "pct_sl_st":0.0,
+    "has_gyro_slider":0,
+    "coors_bf":80,
+    "coors_ip":16.7,
+    "coors_ra9":8.64,
+    "coors_fip":4.96,
+    "coors_k_bb_pct":3.8,
+    "career_coors_bf":235.0,
+    "career_coors_ip":50.3,
+    "career_coors_ra9":6.44,
+    "career_coors_fip":4.93,
+    "career_coors_k_bb_pct":10.2,
+    "coors_perf_score":-0.4424,
+    "coors_composite":103.2,
+    "pitches_by_type":[
+      {
+        "pitch_type":"CU",
+        "stuff_sl":99.6800003052,
+        "stuff_col":100.8000030518
+      },
+      {
+        "pitch_type":"FC",
+        "stuff_sl":100.9899978638,
+        "stuff_col":101.2099990845
+      },
+      {
+        "pitch_type":"FF",
+        "stuff_sl":103.2099990845,
+        "stuff_col":102.5199966431
+      }
     ],
     "primary_pitch":"FF",
     "primary_fastball_family":"FF"
@@ -333,8 +381,8 @@
     "career_coors_ra9":5.07,
     "career_coors_fip":3.96,
     "career_coors_k_bb_pct":16.5,
-    "coors_perf_score":0.7773,
-    "coors_composite":103.4,
+    "coors_perf_score":0.7436,
+    "coors_composite":102.8,
     "pitches_by_type":[
       {
         "pitch_type":"CH",
@@ -366,54 +414,6 @@
     "primary_fastball_family":"FF"
   },
   {
-    "player_name":"Bumgarner, Madison",
-    "pitches":297,
-    "stuff_sl":101.7900009155,
-    "stuff_col":101.7300033569,
-    "stuff_delta":-0.0599999987,
-    "avg_velo":86.83,
-    "avg_ivb":0.71,
-    "avg_hb":0.21,
-    "avg_spin":2374.08,
-    "avg_ext":6.57,
-    "avg_arm_angle":27.08,
-    "avg_ff_ext":6.69,
-    "avg_ff_vaa":-5.48,
-    "pct_sl_st":0.0,
-    "has_gyro_slider":0,
-    "coors_bf":80,
-    "coors_ip":16.7,
-    "coors_ra9":8.64,
-    "coors_fip":4.96,
-    "coors_k_bb_pct":3.8,
-    "career_coors_bf":235.0,
-    "career_coors_ip":50.3,
-    "career_coors_ra9":6.44,
-    "career_coors_fip":4.93,
-    "career_coors_k_bb_pct":10.2,
-    "coors_perf_score":-0.4305,
-    "coors_composite":103.4,
-    "pitches_by_type":[
-      {
-        "pitch_type":"CU",
-        "stuff_sl":99.6800003052,
-        "stuff_col":100.8000030518
-      },
-      {
-        "pitch_type":"FC",
-        "stuff_sl":100.9899978638,
-        "stuff_col":101.2099990845
-      },
-      {
-        "pitch_type":"FF",
-        "stuff_sl":103.2099990845,
-        "stuff_col":102.5199966431
-      }
-    ],
-    "primary_pitch":"FF",
-    "primary_fastball_family":"FF"
-  },
-  {
     "player_name":"Lawrence, Justin",
     "pitches":1785,
     "stuff_sl":99.4199981689,
@@ -439,8 +439,8 @@
     "career_coors_ra9":8.54,
     "career_coors_fip":4.21,
     "career_coors_k_bb_pct":10.0,
-    "coors_perf_score":-0.0269,
-    "coors_composite":101.7,
+    "coors_perf_score":-0.0535,
+    "coors_composite":101.3,
     "pitches_by_type":[
       {
         "pitch_type":"SI",
@@ -453,7 +453,7 @@
         "stuff_col":95.5699996948
       }
     ],
-    "primary_pitch":"SI",
+    "primary_pitch":"SI\/2S",
     "primary_fastball_family":"SI"
   },
   {
@@ -482,8 +482,8 @@
     "career_coors_ra9":6.68,
     "career_coors_fip":4.86,
     "career_coors_k_bb_pct":9.2,
-    "coors_perf_score":-0.4903,
-    "coors_composite":101.3,
+    "coors_perf_score":-0.5034,
+    "coors_composite":101.0,
     "pitches_by_type":[
       {
         "pitch_type":"CU",
@@ -506,7 +506,7 @@
         "stuff_col":103.4599990845
       }
     ],
-    "primary_pitch":"SI",
+    "primary_pitch":"SI\/2S",
     "primary_fastball_family":"SI"
   },
   {
@@ -535,8 +535,8 @@
     "career_coors_ra9":4.5,
     "career_coors_fip":3.82,
     "career_coors_k_bb_pct":16.5,
-    "coors_perf_score":0.8597,
-    "coors_composite":101.0,
+    "coors_perf_score":0.8232,
+    "coors_composite":100.4,
     "pitches_by_type":[
       {
         "pitch_type":"CH",
@@ -588,8 +588,8 @@
     "career_coors_ra9":8.17,
     "career_coors_fip":4.89,
     "career_coors_k_bb_pct":10.6,
-    "coors_perf_score":-0.3665,
-    "coors_composite":100.4,
+    "coors_perf_score":-0.3794,
+    "coors_composite":100.1,
     "pitches_by_type":[
       {
         "pitch_type":"CH",
@@ -621,6 +621,59 @@
     "primary_fastball_family":"FF"
   },
   {
+    "player_name":"Blach, Ty",
+    "pitches":1852,
+    "stuff_sl":101.7300033569,
+    "stuff_col":101.6200027466,
+    "stuff_delta":-0.1099999994,
+    "avg_velo":85.52,
+    "avg_ivb":0.29,
+    "avg_hb":0.83,
+    "avg_spin":2087.99,
+    "avg_ext":5.15,
+    "avg_arm_angle":23.18,
+    "avg_ff_ext":5.46,
+    "avg_ff_vaa":-7.22,
+    "pct_sl_st":0.0,
+    "has_gyro_slider":0,
+    "coors_bf":505,
+    "coors_ip":111.7,
+    "coors_ra9":6.37,
+    "coors_fip":5.29,
+    "coors_k_bb_pct":5.1,
+    "career_coors_bf":582.0,
+    "career_coors_ip":129.0,
+    "career_coors_ra9":6.35,
+    "career_coors_fip":5.28,
+    "career_coors_k_bb_pct":5.2,
+    "coors_perf_score":-1.1452,
+    "coors_composite":99.1,
+    "pitches_by_type":[
+      {
+        "pitch_type":"CH",
+        "stuff_sl":99.3499984741,
+        "stuff_col":99.2799987793
+      },
+      {
+        "pitch_type":"CU",
+        "stuff_sl":98.8899993896,
+        "stuff_col":98.75
+      },
+      {
+        "pitch_type":"FC",
+        "stuff_sl":100.3099975586,
+        "stuff_col":100.0
+      },
+      {
+        "pitch_type":"SI",
+        "stuff_sl":103.6800003052,
+        "stuff_col":103.6100006104
+      }
+    ],
+    "primary_pitch":"SI\/2S",
+    "primary_fastball_family":"SI"
+  },
+  {
     "player_name":"Kuhl, Chad",
     "pitches":1219,
     "stuff_sl":101.5,
@@ -646,8 +699,8 @@
     "career_coors_ra9":5.15,
     "career_coors_fip":4.93,
     "career_coors_k_bb_pct":8.8,
-    "coors_perf_score":-0.572,
-    "coors_composite":99.3,
+    "coors_perf_score":-0.5835,
+    "coors_composite":99.0,
     "pitches_by_type":[
       {
         "pitch_type":"CH",
@@ -679,59 +732,6 @@
     "primary_fastball_family":"SI"
   },
   {
-    "player_name":"Blach, Ty",
-    "pitches":1852,
-    "stuff_sl":101.7300033569,
-    "stuff_col":101.6200027466,
-    "stuff_delta":-0.1099999994,
-    "avg_velo":85.52,
-    "avg_ivb":0.29,
-    "avg_hb":0.83,
-    "avg_spin":2087.99,
-    "avg_ext":5.15,
-    "avg_arm_angle":23.18,
-    "avg_ff_ext":5.46,
-    "avg_ff_vaa":-7.22,
-    "pct_sl_st":0.0,
-    "has_gyro_slider":0,
-    "coors_bf":505,
-    "coors_ip":111.7,
-    "coors_ra9":6.37,
-    "coors_fip":5.29,
-    "coors_k_bb_pct":5.1,
-    "career_coors_bf":582.0,
-    "career_coors_ip":129.0,
-    "career_coors_ra9":6.35,
-    "career_coors_fip":5.28,
-    "career_coors_k_bb_pct":5.2,
-    "coors_perf_score":-1.1418,
-    "coors_composite":99.3,
-    "pitches_by_type":[
-      {
-        "pitch_type":"CH",
-        "stuff_sl":99.3499984741,
-        "stuff_col":99.2799987793
-      },
-      {
-        "pitch_type":"CU",
-        "stuff_sl":98.8899993896,
-        "stuff_col":98.75
-      },
-      {
-        "pitch_type":"FC",
-        "stuff_sl":100.3099975586,
-        "stuff_col":100.0
-      },
-      {
-        "pitch_type":"SI",
-        "stuff_sl":103.6800003052,
-        "stuff_col":103.6100006104
-      }
-    ],
-    "primary_pitch":"SI",
-    "primary_fastball_family":"SI"
-  },
-  {
     "player_name":"Gilbreath, Lucas",
     "pitches":783,
     "stuff_sl":100.0899963379,
@@ -757,8 +757,8 @@
     "career_coors_ra9":5.36,
     "career_coors_fip":4.14,
     "career_coors_k_bb_pct":13.1,
-    "coors_perf_score":0.3277,
-    "coors_composite":98.8,
+    "coors_perf_score":0.2987,
+    "coors_composite":98.2,
     "pitches_by_type":[
       {
         "pitch_type":"FF",
@@ -769,54 +769,6 @@
         "pitch_type":"SL",
         "stuff_sl":96.2900009155,
         "stuff_col":96.2200012207
-      }
-    ],
-    "primary_pitch":"FF",
-    "primary_fastball_family":"FF"
-  },
-  {
-    "player_name":"Anderson, Tyler",
-    "pitches":419,
-    "stuff_sl":99.3499984741,
-    "stuff_col":99.5800018311,
-    "stuff_delta":0.2300000042,
-    "avg_velo":85.48,
-    "avg_ivb":0.86,
-    "avg_hb":0.5,
-    "avg_spin":2180.22,
-    "avg_ext":6.06,
-    "avg_arm_angle":46.58,
-    "avg_ff_ext":6.06,
-    "avg_ff_vaa":-5.74,
-    "pct_sl_st":0.0,
-    "has_gyro_slider":0,
-    "coors_bf":113,
-    "coors_ip":28.0,
-    "coors_ra9":3.21,
-    "coors_fip":3.56,
-    "coors_k_bb_pct":15.9,
-    "career_coors_bf":1085.0,
-    "career_coors_ip":254.7,
-    "career_coors_ra9":4.13,
-    "career_coors_fip":4.06,
-    "career_coors_k_bb_pct":14.7,
-    "coors_perf_score":0.5365,
-    "coors_composite":98.4,
-    "pitches_by_type":[
-      {
-        "pitch_type":"CH",
-        "stuff_sl":95.9300003052,
-        "stuff_col":96.7699966431
-      },
-      {
-        "pitch_type":"FC",
-        "stuff_sl":97.4199981689,
-        "stuff_col":97.8000030518
-      },
-      {
-        "pitch_type":"FF",
-        "stuff_sl":103.2200012207,
-        "stuff_col":102.9599990845
       }
     ],
     "primary_pitch":"FF",
@@ -848,8 +800,8 @@
     "career_coors_ra9":6.86,
     "career_coors_fip":5.65,
     "career_coors_k_bb_pct":7.2,
-    "coors_perf_score":-1.1575,
-    "coors_composite":98.1,
+    "coors_perf_score":-1.1539,
+    "coors_composite":97.9,
     "pitches_by_type":[
       {
         "pitch_type":"CH",
@@ -886,6 +838,107 @@
     "primary_fastball_family":"FF"
   },
   {
+    "player_name":"Anderson, Tyler",
+    "pitches":419,
+    "stuff_sl":99.3499984741,
+    "stuff_col":99.5800018311,
+    "stuff_delta":0.2300000042,
+    "avg_velo":85.48,
+    "avg_ivb":0.86,
+    "avg_hb":0.5,
+    "avg_spin":2180.22,
+    "avg_ext":6.06,
+    "avg_arm_angle":46.58,
+    "avg_ff_ext":6.06,
+    "avg_ff_vaa":-5.74,
+    "pct_sl_st":0.0,
+    "has_gyro_slider":0,
+    "coors_bf":113,
+    "coors_ip":28.0,
+    "coors_ra9":3.21,
+    "coors_fip":3.56,
+    "coors_k_bb_pct":15.9,
+    "career_coors_bf":1085.0,
+    "career_coors_ip":254.7,
+    "career_coors_ra9":4.13,
+    "career_coors_fip":4.06,
+    "career_coors_k_bb_pct":14.7,
+    "coors_perf_score":0.5054,
+    "coors_composite":97.8,
+    "pitches_by_type":[
+      {
+        "pitch_type":"CH",
+        "stuff_sl":95.9300003052,
+        "stuff_col":96.7699966431
+      },
+      {
+        "pitch_type":"FC",
+        "stuff_sl":97.4199981689,
+        "stuff_col":97.8000030518
+      },
+      {
+        "pitch_type":"FF",
+        "stuff_sl":103.2200012207,
+        "stuff_col":102.9599990845
+      }
+    ],
+    "primary_pitch":"FF",
+    "primary_fastball_family":"FF"
+  },
+  {
+    "player_name":"Flexen, Chris",
+    "pitches":690,
+    "stuff_sl":100.4000015259,
+    "stuff_col":101.3099975586,
+    "stuff_delta":0.9100000262,
+    "avg_velo":87.66,
+    "avg_ivb":0.6,
+    "avg_hb":0.11,
+    "avg_spin":2121.84,
+    "avg_ext":6.27,
+    "avg_arm_angle":69.12,
+    "avg_ff_ext":6.22,
+    "avg_ff_vaa":-6.33,
+    "pct_sl_st":7.8,
+    "has_gyro_slider":1,
+    "coors_bf":165,
+    "coors_ip":37.3,
+    "coors_ra9":5.54,
+    "coors_fip":5.86,
+    "coors_k_bb_pct":9.7,
+    "career_coors_bf":183.0,
+    "career_coors_ip":40.3,
+    "career_coors_ra9":6.25,
+    "career_coors_fip":5.95,
+    "career_coors_k_bb_pct":9.3,
+    "coors_perf_score":-1.1127,
+    "coors_composite":97.8,
+    "pitches_by_type":[
+      {
+        "pitch_type":"CH",
+        "stuff_sl":95.0899963379,
+        "stuff_col":95.5400009155
+      },
+      {
+        "pitch_type":"FC",
+        "stuff_sl":98.1100006104,
+        "stuff_col":99.0800018311
+      },
+      {
+        "pitch_type":"FF",
+        "stuff_sl":105.4700012207,
+        "stuff_col":106.2600021362
+      },
+      {
+        "pitch_type":"SL",
+        "stuff_sl":91.6299972534,
+        "stuff_col":93.3799972534
+      }
+    ],
+    "primary_pitch":"FF",
+    "primary_fastball_family":"FF"
+  },
+  {
     "player_name":"Freeland, Kyle",
     "pitches":4539,
     "stuff_sl":100.6900024414,
@@ -911,8 +964,8 @@
     "career_coors_ra9":4.99,
     "career_coors_fip":4.59,
     "career_coors_k_bb_pct":10.5,
-    "coors_perf_score":-0.2,
-    "coors_composite":98.1,
+    "coors_perf_score":-0.219,
+    "coors_composite":97.6,
     "pitches_by_type":[
       {
         "pitch_type":"CH",
@@ -942,58 +995,5 @@
     ],
     "primary_pitch":"FC",
     "primary_fastball_family":"FC"
-  },
-  {
-    "player_name":"Flexen, Chris",
-    "pitches":690,
-    "stuff_sl":100.4000015259,
-    "stuff_col":101.3099975586,
-    "stuff_delta":0.9100000262,
-    "avg_velo":87.66,
-    "avg_ivb":0.6,
-    "avg_hb":0.11,
-    "avg_spin":2121.84,
-    "avg_ext":6.27,
-    "avg_arm_angle":69.12,
-    "avg_ff_ext":6.22,
-    "avg_ff_vaa":-6.33,
-    "pct_sl_st":7.8,
-    "has_gyro_slider":1,
-    "coors_bf":165,
-    "coors_ip":37.3,
-    "coors_ra9":5.54,
-    "coors_fip":5.86,
-    "coors_k_bb_pct":9.7,
-    "career_coors_bf":183.0,
-    "career_coors_ip":40.3,
-    "career_coors_ra9":6.25,
-    "career_coors_fip":5.95,
-    "career_coors_k_bb_pct":9.3,
-    "coors_perf_score":-1.1218,
-    "coors_composite":98.0,
-    "pitches_by_type":[
-      {
-        "pitch_type":"CH",
-        "stuff_sl":95.0899963379,
-        "stuff_col":95.5400009155
-      },
-      {
-        "pitch_type":"FC",
-        "stuff_sl":98.1100006104,
-        "stuff_col":99.0800018311
-      },
-      {
-        "pitch_type":"FF",
-        "stuff_sl":105.4700012207,
-        "stuff_col":106.2600021362
-      },
-      {
-        "pitch_type":"SL",
-        "stuff_sl":91.6299972534,
-        "stuff_col":93.3799972534
-      }
-    ],
-    "primary_pitch":"FF",
-    "primary_fastball_family":"FF"
   }
 ]

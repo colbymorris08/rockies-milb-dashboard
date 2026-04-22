@@ -168,7 +168,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
   <div class="insight-divider"></div>
   <div class="insight-item">Gyro-slider pitchers: <strong id="insGyroCount">—</strong></div>
   <div class="insight-divider"></div>
-  <div class="insight-item">Primary pitch type (count): <strong id="insPitchMix" title="Most-thrown pitch type per pitcher in this sample, then tallied across the board">—</strong></div>
+  <div class="insight-item">High-extension arms (>=6.6 ft): <strong id="insHiExtCount" title="Count of pitchers with average Coors release extension at or above 6.6 ft">—</strong></div>
 </div>
 
 <div class="main">
@@ -237,7 +237,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
       <div class="finding">
         <span class="finding-label">Pitch mix &amp; slider family</span>
         <span class="finding-val" id="cardFbVal">—</span>
-        <span class="finding-note" id="cardFbNote">“Primary pitch” is each pitcher’s most-thrown pitch type in the scored Coors sample; the line shows how many of this board’s arms lead with FF, SL, SI, etc. Slider + sweeper share is SL+ST pitches ÷ all scored pitches. Gyro-slider count uses a simple SL shape proxy (>=20 SL with tighter average glove-side break).</span>
+        <span class="finding-note" id="cardFbNote">“Primary pitch” is each pitcher’s most-thrown pitch type in the scored Coors sample; sinker-first arms are labeled SI/2S. Slider + sweeper share is SL+ST pitches ÷ all scored pitches. Gyro-slider count uses a simple SL shape proxy (>=20 SL with tighter average glove-side break).</span>
       </div>
       <div class="finding">
         <span class="finding-label">Stuff+ snapshot</span>
@@ -457,7 +457,8 @@ function init(){
   document.getElementById('insArmAngle').textContent = mArm==null ? '—' : `${mArm.toFixed(1)}°`;
   document.getElementById('insSlStPct').textContent = mPctSlSt==null ? '—' : `${mPctSlSt.toFixed(1)}%`;
   document.getElementById('insGyroCount').textContent = `${Math.round(mGyroCount)}/${n}`;
-  document.getElementById('insPitchMix').textContent = formatPrimaryPitchMix(allData);
+  const hiExtCount = allData.reduce((a,p)=>a+(Number(p.avg_ext)>=6.6?1:0),0);
+  document.getElementById('insHiExtCount').textContent = `${hiExtCount}/${n}`;
   updateInsightCard(allData, { stuffSlAvg, stuffColAvg, stuffDeltaAvg, mExt, mFfVaa, mArm, mPctSlSt, mGyroCount });
   const avgDelta = n ? (allData.reduce((a,p)=>a+(p.stuff_delta||0),0)/n).toFixed(1) : '0.0';
   document.getElementById('statAvgDelta').textContent = (parseFloat(avgDelta)>0?'+':'')+avgDelta;
