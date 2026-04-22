@@ -1,110 +1,98 @@
 [
   {
     "feature": "strikes",
-    "importance": 0.5773,
+    "importance": 0.558,
     "alpha": 1.0,
     "model": "sea_level"
   },
   {
     "feature": "balls",
-    "importance": 0.2181,
+    "importance": 0.3512,
     "alpha": 1.0,
     "model": "sea_level"
   },
   {
-    "feature": "vaa",
-    "importance": 0.0264,
-    "alpha": 1.14,
-    "model": "sea_level"
-  },
-  {
     "feature": "delta_velo",
-    "importance": 0.0181,
+    "importance": 0.0118,
     "alpha": 1.05,
     "model": "sea_level"
   },
   {
+    "feature": "pitch_type_enc",
+    "importance": 0.0089,
+    "alpha": 1.0,
+    "model": "sea_level"
+  },
+  {
+    "feature": "delta_ivb",
+    "importance": 0.0081,
+    "alpha": 0.79,
+    "model": "sea_level"
+  },
+  {
     "feature": "pfx_z",
-    "importance": 0.0173,
+    "importance": 0.0074,
     "alpha": 0.79,
     "model": "sea_level"
   },
   {
     "feature": "stand_enc",
-    "importance": 0.0144,
-    "alpha": 1.0,
-    "model": "sea_level"
-  },
-  {
-    "feature": "haa",
-    "importance": 0.0143,
-    "alpha": 1.06,
-    "model": "sea_level"
-  },
-  {
-    "feature": "release_pos_x",
-    "importance": 0.0142,
+    "importance": 0.0073,
     "alpha": 1.0,
     "model": "sea_level"
   },
   {
     "feature": "pfx_x_magnus",
-    "importance": 0.0139,
+    "importance": 0.0063,
     "alpha": 0.82,
     "model": "sea_level"
   },
   {
-    "feature": "delta_ivb",
-    "importance": 0.013,
-    "alpha": 0.79,
-    "model": "sea_level"
-  },
-  {
-    "feature": "pitch_type_enc",
-    "importance": 0.0129,
-    "alpha": 1.0,
-    "model": "sea_level"
-  },
-  {
-    "feature": "release_pos_z",
-    "importance": 0.0127,
-    "alpha": 1.08,
-    "model": "sea_level"
-  },
-  {
     "feature": "release_speed",
-    "importance": 0.0097,
+    "importance": 0.0063,
     "alpha": 1.05,
     "model": "sea_level"
   },
   {
-    "feature": "pfx_x_gyro",
-    "importance": 0.0082,
-    "alpha": 0.97,
+    "feature": "delta_hb",
+    "importance": 0.0058,
+    "alpha": 0.9,
     "model": "sea_level"
   },
   {
     "feature": "release_spin_rate",
-    "importance": 0.0082,
+    "importance": 0.0057,
     "alpha": 0.86,
     "model": "sea_level"
   },
   {
     "feature": "spin_axis",
-    "importance": 0.0079,
+    "importance": 0.0048,
     "alpha": 1.0,
     "model": "sea_level"
   },
   {
-    "feature": "delta_hb",
-    "importance": 0.0078,
-    "alpha": 0.9,
+    "feature": "release_pos_z",
+    "importance": 0.0048,
+    "alpha": 1.08,
+    "model": "sea_level"
+  },
+  {
+    "feature": "pfx_x_gyro",
+    "importance": 0.0046,
+    "alpha": 0.97,
     "model": "sea_level"
   },
   {
     "feature": "log_ext",
-    "importance": 0.0055,
+    "importance": 0.0046,
     "alpha": 1.18,
+    "model": "sea_level"
+  },
+  {
+    "feature": "release_pos_x",
+    "importance": 0.0045,
+    "alpha": 1.0,
     "model": "sea_level"
   }
 ]

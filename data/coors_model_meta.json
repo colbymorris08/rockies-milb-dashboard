@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-21T16:56:02.511310",
+  "generated": "2026-04-21T21:51:57.567668",
   "training_years": "2021-2024",
   "career_coors_statcast_years": "2015-2024",
   "features": [
@@ -18,14 +18,12 @@
     "strikes",
     "stand_enc",
     "pitch_type_enc",
-    "vaa",
-    "haa",
     "spin_axis"
   ],
   "stuff_model": {
     "name": "Internal dual-XGBoost Coors Stuff index",
-    "summary": "Two gradient-boosted models on Statcast pitch features (estimated wOBA target): one trained on all parks and one on Coors-adjusted (\u03b1-scaled) movement, extension, and approach inputs. Outputs standardized to a 100/10 scale for leaderboard use.",
-    "informed_by_public_research": "Broad pitching-analytics threads\u2014velocity and movement decomposition, release-side and count context, horizontal/vertical approach angles, spin axis\u2014used as conceptual inspiration only; weights, stacking, and implementation are original to this pipeline."
+    "summary": "Two gradient-boosted models on Statcast pitch features (estimated wOBA target): one trained on all parks and one on Coors-adjusted (\u03b1-scaled) movement, extension, and release context. Outputs standardized to a 100/10 scale for leaderboard use.",
+    "informed_by_public_research": "Broad pitching-analytics threads\u2014velocity and movement decomposition, release-side and count context, spin axis\u2014used as conceptual inspiration only; weights, stacking, and implementation are original to this pipeline."
   },
   "coors_alpha": {
     "release_speed": 1.05,
@@ -34,8 +32,6 @@
     "pfx_x_gyro": 0.97,
     "release_spin_rate": 0.86,
     "log_ext": 1.18,
-    "vaa": 1.14,
-    "haa": 1.06,
     "delta_velo": 1.05,
     "delta_ivb": 0.79,
     "delta_hb": 0.9,
@@ -54,59 +50,57 @@
   },
   "performance_inputs": "xFIP_if_available_else_FIP_plus_K_minus_BB_percent",
   "top20_names": [
-    "Bumgarner, Madison",
     "Gallen, Zac",
     "McGee, Jake",
     "Gomber, Austin",
     "Stephenson, Robert",
-    "Suter, Brent",
-    "Kuhl, Chad",
-    "Lawrence, Justin",
-    "Kershaw, Clayton",
-    "Wood, Alex",
-    "Bard, Daniel",
+    "Hale, David",
+    "Greinke, Zack",
+    "Bumgarner, Madison",
     "Gray, Jon",
-    "Anderson, Tyler",
-    "Freeland, Kyle",
-    "Chac\u00edn, Jhoulys",
-    "Est\u00e9vez, Carlos",
-    "Ottavino, Adam",
+    "Kershaw, Clayton",
+    "Flexen, Chris",
+    "Lawrence, Justin",
+    "Almonte, Yency",
+    "Wood, Alex",
+    "Kuhl, Chad",
     "Lyles, Jordan",
-    "Blach, Ty",
-    "M\u00e1rquez, Germ\u00e1n"
+    "Freeland, Kyle",
+    "Anderson, Tyler",
+    "Chac\u00edn, Jhoulys",
+    "Lambert, Peter",
+    "Gilbreath, Lucas"
   ],
   "rockies_top20_names": [
     "Gomber, Austin",
-    "Lawrence, Justin",
-    "Bard, Daniel",
     "Gray, Jon",
+    "Lawrence, Justin",
     "Freeland, Kyle",
     "Est\u00e9vez, Carlos",
-    "Blach, Ty",
-    "Feltner, Ryan",
-    "M\u00e1rquez, Germ\u00e1n",
-    "Bird, Jake",
-    "Kinley, Tyler",
     "Lambert, Peter",
+    "M\u00e1rquez, Germ\u00e1n",
     "Senzatela, Antonio",
+    "Bard, Daniel",
+    "Feltner, Ryan",
+    "Kinley, Tyler",
+    "Bird, Jake",
     "Quantrill, Cal",
+    "Blach, Ty",
     "Gonz\u00e1lez, Chi Chi"
   ],
   "top20_key_findings": {
-    "avg_stuff_delta": 0.18,
-    "avg_vaa_release": -1.54,
-    "avg_ff_vaa": -1.93,
-    "avg_haa": 0.08,
-    "avg_arm_angle": 35.84,
-    "avg_ext": 6.27,
+    "avg_stuff_delta": 0.32,
+    "avg_ff_ext": 6.37,
+    "avg_ff_vaa": -5.64,
+    "avg_arm_angle": 40.47,
+    "avg_ext": 6.33,
     "avg_pct_sl_st": 20.88,
     "primary_pitch_counts": {
-      "FF": 11,
-      "SI": 4,
+      "FF": 13,
       "SL": 3,
-      "FC": 1,
-      "ST": 1
+      "SI": 3,
+      "FC": 1
     }
   },
-  "mechanics_note": "VAA/HAA from Statcast vx0,vy0,vz0 at release (Tangotiger-style); avg_ff_vaa is mean VAA on four-seamers only; arm_angle is Statcast release arm angle (\u00b0)."
+  "mechanics_note": "avg_ff_ext is mean Statcast release_extension (ft) on four-seam (FF) pitches only; avg_ff_vaa is plate-crossing vertical approach angle (deg) on FF; arm_angle is Statcast release arm angle (\u00b0)."
 }

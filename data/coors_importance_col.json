@@ -1,110 +1,98 @@
 [
   {
     "feature": "strikes",
-    "importance": 0.5798,
+    "importance": 0.5688,
     "alpha": 1.0,
     "model": "coors_adj"
   },
   {
     "feature": "balls",
-    "importance": 0.2155,
+    "importance": 0.3423,
     "alpha": 1.0,
-    "model": "coors_adj"
-  },
-  {
-    "feature": "vaa",
-    "importance": 0.0266,
-    "alpha": 1.14,
     "model": "coors_adj"
   },
   {
     "feature": "delta_velo",
-    "importance": 0.0181,
+    "importance": 0.012,
     "alpha": 1.05,
     "model": "coors_adj"
   },
   {
-    "feature": "pfx_z",
-    "importance": 0.0168,
-    "alpha": 0.79,
-    "model": "coors_adj"
-  },
-  {
-    "feature": "haa",
-    "importance": 0.0146,
-    "alpha": 1.06,
-    "model": "coors_adj"
-  },
-  {
-    "feature": "stand_enc",
-    "importance": 0.0145,
-    "alpha": 1.0,
-    "model": "coors_adj"
-  },
-  {
     "feature": "pitch_type_enc",
-    "importance": 0.0138,
-    "alpha": 1.0,
-    "model": "coors_adj"
-  },
-  {
-    "feature": "release_pos_x",
-    "importance": 0.0137,
+    "importance": 0.0083,
     "alpha": 1.0,
     "model": "coors_adj"
   },
   {
     "feature": "delta_ivb",
-    "importance": 0.0134,
+    "importance": 0.008,
+    "alpha": 0.79,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "stand_enc",
+    "importance": 0.0072,
+    "alpha": 1.0,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "pfx_z",
+    "importance": 0.0072,
     "alpha": 0.79,
     "model": "coors_adj"
   },
   {
     "feature": "pfx_x_magnus",
-    "importance": 0.0132,
+    "importance": 0.0062,
     "alpha": 0.82,
     "model": "coors_adj"
   },
   {
-    "feature": "release_pos_z",
-    "importance": 0.0128,
-    "alpha": 1.08,
-    "model": "coors_adj"
-  },
-  {
-    "feature": "release_speed",
-    "importance": 0.0095,
-    "alpha": 1.05,
-    "model": "coors_adj"
-  },
-  {
     "feature": "release_spin_rate",
-    "importance": 0.0087,
+    "importance": 0.0058,
     "alpha": 0.86,
     "model": "coors_adj"
   },
   {
+    "feature": "release_speed",
+    "importance": 0.0057,
+    "alpha": 1.05,
+    "model": "coors_adj"
+  },
+  {
     "feature": "delta_hb",
-    "importance": 0.0081,
+    "importance": 0.0056,
     "alpha": 0.9,
     "model": "coors_adj"
   },
   {
-    "feature": "pfx_x_gyro",
-    "importance": 0.0079,
-    "alpha": 0.97,
+    "feature": "release_pos_z",
+    "importance": 0.0048,
+    "alpha": 1.08,
     "model": "coors_adj"
   },
   {
     "feature": "spin_axis",
-    "importance": 0.0078,
+    "importance": 0.0047,
     "alpha": 1.0,
     "model": "coors_adj"
   },
   {
     "feature": "log_ext",
-    "importance": 0.0052,
+    "importance": 0.0044,
     "alpha": 1.18,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "pfx_x_gyro",
+    "importance": 0.0044,
+    "alpha": 0.97,
+    "model": "coors_adj"
+  },
+  {
+    "feature": "release_pos_x",
+    "importance": 0.0044,
+    "alpha": 1.0,
     "model": "coors_adj"
   }
 ]

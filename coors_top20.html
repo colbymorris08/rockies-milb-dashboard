@@ -158,13 +158,9 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
   <div class="insight-divider"></div>
   <div class="insight-item">Avg Stuff Δ: <strong id="insStuffDeltaAvg">—</strong></div>
   <div class="insight-divider"></div>
-  <div class="insight-item">Mean extension: <strong id="insMeanExt">—</strong></div>
+  <div class="insight-item">Mean extension (all pitches): <strong id="insMeanExt">—</strong></div>
   <div class="insight-divider"></div>
-  <div class="insight-item">Four-seam VAA (mean): <strong id="insFfVaa" title="Mean vertical approach angle on FF only; vx0/vy0/vz0 at Statcast release">—</strong></div>
-  <div class="insight-divider"></div>
-  <div class="insight-item">VAA all pitch types: <strong id="insMeanVaa">—</strong></div>
-  <div class="insight-divider"></div>
-  <div class="insight-item">HAA: <strong id="insMeanHaa">—</strong></div>
+  <div class="insight-item">Four-seam VAA (FF): <strong id="insFfVaa" title="Mean plate-crossing vertical approach angle on FF pitches">—</strong></div>
   <div class="insight-divider"></div>
   <div class="insight-item">Statcast arm angle: <strong id="insArmAngle" title="MLB release arm angle (°); 0° = sidearm, 90° = over-the-top">—</strong></div>
   <div class="insight-divider"></div>
@@ -232,9 +228,9 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
         <span class="finding-note" id="cardExtNote">Mean release extension across this board’s Coors pitches (2021–24). The XGBoost uses log(extension); the Coors-adjusted path scales it by α×1.18.</span>
       </div>
       <div class="finding">
-        <span class="finding-label">Approach angles &amp; arm slot</span>
+        <span class="finding-label">Four-seam VAA &amp; arm slot</span>
         <span class="finding-val" id="cardApproachVal">—</span>
-        <span class="finding-note" id="cardApproachNote">VAA/HAA come from Statcast release velocity components (vx0, vy0, vz0)—not from raw movement inches. Four-seam VAA is averaged on FF pitches only (typically about −2° to −5° here). Arm angle is Statcast’s release metric (0° sidearm → 90° over-the-top).</span>
+        <span class="finding-note" id="cardApproachNote">VAA is computed at plate crossing from Statcast trajectory (vx0/vy0/vz0 + ax/ay/az); four-seam averages should sit in a realistic negative range. Arm angle is Statcast’s release metric (0° sidearm → 90° over-the-top).</span>
       </div>
       <div class="finding">
         <span class="finding-label">Pitch mix &amp; slider family</span>
@@ -258,7 +254,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
     <div class="card-header" style="padding:.875rem 1.25rem;border-bottom:1px solid var(--border);flex-direction:column;align-items:stretch;gap:.75rem">
       <span class="card-title">COORS STUFF MODEL (INTERNAL XGBOOST)</span>
       <p style="font-size:12px;color:var(--muted);line-height:1.65;max-width:920px;font-weight:400">
-        Two gradient-boosted models predict pitch quality from Statcast: one on all parks (“sea-level” features) and one on the same pitch rows with <strong>Coors-specific scaling (α)</strong> on movement, extension, and approach metrics. Outputs are standardized to a 100/10 “Stuff-style” scale, then paired with long-run Coors performance for the composite leaderboard. The feature set is <strong>informed by</strong> common public research threads—velocity and movement decomposition, release-side context, count and handedness, approach angles, spin axis—but it is <strong>not</strong> a direct port or credit to any single external Stuff product; weights and stacking are mine.
+        Two gradient-boosted models predict pitch quality from Statcast: one on all parks (“sea-level” features) and one on the same pitch rows with <strong>Coors-specific scaling (α)</strong> on movement, extension, and release context. Outputs are standardized to a 100/10 “Stuff-style” scale, then paired with long-run Coors performance for the composite leaderboard. The feature set is <strong>informed by</strong> common public research threads—velocity and movement decomposition, release-side context, count and handedness, spin axis—but it is <strong>not</strong> a direct port or credit to any single external Stuff product; weights and stacking are mine.
       </p>
     </div>
     <div class="model-grid">
@@ -284,9 +280,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
         <div class="model-feat">Pitch type categorical<span class="neutral">α×1.00</span></div>
       </div>
       <div class="model-block">
-        <h4>Approach angles &amp; park layer</h4>
-        <div class="model-feat">VAA (vert. approach angle)<span class="boost">α×1.14</span></div>
-        <div class="model-feat">HAA (horiz. approach angle)<span class="boost">α×1.06</span></div>
+        <h4>Spin axis &amp; park layer</h4>
         <div class="model-feat">Spin axis<span class="neutral">α×1.00</span></div>
         <div class="model-feat" style="margin-top:.75rem;border-top:1px solid var(--border);padding-top:.75rem">
           <em style="font-size:10px;color:var(--muted)">Park constants applied post-model</em>
@@ -323,16 +317,16 @@ const PITCH_COLORS = {
 
 // Mock data — replaced by JSON fetch in production
 const MOCK = [
-  {player_name:"Freeland, Kyle",pitches:2847,stuff_sl:97.2,stuff_col:104.1,stuff_delta:6.9,avg_velo:90.1,avg_ivb:12.4,avg_ext:6.7,avg_vaa:-4.1,avg_haa:0.3,avg_ff_vaa:-2.5,avg_arm_angle:51.2,pct_sl_st:24.0,primary_pitch:"FF",ERA:3.21,FIP:3.48,K_pct:0.198,BB_pct:0.071,coors_ra9:4.1,coors_fip:3.55,coors_k_bb_pct:12.7,career_coors_ra9:4.35,career_coors_fip:3.62,career_coors_k_bb_pct:11.9,coors_composite:112.4,pitches_by_type:[{pitch_type:"SL",stuff_col:108},{pitch_type:"FC",stuff_col:106},{pitch_type:"FF",stuff_col:101},{pitch_type:"CH",stuff_col:98}]},
-  {player_name:"Márquez, Germán",pitches:2341,stuff_sl:101.8,stuff_col:107.3,stuff_delta:5.5,avg_velo:93.4,avg_ivb:15.2,avg_ext:6.4,avg_vaa:-3.8,avg_haa:-0.2,avg_ff_vaa:-2.3,avg_arm_angle:54.0,pct_sl_st:21.0,primary_pitch:"FF",ERA:3.84,FIP:3.91,K_pct:0.231,BB_pct:0.082,coors_ra9:4.5,coors_fip:3.7,coors_k_bb_pct:14.9,career_coors_ra9:4.62,career_coors_fip:3.78,career_coors_k_bb_pct:14.2,coors_composite:109.7,pitches_by_type:[{pitch_type:"FF",stuff_col:109},{pitch_type:"SL",stuff_col:106},{pitch_type:"CU",stuff_col:97}]},
-  {player_name:"Ottavino, Adam",pitches:1204,stuff_sl:108.4,stuff_col:113.2,stuff_delta:4.8,avg_velo:93.1,avg_ivb:11.2,avg_ext:6.9,avg_vaa:-2.9,avg_haa:1.1,primary_pitch:"FF",ERA:2.18,FIP:2.44,K_pct:0.347,BB_pct:0.118,coors_ra9:3.2,coors_fip:2.9,coors_k_bb_pct:22.9,career_coors_ra9:3.41,career_coors_fip:3.05,career_coors_k_bb_pct:20.1,coors_composite:108.9,pitches_by_type:[{pitch_type:"SL",stuff_col:117},{pitch_type:"FF",stuff_col:104}]},
-  {player_name:"Senzatela, Antonio",pitches:1987,stuff_sl:93.1,stuff_col:99.8,stuff_delta:6.7,avg_velo:92.8,avg_ivb:10.1,avg_ext:6.2,avg_vaa:-5.0,avg_haa:0.0,avg_ff_vaa:-3.1,avg_arm_angle:55.8,pct_sl_st:18.0,primary_pitch:"SI",ERA:3.74,FIP:3.99,K_pct:0.156,BB_pct:0.072,coors_ra9:5.2,coors_fip:4.2,coors_k_bb_pct:8.4,career_coors_ra9:5.45,career_coors_fip:4.28,career_coors_k_bb_pct:8.1,coors_composite:104.2,pitches_by_type:[{pitch_type:"SI",stuff_col:97},{pitch_type:"SL",stuff_col:102},{pitch_type:"CH",stuff_col:96}]},
-  {player_name:"Gray, Jon",pitches:1562,stuff_sl:102.1,stuff_col:106.8,stuff_delta:4.7,avg_velo:95.2,avg_ivb:16.1,avg_ext:6.6,avg_vaa:-3.2,avg_haa:-0.4,avg_ff_vaa:-2.6,avg_arm_angle:53.1,pct_sl_st:26.0,primary_pitch:"FF",ERA:4.12,FIP:3.87,K_pct:0.264,BB_pct:0.091,coors_ra9:4.8,coors_fip:3.9,coors_k_bb_pct:17.3,career_coors_ra9:5.05,career_coors_fip:4.02,career_coors_k_bb_pct:15.8,coors_composite:103.8,pitches_by_type:[{pitch_type:"FF",stuff_col:108},{pitch_type:"SL",stuff_col:106},{pitch_type:"CU",stuff_col:98}]},
-  {player_name:"Estévez, Carlos",pitches:1089,stuff_sl:105.7,stuff_col:109.1,stuff_delta:3.4,avg_velo:96.8,avg_ivb:13.4,avg_ext:7.1,avg_vaa:-3.5,avg_haa:0.2,avg_ff_vaa:-2.4,avg_arm_angle:50.0,pct_sl_st:28.0,primary_pitch:"FF",ERA:3.42,FIP:3.28,K_pct:0.298,BB_pct:0.094,coors_ra9:3.9,coors_fip:3.4,coors_k_bb_pct:20.4,career_coors_ra9:4.12,career_coors_fip:3.52,career_coors_k_bb_pct:18.6,coors_composite:103.1,pitches_by_type:[{pitch_type:"FF",stuff_col:111},{pitch_type:"SL",stuff_col:107}]},
-  {player_name:"Bard, Daniel",pitches:978,stuff_sl:106.2,stuff_col:109.8,stuff_delta:3.6,avg_velo:97.4,avg_ivb:14.2,avg_ext:7.2,avg_vaa:-3.1,avg_haa:0.5,primary_pitch:"FF",ERA:3.91,FIP:3.74,K_pct:0.267,BB_pct:0.112,coors_ra9:4.2,coors_fip:3.6,coors_k_bb_pct:15.5,career_coors_ra9:4.35,career_coors_fip:3.68,career_coors_k_bb_pct:14.9,coors_composite:102.4,pitches_by_type:[{pitch_type:"FF",stuff_col:110},{pitch_type:"SI",stuff_col:102}]},
-  {player_name:"Feltner, Ryan",pitches:1124,stuff_sl:96.4,stuff_col:101.2,stuff_delta:4.8,avg_velo:93.7,avg_ivb:13.8,avg_ext:6.5,avg_vaa:-3.9,avg_haa:0.1,avg_ff_vaa:-2.7,avg_arm_angle:52.4,pct_sl_st:30.0,primary_pitch:"FF",ERA:4.44,FIP:4.21,K_pct:0.224,BB_pct:0.083,coors_ra9:5.5,coors_fip:4.4,coors_k_bb_pct:14.1,career_coors_ra9:5.62,career_coors_fip:4.48,career_coors_k_bb_pct:13.5,coors_composite:100.8,pitches_by_type:[{pitch_type:"FF",stuff_col:103},{pitch_type:"SL",stuff_col:101},{pitch_type:"CH",stuff_col:97}]},
-  {player_name:"Kuhl, Chad",pitches:874,stuff_sl:95.2,stuff_col:99.7,stuff_delta:4.5,avg_velo:92.1,avg_ivb:12.9,avg_ext:6.3,avg_vaa:-4.4,avg_haa:0.6,avg_ff_vaa:-2.9,avg_arm_angle:54.2,pct_sl_st:27.0,primary_pitch:"SI",ERA:4.82,FIP:4.54,K_pct:0.198,BB_pct:0.088,coors_ra9:6.1,coors_fip:4.8,coors_k_bb_pct:11.0,career_coors_ra9:6.25,career_coors_fip:4.85,career_coors_k_bb_pct:10.6,coors_composite:99.2,pitches_by_type:[{pitch_type:"SI",stuff_col:98},{pitch_type:"SL",stuff_col:101},{pitch_type:"CU",stuff_col:94}]},
-  {player_name:"Gomber, Austin",pitches:1432,stuff_sl:94.8,stuff_col:99.1,stuff_delta:4.3,avg_velo:91.4,avg_ivb:11.7,avg_ext:6.1,avg_vaa:-4.2,avg_haa:0.8,avg_ff_vaa:-2.5,avg_arm_angle:51.0,pct_sl_st:19.0,primary_pitch:"FF",ERA:4.96,FIP:4.78,K_pct:0.187,BB_pct:0.079,coors_ra9:5.8,coors_fip:4.6,coors_k_bb_pct:10.8,career_coors_ra9:5.92,career_coors_fip:4.65,career_coors_k_bb_pct:10.4,coors_composite:98.7,pitches_by_type:[{pitch_type:"FF",stuff_col:99},{pitch_type:"CH",stuff_col:101},{pitch_type:"CU",stuff_col:96}]},
+  {player_name:"Freeland, Kyle",pitches:2847,stuff_sl:97.2,stuff_col:104.1,stuff_delta:6.9,avg_velo:90.1,avg_ivb:12.4,avg_ext:6.7,avg_ff_ext:6.72,avg_arm_angle:51.2,pct_sl_st:24.0,primary_pitch:"FF",ERA:3.21,FIP:3.48,K_pct:0.198,BB_pct:0.071,coors_ra9:4.1,coors_fip:3.55,coors_k_bb_pct:12.7,career_coors_ra9:4.35,career_coors_fip:3.62,career_coors_k_bb_pct:11.9,coors_composite:112.4,pitches_by_type:[{pitch_type:"SL",stuff_col:108},{pitch_type:"FC",stuff_col:106},{pitch_type:"FF",stuff_col:101},{pitch_type:"CH",stuff_col:98}]},
+  {player_name:"Márquez, Germán",pitches:2341,stuff_sl:101.8,stuff_col:107.3,stuff_delta:5.5,avg_velo:93.4,avg_ivb:15.2,avg_ext:6.4,avg_ff_ext:6.58,avg_arm_angle:54.0,pct_sl_st:21.0,primary_pitch:"FF",ERA:3.84,FIP:3.91,K_pct:0.231,BB_pct:0.082,coors_ra9:4.5,coors_fip:3.7,coors_k_bb_pct:14.9,career_coors_ra9:4.62,career_coors_fip:3.78,career_coors_k_bb_pct:14.2,coors_composite:109.7,pitches_by_type:[{pitch_type:"FF",stuff_col:109},{pitch_type:"SL",stuff_col:106},{pitch_type:"CU",stuff_col:97}]},
+  {player_name:"Ottavino, Adam",pitches:1204,stuff_sl:108.4,stuff_col:113.2,stuff_delta:4.8,avg_velo:93.1,avg_ivb:11.2,avg_ext:6.9,avg_ff_ext:6.85,pct_sl_st:22.0,primary_pitch:"FF",ERA:2.18,FIP:2.44,K_pct:0.347,BB_pct:0.118,coors_ra9:3.2,coors_fip:2.9,coors_k_bb_pct:22.9,career_coors_ra9:3.41,career_coors_fip:3.05,career_coors_k_bb_pct:20.1,coors_composite:108.9,pitches_by_type:[{pitch_type:"SL",stuff_col:117},{pitch_type:"FF",stuff_col:104}]},
+  {player_name:"Senzatela, Antonio",pitches:1987,stuff_sl:93.1,stuff_col:99.8,stuff_delta:6.7,avg_velo:92.8,avg_ivb:10.1,avg_ext:6.2,avg_ff_ext:6.45,avg_arm_angle:55.8,pct_sl_st:18.0,primary_pitch:"SI",ERA:3.74,FIP:3.99,K_pct:0.156,BB_pct:0.072,coors_ra9:5.2,coors_fip:4.2,coors_k_bb_pct:8.4,career_coors_ra9:5.45,career_coors_fip:4.28,career_coors_k_bb_pct:8.1,coors_composite:104.2,pitches_by_type:[{pitch_type:"SI",stuff_col:97},{pitch_type:"SL",stuff_col:102},{pitch_type:"CH",stuff_col:96}]},
+  {player_name:"Gray, Jon",pitches:1562,stuff_sl:102.1,stuff_col:106.8,stuff_delta:4.7,avg_velo:95.2,avg_ivb:16.1,avg_ext:6.6,avg_ff_ext:6.68,avg_arm_angle:53.1,pct_sl_st:26.0,primary_pitch:"FF",ERA:4.12,FIP:3.87,K_pct:0.264,BB_pct:0.091,coors_ra9:4.8,coors_fip:3.9,coors_k_bb_pct:17.3,career_coors_ra9:5.05,career_coors_fip:4.02,career_coors_k_bb_pct:15.8,coors_composite:103.8,pitches_by_type:[{pitch_type:"FF",stuff_col:108},{pitch_type:"SL",stuff_col:106},{pitch_type:"CU",stuff_col:98}]},
+  {player_name:"Estévez, Carlos",pitches:1089,stuff_sl:105.7,stuff_col:109.1,stuff_delta:3.4,avg_velo:96.8,avg_ivb:13.4,avg_ext:7.1,avg_ff_ext:7.05,avg_arm_angle:50.0,pct_sl_st:28.0,primary_pitch:"FF",ERA:3.42,FIP:3.28,K_pct:0.298,BB_pct:0.094,coors_ra9:3.9,coors_fip:3.4,coors_k_bb_pct:20.4,career_coors_ra9:4.12,career_coors_fip:3.52,career_coors_k_bb_pct:18.6,coors_composite:103.1,pitches_by_type:[{pitch_type:"FF",stuff_col:111},{pitch_type:"SL",stuff_col:107}]},
+  {player_name:"Bard, Daniel",pitches:978,stuff_sl:106.2,stuff_col:109.8,stuff_delta:3.6,avg_velo:97.4,avg_ivb:14.2,avg_ext:7.2,avg_ff_ext:7.12,pct_sl_st:15.0,primary_pitch:"FF",ERA:3.91,FIP:3.74,K_pct:0.267,BB_pct:0.112,coors_ra9:4.2,coors_fip:3.6,coors_k_bb_pct:15.5,career_coors_ra9:4.35,career_coors_fip:3.68,career_coors_k_bb_pct:14.9,coors_composite:102.4,pitches_by_type:[{pitch_type:"FF",stuff_col:110},{pitch_type:"SI",stuff_col:102}]},
+  {player_name:"Feltner, Ryan",pitches:1124,stuff_sl:96.4,stuff_col:101.2,stuff_delta:4.8,avg_velo:93.7,avg_ivb:13.8,avg_ext:6.5,avg_ff_ext:6.62,avg_arm_angle:52.4,pct_sl_st:30.0,primary_pitch:"FF",ERA:4.44,FIP:4.21,K_pct:0.224,BB_pct:0.083,coors_ra9:5.5,coors_fip:4.4,coors_k_bb_pct:14.1,career_coors_ra9:5.62,career_coors_fip:4.48,career_coors_k_bb_pct:13.5,coors_composite:100.8,pitches_by_type:[{pitch_type:"FF",stuff_col:103},{pitch_type:"SL",stuff_col:101},{pitch_type:"CH",stuff_col:97}]},
+  {player_name:"Kuhl, Chad",pitches:874,stuff_sl:95.2,stuff_col:99.7,stuff_delta:4.5,avg_velo:92.1,avg_ivb:12.9,avg_ext:6.3,avg_ff_ext:6.55,avg_arm_angle:54.2,pct_sl_st:27.0,primary_pitch:"SI",ERA:4.82,FIP:4.54,K_pct:0.198,BB_pct:0.088,coors_ra9:6.1,coors_fip:4.8,coors_k_bb_pct:11.0,career_coors_ra9:6.25,career_coors_fip:4.85,career_coors_k_bb_pct:10.6,coors_composite:99.2,pitches_by_type:[{pitch_type:"SI",stuff_col:98},{pitch_type:"SL",stuff_col:101},{pitch_type:"CU",stuff_col:94}]},
+  {player_name:"Gomber, Austin",pitches:1432,stuff_sl:94.8,stuff_col:99.1,stuff_delta:4.3,avg_velo:91.4,avg_ivb:11.7,avg_ext:6.1,avg_ff_ext:6.48,avg_arm_angle:51.0,pct_sl_st:19.0,primary_pitch:"FF",ERA:4.96,FIP:4.78,K_pct:0.187,BB_pct:0.079,coors_ra9:5.8,coors_fip:4.6,coors_k_bb_pct:10.8,career_coors_ra9:5.92,career_coors_fip:4.65,career_coors_k_bb_pct:10.4,coors_composite:98.7,pitches_by_type:[{pitch_type:"FF",stuff_col:99},{pitch_type:"CH",stuff_col:101},{pitch_type:"CU",stuff_col:96}]},
 ];
 
 function meanNum(rows, key){
@@ -378,8 +372,6 @@ function updateInsightCard(rows, m){
   if (apprEl){
     const bits = [];
     if (m.mFfVaa!=null) bits.push(`FF VAA ${m.mFfVaa.toFixed(2)}°`);
-    if (m.mVaa!=null) bits.push(`all-pitch VAA ${m.mVaa.toFixed(2)}°`);
-    if (m.mHaa!=null) bits.push(`HAA ${m.mHaa.toFixed(2)}°`);
     if (m.mArm!=null) bits.push(`arm ∠ ${m.mArm.toFixed(1)}°`);
     apprEl.textContent = bits.length ? bits.join(' · ') : '—';
   }
@@ -454,18 +446,14 @@ function init(){
   document.getElementById('insStuffDeltaAvg').textContent = stuffDeltaAvg==null ? '—' : `${stuffDeltaAvg>=0?'+':''}${stuffDeltaAvg.toFixed(2)}`;
   const mExt = meanNum(allData,'avg_ext');
   const mFfVaa = meanNum(allData,'avg_ff_vaa');
-  const mVaa = meanNum(allData,'avg_vaa');
-  const mHaa = meanNum(allData,'avg_haa');
   const mArm = meanNum(allData,'avg_arm_angle');
   const mPctSlSt = meanNum(allData,'pct_sl_st');
   document.getElementById('insMeanExt').textContent = mExt==null ? '—' : `${mExt.toFixed(2)} ft`;
   document.getElementById('insFfVaa').textContent = mFfVaa==null ? '—' : `${mFfVaa.toFixed(2)}°`;
-  document.getElementById('insMeanVaa').textContent = mVaa==null ? '—' : `${mVaa.toFixed(2)}°`;
-  document.getElementById('insMeanHaa').textContent = mHaa==null ? '—' : `${mHaa.toFixed(2)}°`;
   document.getElementById('insArmAngle').textContent = mArm==null ? '—' : `${mArm.toFixed(1)}°`;
   document.getElementById('insSlStPct').textContent = mPctSlSt==null ? '—' : `${mPctSlSt.toFixed(1)}%`;
   document.getElementById('insPitchMix').textContent = formatPrimaryPitchMix(allData);
-  updateInsightCard(allData, { stuffSlAvg, stuffColAvg, stuffDeltaAvg, mExt, mFfVaa, mVaa, mHaa, mArm, mPctSlSt });
+  updateInsightCard(allData, { stuffSlAvg, stuffColAvg, stuffDeltaAvg, mExt, mFfVaa, mArm, mPctSlSt });
   const avgDelta = n ? (allData.reduce((a,p)=>a+(p.stuff_delta||0),0)/n).toFixed(1) : '0.0';
   document.getElementById('statAvgDelta').textContent = (parseFloat(avgDelta)>0?'+':'')+avgDelta;
   const topStuff = n ? Math.max(...allData.map(p=>p.stuff_col||0)).toFixed(1) : '—';
