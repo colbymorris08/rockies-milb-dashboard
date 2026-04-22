@@ -4,7 +4,7 @@
     "pitch_type":"CH",
     "pitches":56,
     "stuff_sl":99.8099975586,
-    "stuff_col":98.8300018311,
+    "stuff_col":99.6999969482,
     "avg_velo":87.59,
     "avg_ivb":0.27,
     "avg_hb":-1.04
@@ -14,7 +14,7 @@
     "pitch_type":"FF",
     "pitches":212,
     "stuff_sl":103.6500015259,
-    "stuff_col":104.2200012207,
+    "stuff_col":104.3000030518,
     "avg_velo":94.34,
     "avg_ivb":0.83,
     "avg_hb":-0.51
@@ -24,7 +24,7 @@
     "pitch_type":"SI",
     "pitches":40,
     "stuff_sl":102.8199996948,
-    "stuff_col":101.5,
+    "stuff_col":102.1299972534,
     "avg_velo":94.52,
     "avg_ivb":0.55,
     "avg_hb":-1.07
@@ -34,7 +34,7 @@
     "pitch_type":"SL",
     "pitches":118,
     "stuff_sl":98.8300018311,
-    "stuff_col":99.0500030518,
+    "stuff_col":98.1699981689,
     "avg_velo":83.63,
     "avg_ivb":-0.12,
     "avg_hb":0.44
@@ -44,7 +44,7 @@
     "pitch_type":"ST",
     "pitches":97,
     "stuff_sl":97.9199981689,
-    "stuff_col":99.3399963379,
+    "stuff_col":97.5400009155,
     "avg_velo":84.03,
     "avg_ivb":0.25,
     "avg_hb":0.76
@@ -54,7 +54,7 @@
     "pitch_type":"CH",
     "pitches":139,
     "stuff_sl":95.9300003052,
-    "stuff_col":97.8300018311,
+    "stuff_col":96.7699966431,
     "avg_velo":79.57,
     "avg_ivb":0.6,
     "avg_hb":0.94
@@ -64,7 +64,7 @@
     "pitch_type":"FC",
     "pitches":94,
     "stuff_sl":97.4199981689,
-    "stuff_col":97.9899978638,
+    "stuff_col":97.8000030518,
     "avg_velo":85.15,
     "avg_ivb":0.64,
     "avg_hb":-0.25
@@ -74,7 +74,7 @@
     "pitch_type":"FF",
     "pitches":165,
     "stuff_sl":103.2200012207,
-    "stuff_col":102.8199996948,
+    "stuff_col":102.9599990845,
     "avg_velo":90.52,
     "avg_ivb":1.25,
     "avg_hb":0.51
@@ -84,7 +84,7 @@
     "pitch_type":"CH",
     "pitches":54,
     "stuff_sl":98.3499984741,
-    "stuff_col":98.9000015259,
+    "stuff_col":99.5699996948,
     "avg_velo":89.86,
     "avg_ivb":0.21,
     "avg_hb":-1.21
@@ -94,7 +94,7 @@
     "pitch_type":"FF",
     "pitches":376,
     "stuff_sl":101.1299972534,
-    "stuff_col":101.2200012207,
+    "stuff_col":100.9800033569,
     "avg_velo":96.96,
     "avg_ivb":0.74,
     "avg_hb":-0.64
@@ -104,7 +104,7 @@
     "pitch_type":"SI",
     "pitches":561,
     "stuff_sl":101.3399963379,
-    "stuff_col":100.9400024414,
+    "stuff_col":101.7099990845,
     "avg_velo":96.77,
     "avg_ivb":0.54,
     "avg_hb":-1.02
@@ -114,7 +114,7 @@
     "pitch_type":"SL",
     "pitches":799,
     "stuff_sl":95.1900024414,
-    "stuff_col":96.1399993896,
+    "stuff_col":96.0199966431,
     "avg_velo":87.54,
     "avg_ivb":0.16,
     "avg_hb":0.61
@@ -124,7 +124,7 @@
     "pitch_type":"CU",
     "pitches":302,
     "stuff_sl":93.4100036621,
-    "stuff_col":93.1600036621,
+    "stuff_col":93.6200027466,
     "avg_velo":81.66,
     "avg_ivb":-0.66,
     "avg_hb":1.14
@@ -134,7 +134,7 @@
     "pitch_type":"FC",
     "pitches":242,
     "stuff_sl":99.0999984741,
-    "stuff_col":98.3099975586,
+    "stuff_col":99.0400009155,
     "avg_velo":90.55,
     "avg_ivb":0.49,
     "avg_hb":0.22
@@ -144,7 +144,7 @@
     "pitch_type":"SI",
     "pitches":952,
     "stuff_sl":102.2799987793,
-    "stuff_col":101.6399993896,
+    "stuff_col":102.5500030518,
     "avg_velo":94.83,
     "avg_ivb":0.07,
     "avg_hb":-0.74
@@ -154,7 +154,7 @@
     "pitch_type":"SL",
     "pitches":192,
     "stuff_sl":95.1500015259,
-    "stuff_col":96.2099990845,
+    "stuff_col":95.9199981689,
     "avg_velo":85.76,
     "avg_ivb":0.12,
     "avg_hb":0.67
@@ -164,7 +164,7 @@
     "pitch_type":"CH",
     "pitches":447,
     "stuff_sl":99.3499984741,
-    "stuff_col":98.5199966431,
+    "stuff_col":99.2799987793,
     "avg_velo":80.05,
     "avg_ivb":-0.09,
     "avg_hb":1.08
@@ -174,7 +174,7 @@
     "pitch_type":"CU",
     "pitches":157,
     "stuff_sl":98.8899993896,
-    "stuff_col":96.75,
+    "stuff_col":98.75,
     "avg_velo":78.83,
     "avg_ivb":-0.33,
     "avg_hb":-0.21
@@ -184,7 +184,7 @@
     "pitch_type":"FC",
     "pitches":277,
     "stuff_sl":100.3099975586,
-    "stuff_col":98.7399978638,
+    "stuff_col":100.0,
     "avg_velo":83.66,
     "avg_ivb":0.31,
     "avg_hb":0.09
@@ -194,7 +194,7 @@
     "pitch_type":"SI",
     "pitches":966,
     "stuff_sl":103.6800003052,
-    "stuff_col":101.5100021362,
+    "stuff_col":103.6100006104,
     "avg_velo":89.64,
     "avg_ivb":0.57,
     "avg_hb":1.1
@@ -204,7 +204,7 @@
     "pitch_type":"CU",
     "pitches":50,
     "stuff_sl":99.6800003052,
-    "stuff_col":99.9000015259,
+    "stuff_col":100.8000030518,
     "avg_velo":78.61,
     "avg_ivb":-0.2,
     "avg_hb":-0.69
@@ -214,7 +214,7 @@
     "pitch_type":"FC",
     "pitches":92,
     "stuff_sl":100.9899978638,
-    "stuff_col":100.8000030518,
+    "stuff_col":101.2099990845,
     "avg_velo":86.2,
     "avg_ivb":0.58,
     "avg_hb":-0.21
@@ -224,7 +224,7 @@
     "pitch_type":"FF",
     "pitches":110,
     "stuff_sl":103.2099990845,
-    "stuff_col":103.2099990845,
+    "stuff_col":102.5199966431,
     "avg_velo":90.83,
     "avg_ivb":1.23,
     "avg_hb":0.68
@@ -234,7 +234,7 @@
     "pitch_type":"CU",
     "pitches":276,
     "stuff_sl":98.0500030518,
-    "stuff_col":97.5699996948,
+    "stuff_col":97.9400024414,
     "avg_velo":80.68,
     "avg_ivb":-0.07,
     "avg_hb":0.99
@@ -244,7 +244,7 @@
     "pitch_type":"FC",
     "pitches":244,
     "stuff_sl":100.9899978638,
-    "stuff_col":101.4800033569,
+    "stuff_col":101.3799972534,
     "avg_velo":87.62,
     "avg_ivb":0.37,
     "avg_hb":0.33
@@ -254,7 +254,7 @@
     "pitch_type":"FF",
     "pitches":83,
     "stuff_sl":103.7399978638,
-    "stuff_col":103.2200012207,
+    "stuff_col":103.9800033569,
     "avg_velo":92.64,
     "avg_ivb":1.05,
     "avg_hb":-0.26
@@ -264,7 +264,7 @@
     "pitch_type":"SI",
     "pitches":328,
     "stuff_sl":103.9800033569,
-    "stuff_col":102.7699966431,
+    "stuff_col":103.4599990845,
     "avg_velo":92.88,
     "avg_ivb":0.75,
     "avg_hb":-0.86
@@ -274,7 +274,7 @@
     "pitch_type":"CH",
     "pitches":203,
     "stuff_sl":96.2399978638,
-    "stuff_col":96.7399978638,
+    "stuff_col":96.8499984741,
     "avg_velo":88.68,
     "avg_ivb":0.33,
     "avg_hb":-0.88
@@ -284,7 +284,7 @@
     "pitch_type":"FF",
     "pitches":762,
     "stuff_sl":102.2300033569,
-    "stuff_col":101.6399993896,
+    "stuff_col":101.4899978638,
     "avg_velo":97.31,
     "avg_ivb":1.1,
     "avg_hb":-0.69
@@ -294,7 +294,7 @@
     "pitch_type":"SL",
     "pitches":155,
     "stuff_sl":96.4499969482,
-    "stuff_col":95.9700012207,
+    "stuff_col":96.0800018311,
     "avg_velo":86.78,
     "avg_ivb":0.01,
     "avg_hb":0.38
@@ -304,7 +304,7 @@
     "pitch_type":"CH",
     "pitches":267,
     "stuff_sl":96.9899978638,
-    "stuff_col":97.5899963379,
+    "stuff_col":96.5199966431,
     "avg_velo":85.03,
     "avg_ivb":0.42,
     "avg_hb":-0.41
@@ -314,7 +314,7 @@
     "pitch_type":"CU",
     "pitches":238,
     "stuff_sl":94.3199996948,
-    "stuff_col":97.1500015259,
+    "stuff_col":95.0299987793,
     "avg_velo":78.91,
     "avg_ivb":-0.64,
     "avg_hb":0.68
@@ -324,7 +324,7 @@
     "pitch_type":"FF",
     "pitches":819,
     "stuff_sl":101.7099990845,
-    "stuff_col":100.8099975586,
+    "stuff_col":100.6600036621,
     "avg_velo":94.48,
     "avg_ivb":0.95,
     "avg_hb":-0.39
@@ -334,7 +334,7 @@
     "pitch_type":"SI",
     "pitches":342,
     "stuff_sl":102.6699981689,
-    "stuff_col":101.2399978638,
+    "stuff_col":101.6999969482,
     "avg_velo":93.94,
     "avg_ivb":0.49,
     "avg_hb":-0.9
@@ -344,7 +344,7 @@
     "pitch_type":"SL",
     "pitches":538,
     "stuff_sl":100.9100036621,
-    "stuff_col":101.1999969482,
+    "stuff_col":100.4199981689,
     "avg_velo":87.07,
     "avg_ivb":0.26,
     "avg_hb":0.35
@@ -354,7 +354,7 @@
     "pitch_type":"ST",
     "pitches":81,
     "stuff_sl":95.9800033569,
-    "stuff_col":97.3399963379,
+    "stuff_col":96.0500030518,
     "avg_velo":82.79,
     "avg_ivb":0.05,
     "avg_hb":0.91
@@ -364,7 +364,7 @@
     "pitch_type":"CH",
     "pitches":88,
     "stuff_sl":95.0899963379,
-    "stuff_col":97.0400009155,
+    "stuff_col":95.5400009155,
     "avg_velo":81.19,
     "avg_ivb":0.52,
     "avg_hb":-0.66
@@ -374,7 +374,7 @@
     "pitch_type":"FC",
     "pitches":208,
     "stuff_sl":98.1100006104,
-    "stuff_col":99.5299987793,
+    "stuff_col":99.0800018311,
     "avg_velo":87.6,
     "avg_ivb":0.27,
     "avg_hb":0.53
@@ -384,7 +384,7 @@
     "pitch_type":"FF",
     "pitches":297,
     "stuff_sl":105.4700012207,
-    "stuff_col":107.1699981689,
+    "stuff_col":106.2600021362,
     "avg_velo":91.98,
     "avg_ivb":1.14,
     "avg_hb":0.04
@@ -394,7 +394,7 @@
     "pitch_type":"SL",
     "pitches":54,
     "stuff_sl":91.6299972534,
-    "stuff_col":95.7600021362,
+    "stuff_col":93.3799972534,
     "avg_velo":80.58,
     "avg_ivb":-0.48,
     "avg_hb":0.19
@@ -404,7 +404,7 @@
     "pitch_type":"CH",
     "pitches":622,
     "stuff_sl":103.9899978638,
-    "stuff_col":106.4700012207,
+    "stuff_col":104.2799987793,
     "avg_velo":85.09,
     "avg_ivb":0.55,
     "avg_hb":0.81
@@ -414,7 +414,7 @@
     "pitch_type":"FC",
     "pitches":1031,
     "stuff_sl":100.3399963379,
-    "stuff_col":100.3399963379,
+    "stuff_col":99.9599990845,
     "avg_velo":85.67,
     "avg_ivb":0.4,
     "avg_hb":-0.11
@@ -424,7 +424,7 @@
     "pitch_type":"FF",
     "pitches":1003,
     "stuff_sl":102.2099990845,
-    "stuff_col":101.5100021362,
+    "stuff_col":101.5599975586,
     "avg_velo":90.68,
     "avg_ivb":1.02,
     "avg_hb":0.48
@@ -434,7 +434,7 @@
     "pitch_type":"KC",
     "pitches":877,
     "stuff_sl":93.9000015259,
-    "stuff_col":93.0899963379,
+    "stuff_col":93.5800018311,
     "avg_velo":81.36,
     "avg_ivb":-0.48,
     "avg_hb":-0.2
@@ -444,7 +444,7 @@
     "pitch_type":"SI",
     "pitches":1006,
     "stuff_sl":103.4000015259,
-    "stuff_col":104.1800003052,
+    "stuff_col":102.8199996948,
     "avg_velo":90.05,
     "avg_ivb":0.55,
     "avg_hb":0.99
@@ -454,7 +454,7 @@
     "pitch_type":"CH",
     "pitches":35,
     "stuff_sl":94.5500030518,
-    "stuff_col":95.4599990845,
+    "stuff_col":94.5599975586,
     "avg_velo":86.72,
     "avg_ivb":0.36,
     "avg_hb":-0.67
@@ -464,7 +464,7 @@
     "pitch_type":"FC",
     "pitches":50,
     "stuff_sl":95.8700027466,
-    "stuff_col":94.25,
+    "stuff_col":94.0299987793,
     "avg_velo":89.7,
     "avg_ivb":0.38,
     "avg_hb":0.4
@@ -474,7 +474,7 @@
     "pitch_type":"FF",
     "pitches":283,
     "stuff_sl":102.8700027466,
-    "stuff_col":102.1600036621,
+    "stuff_col":101.6999969482,
     "avg_velo":93.57,
     "avg_ivb":1.18,
     "avg_hb":-0.22
@@ -484,7 +484,7 @@
     "pitch_type":"KC",
     "pitches":117,
     "stuff_sl":93.5299987793,
-    "stuff_col":96.4599990845,
+    "stuff_col":94.0,
     "avg_velo":81.36,
     "avg_ivb":-0.88,
     "avg_hb":0.39
@@ -494,7 +494,7 @@
     "pitch_type":"FF",
     "pitches":541,
     "stuff_sl":101.7900009155,
-    "stuff_col":101.5599975586,
+    "stuff_col":101.5199966431,
     "avg_velo":93.29,
     "avg_ivb":1.15,
     "avg_hb":0.02
@@ -504,7 +504,7 @@
     "pitch_type":"SL",
     "pitches":235,
     "stuff_sl":96.2900009155,
-    "stuff_col":95.7200012207,
+    "stuff_col":96.2200012207,
     "avg_velo":81.98,
     "avg_ivb":-0.21,
     "avg_hb":-0.4
@@ -514,7 +514,7 @@
     "pitch_type":"CH",
     "pitches":857,
     "stuff_sl":99.3399963379,
-    "stuff_col":100.9199981689,
+    "stuff_col":100.6299972534,
     "avg_velo":81.85,
     "avg_ivb":0.79,
     "avg_hb":0.72
@@ -524,7 +524,7 @@
     "pitch_type":"FF",
     "pitches":1737,
     "stuff_sl":106.0599975586,
-    "stuff_col":108.9700012207,
+    "stuff_col":108.7900009155,
     "avg_velo":90.74,
     "avg_ivb":1.31,
     "avg_hb":0.53
@@ -534,7 +534,7 @@
     "pitch_type":"KC",
     "pitches":775,
     "stuff_sl":95.6500015259,
-    "stuff_col":96.4000015259,
+    "stuff_col":96.2600021362,
     "avg_velo":76.85,
     "avg_ivb":-0.9,
     "avg_hb":-0.5
@@ -544,7 +544,7 @@
     "pitch_type":"SL",
     "pitches":886,
     "stuff_sl":96.5999984741,
-    "stuff_col":97.6399993896,
+    "stuff_col":97.5999984741,
     "avg_velo":84.43,
     "avg_ivb":0.28,
     "avg_hb":-0.39
@@ -554,7 +554,7 @@
     "pitch_type":"CH",
     "pitches":69,
     "stuff_sl":98.1399993896,
-    "stuff_col":98.2399978638,
+    "stuff_col":98.6900024414,
     "avg_velo":84.23,
     "avg_ivb":0.33,
     "avg_hb":-0.86
@@ -564,7 +564,7 @@
     "pitch_type":"CU",
     "pitches":62,
     "stuff_sl":95.3499984741,
-    "stuff_col":94.8600006104,
+    "stuff_col":95.25,
     "avg_velo":81.05,
     "avg_ivb":-0.21,
     "avg_hb":0.37
@@ -574,7 +574,7 @@
     "pitch_type":"FC",
     "pitches":116,
     "stuff_sl":99.5100021362,
-    "stuff_col":99.8399963379,
+    "stuff_col":100.0500030518,
     "avg_velo":87.86,
     "avg_ivb":0.31,
     "avg_hb":0.21
@@ -584,7 +584,7 @@
     "pitch_type":"FF",
     "pitches":399,
     "stuff_sl":101.1500015259,
-    "stuff_col":100.5999984741,
+    "stuff_col":101.4100036621,
     "avg_velo":92.0,
     "avg_ivb":0.8,
     "avg_hb":-0.16
@@ -594,7 +594,7 @@
     "pitch_type":"SI",
     "pitches":41,
     "stuff_sl":102.6600036621,
-    "stuff_col":102.4199981689,
+    "stuff_col":103.5400009155,
     "avg_velo":90.54,
     "avg_ivb":0.54,
     "avg_hb":-0.86
@@ -604,7 +604,7 @@
     "pitch_type":"SL",
     "pitches":176,
     "stuff_sl":100.5999984741,
-    "stuff_col":100.4400024414,
+    "stuff_col":100.5899963379,
     "avg_velo":85.66,
     "avg_ivb":0.2,
     "avg_hb":0.27
@@ -614,7 +614,7 @@
     "pitch_type":"CH",
     "pitches":113,
     "stuff_sl":100.8600006104,
-    "stuff_col":101.3199996948,
+    "stuff_col":101.4100036621,
     "avg_velo":87.49,
     "avg_ivb":0.51,
     "avg_hb":-0.84
@@ -624,7 +624,7 @@
     "pitch_type":"CU",
     "pitches":82,
     "stuff_sl":101.1299972534,
-    "stuff_col":102.9599990845,
+    "stuff_col":101.5,
     "avg_velo":76.04,
     "avg_ivb":-0.7,
     "avg_hb":0.85
@@ -634,7 +634,7 @@
     "pitch_type":"FF",
     "pitches":636,
     "stuff_sl":103.0899963379,
-    "stuff_col":102.4199981689,
+    "stuff_col":102.0800018311,
     "avg_velo":94.58,
     "avg_ivb":0.82,
     "avg_hb":-0.92
@@ -644,7 +644,7 @@
     "pitch_type":"SL",
     "pitches":529,
     "stuff_sl":96.8199996948,
-    "stuff_col":97.2200012207,
+    "stuff_col":96.4499969482,
     "avg_velo":86.61,
     "avg_ivb":0.23,
     "avg_hb":0.22
@@ -654,7 +654,7 @@
     "pitch_type":"SL",
     "pitches":32,
     "stuff_sl":95.7900009155,
-    "stuff_col":95.9400024414,
+    "stuff_col":96.0899963379,
     "avg_velo":82.59,
     "avg_ivb":0.4,
     "avg_hb":0.54
@@ -664,7 +664,7 @@
     "pitch_type":"CU",
     "pitches":76,
     "stuff_sl":96.8499984741,
-    "stuff_col":97.3199996948,
+    "stuff_col":98.4400024414,
     "avg_velo":73.94,
     "avg_ivb":-1.02,
     "avg_hb":-0.22
@@ -674,7 +674,7 @@
     "pitch_type":"FF",
     "pitches":151,
     "stuff_sl":102.3199996948,
-    "stuff_col":103.2699966431,
+    "stuff_col":103.1600036621,
     "avg_velo":90.76,
     "avg_ivb":1.26,
     "avg_hb":-0.06
@@ -684,7 +684,7 @@
     "pitch_type":"SL",
     "pitches":174,
     "stuff_sl":99.3099975586,
-    "stuff_col":99.4199981689,
+    "stuff_col":99.6399993896,
     "avg_velo":87.1,
     "avg_ivb":0.53,
     "avg_hb":-0.28
@@ -694,7 +694,7 @@
     "pitch_type":"CH",
     "pitches":41,
     "stuff_sl":97.0800018311,
-    "stuff_col":95.7399978638,
+    "stuff_col":96.6500015259,
     "avg_velo":87.5,
     "avg_ivb":0.81,
     "avg_hb":-0.8
@@ -704,7 +704,7 @@
     "pitch_type":"FF",
     "pitches":619,
     "stuff_sl":105.6600036621,
-    "stuff_col":105.1900024414,
+    "stuff_col":106.5899963379,
     "avg_velo":95.95,
     "avg_ivb":1.16,
     "avg_hb":-0.31
@@ -714,7 +714,7 @@
     "pitch_type":"SL",
     "pitches":918,
     "stuff_sl":95.3499984741,
-    "stuff_col":94.4400024414,
+    "stuff_col":94.9199981689,
     "avg_velo":90.22,
     "avg_ivb":0.41,
     "avg_hb":0.02
@@ -724,7 +724,7 @@
     "pitch_type":"CH",
     "pitches":83,
     "stuff_sl":100.6100006104,
-    "stuff_col":100.2799987793,
+    "stuff_col":100.3199996948,
     "avg_velo":87.27,
     "avg_ivb":0.42,
     "avg_hb":-0.93
@@ -734,7 +734,7 @@
     "pitch_type":"FF",
     "pitches":102,
     "stuff_sl":103.4000015259,
-    "stuff_col":103.2600021362,
+    "stuff_col":102.9599990845,
     "avg_velo":93.01,
     "avg_ivb":1.03,
     "avg_hb":-0.74
@@ -744,7 +744,7 @@
     "pitch_type":"KC",
     "pitches":114,
     "stuff_sl":98.3600006104,
-    "stuff_col":102.0500030518,
+    "stuff_col":99.7799987793,
     "avg_velo":79.13,
     "avg_ivb":-0.81,
     "avg_hb":0.87
@@ -754,7 +754,7 @@
     "pitch_type":"SI",
     "pitches":438,
     "stuff_sl":106.2600021362,
-    "stuff_col":105.5,
+    "stuff_col":105.3899993896,
     "avg_velo":92.57,
     "avg_ivb":0.72,
     "avg_hb":-1.03
@@ -764,7 +764,7 @@
     "pitch_type":"SL",
     "pitches":481,
     "stuff_sl":97.6800003052,
-    "stuff_col":97.5800018311,
+    "stuff_col":96.9899978638,
     "avg_velo":86.5,
     "avg_ivb":0.13,
     "avg_hb":0.25
@@ -774,7 +774,7 @@
     "pitch_type":"CH",
     "pitches":293,
     "stuff_sl":97.5400009155,
-    "stuff_col":98.0400009155,
+    "stuff_col":98.0800018311,
     "avg_velo":86.28,
     "avg_ivb":0.42,
     "avg_hb":-0.82
@@ -784,7 +784,7 @@
     "pitch_type":"CU",
     "pitches":57,
     "stuff_sl":97.3899993896,
-    "stuff_col":99.0800018311,
+    "stuff_col":97.2799987793,
     "avg_velo":77.01,
     "avg_ivb":-1.14,
     "avg_hb":0.46
@@ -794,7 +794,7 @@
     "pitch_type":"FF",
     "pitches":543,
     "stuff_sl":106.4700012207,
-    "stuff_col":105.6900024414,
+    "stuff_col":105.9899978638,
     "avg_velo":93.57,
     "avg_ivb":1.2,
     "avg_hb":-0.56
@@ -804,7 +804,7 @@
     "pitch_type":"SL",
     "pitches":251,
     "stuff_sl":99.3700027466,
-    "stuff_col":99.7099990845,
+    "stuff_col":98.8099975586,
     "avg_velo":87.34,
     "avg_ivb":0.24,
     "avg_hb":0.31
@@ -814,7 +814,7 @@
     "pitch_type":"ST",
     "pitches":63,
     "stuff_sl":97.5,
-    "stuff_col":97.7900009155,
+    "stuff_col":96.4199981689,
     "avg_velo":82.52,
     "avg_ivb":-0.13,
     "avg_hb":1.01
@@ -824,7 +824,7 @@
     "pitch_type":"SV",
     "pitches":41,
     "stuff_sl":93.8300018311,
-    "stuff_col":98.25,
+    "stuff_col":94.7600021362,
     "avg_velo":81.24,
     "avg_ivb":-0.61,
     "avg_hb":0.98
@@ -834,7 +834,7 @@
     "pitch_type":"SI",
     "pitches":967,
     "stuff_sl":102.9199981689,
-    "stuff_col":105.3399963379,
+    "stuff_col":105.4400024414,
     "avg_velo":95.34,
     "avg_ivb":0.01,
     "avg_hb":-1.12
@@ -844,27 +844,17 @@
     "pitch_type":"ST",
     "pitches":812,
     "stuff_sl":95.3399963379,
-    "stuff_col":95.8300018311,
+    "stuff_col":95.5699996948,
     "avg_velo":83.12,
     "avg_ivb":0.23,
     "avg_hb":1.12
-  },
-  {
-    "player_name":"Lyles, Jordan",
-    "pitch_type":"FF",
-    "pitches":46,
-    "stuff_sl":105.1999969482,
-    "stuff_col":104.5899963379,
-    "avg_velo":92.64,
-    "avg_ivb":1.18,
-    "avg_hb":-0.43
   },
   {
     "player_name":"M\u00e1rquez, Germ\u00e1n",
     "pitch_type":"CH",
     "pitches":78,
     "stuff_sl":102.1800003052,
-    "stuff_col":100.7300033569,
+    "stuff_col":103.3499984741,
     "avg_velo":86.62,
     "avg_ivb":0.58,
     "avg_hb":-0.75
@@ -874,7 +864,7 @@
     "pitch_type":"FF",
     "pitches":1303,
     "stuff_sl":104.5800018311,
-    "stuff_col":102.9800033569,
+    "stuff_col":104.5400009155,
     "avg_velo":95.1,
     "avg_ivb":0.93,
     "avg_hb":-0.5
@@ -884,7 +874,7 @@
     "pitch_type":"KC",
     "pitches":674,
     "stuff_sl":90.7300033569,
-    "stuff_col":89.7900009155,
+    "stuff_col":91.4599990845,
     "avg_velo":86.06,
     "avg_ivb":-0.17,
     "avg_hb":0.16
@@ -894,7 +884,7 @@
     "pitch_type":"SI",
     "pitches":433,
     "stuff_sl":103.5899963379,
-    "stuff_col":102.2600021362,
+    "stuff_col":103.7099990845,
     "avg_velo":94.85,
     "avg_ivb":0.66,
     "avg_hb":-1.0
@@ -904,7 +894,7 @@
     "pitch_type":"SL",
     "pitches":780,
     "stuff_sl":99.0100021362,
-    "stuff_col":98.25,
+    "stuff_col":99.0699996948,
     "avg_velo":87.09,
     "avg_ivb":0.19,
     "avg_hb":0.09
@@ -914,7 +904,7 @@
     "pitch_type":"CU",
     "pitches":137,
     "stuff_sl":99.5999984741,
-    "stuff_col":102.4700012207,
+    "stuff_col":101.2300033569,
     "avg_velo":78.98,
     "avg_ivb":-0.3,
     "avg_hb":0.21
@@ -924,7 +914,7 @@
     "pitch_type":"FC",
     "pitches":161,
     "stuff_sl":100.8300018311,
-    "stuff_col":101.3399963379,
+    "stuff_col":100.6900024414,
     "avg_velo":87.82,
     "avg_ivb":0.34,
     "avg_hb":0.27
@@ -934,7 +924,7 @@
     "pitch_type":"FF",
     "pitches":256,
     "stuff_sl":105.5800018311,
-    "stuff_col":104.8399963379,
+    "stuff_col":104.4199981689,
     "avg_velo":94.05,
     "avg_ivb":1.11,
     "avg_hb":-0.69
@@ -944,7 +934,7 @@
     "pitch_type":"FS",
     "pitches":441,
     "stuff_sl":96.4400024414,
-    "stuff_col":96.5999984741,
+    "stuff_col":96.7399978638,
     "avg_velo":86.69,
     "avg_ivb":0.36,
     "avg_hb":-0.63
@@ -954,7 +944,7 @@
     "pitch_type":"SI",
     "pitches":258,
     "stuff_sl":104.9800033569,
-    "stuff_col":103.8199996948,
+    "stuff_col":103.3499984741,
     "avg_velo":93.61,
     "avg_ivb":0.96,
     "avg_hb":-0.89
@@ -964,7 +954,7 @@
     "pitch_type":"CH",
     "pitches":146,
     "stuff_sl":101.1699981689,
-    "stuff_col":101.6699981689,
+    "stuff_col":101.6900024414,
     "avg_velo":86.26,
     "avg_ivb":0.6,
     "avg_hb":-0.57
@@ -974,7 +964,7 @@
     "pitch_type":"CU",
     "pitches":153,
     "stuff_sl":95.3700027466,
-    "stuff_col":96.0199966431,
+    "stuff_col":96.7300033569,
     "avg_velo":77.74,
     "avg_ivb":-0.5,
     "avg_hb":0.47
@@ -984,7 +974,7 @@
     "pitch_type":"FF",
     "pitches":1431,
     "stuff_sl":102.1900024414,
-    "stuff_col":101.6399993896,
+    "stuff_col":101.5100021362,
     "avg_velo":94.38,
     "avg_ivb":0.81,
     "avg_hb":-0.32
@@ -994,7 +984,7 @@
     "pitch_type":"SI",
     "pitches":43,
     "stuff_sl":105.1699981689,
-    "stuff_col":104.0699996948,
+    "stuff_col":104.8199996948,
     "avg_velo":92.34,
     "avg_ivb":0.85,
     "avg_hb":-0.8
@@ -1004,7 +994,7 @@
     "pitch_type":"SL",
     "pitches":710,
     "stuff_sl":97.5999984741,
-    "stuff_col":97.5500030518,
+    "stuff_col":97.4100036621,
     "avg_velo":86.01,
     "avg_ivb":0.2,
     "avg_hb":0.38
@@ -1014,7 +1004,7 @@
     "pitch_type":"CU",
     "pitches":85,
     "stuff_sl":97.1800003052,
-    "stuff_col":97.3199996948,
+    "stuff_col":97.6299972534,
     "avg_velo":80.95,
     "avg_ivb":-0.58,
     "avg_hb":0.83
@@ -1024,7 +1014,7 @@
     "pitch_type":"FF",
     "pitches":432,
     "stuff_sl":104.3499984741,
-    "stuff_col":104.0100021362,
+    "stuff_col":104.1699981689,
     "avg_velo":96.64,
     "avg_ivb":1.14,
     "avg_hb":-0.89
@@ -1034,39 +1024,9 @@
     "pitch_type":"SL",
     "pitches":344,
     "stuff_sl":96.5899963379,
-    "stuff_col":96.5,
+    "stuff_col":96.3499984741,
     "avg_velo":83.72,
     "avg_ivb":-0.27,
     "avg_hb":0.44
-  },
-  {
-    "player_name":"Wood, Alex",
-    "pitch_type":"CH",
-    "pitches":78,
-    "stuff_sl":96.9000015259,
-    "stuff_col":99.0699996948,
-    "avg_velo":85.22,
-    "avg_ivb":0.09,
-    "avg_hb":1.03
-  },
-  {
-    "player_name":"Wood, Alex",
-    "pitch_type":"SI",
-    "pitches":165,
-    "stuff_sl":101.0800018311,
-    "stuff_col":101.2200012207,
-    "avg_velo":91.76,
-    "avg_ivb":0.76,
-    "avg_hb":1.06
-  },
-  {
-    "player_name":"Wood, Alex",
-    "pitch_type":"SL",
-    "pitches":76,
-    "stuff_sl":97.3000030518,
-    "stuff_col":101.9000015259,
-    "avg_velo":84.17,
-    "avg_ivb":-0.16,
-    "avg_hb":-0.06
   }
 ]

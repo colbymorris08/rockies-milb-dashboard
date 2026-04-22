@@ -86,7 +86,7 @@
   {
     "feature": "log_ext",
     "importance": 0.0046,
-    "alpha": 1.18,
+    "alpha": 1.0,
     "model": "sea_level"
   },
   {
