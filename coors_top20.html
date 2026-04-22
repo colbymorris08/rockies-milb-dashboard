@@ -160,8 +160,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
   <div class="insight-divider"></div>
   <div class="insight-item">Mean extension (all pitches): <strong id="insMeanExt">—</strong></div>
   <div class="insight-divider"></div>
-  <div class="insight-item">Four-seam VAA (FF): <strong id="insFfVaa" title="Mean plate-crossing vertical approach angle on FF pitches">—</strong></div>
-  <div class="insight-divider"></div>
   <div class="insight-item">Statcast arm angle: <strong id="insArmAngle" title="MLB release arm angle (°); 0° = sidearm, 90° = over-the-top">—</strong></div>
   <div class="insight-divider"></div>
   <div class="insight-item">Slider + sweeper % of arsenal: <strong id="insSlStPct">—</strong></div>
@@ -203,8 +201,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
             <th title="Statcast PAs at Coors, 2021–24 only">@ Coors R/9</th>
             <th title="Statcast at Coors, 2021–24">@ Coors FIP</th>
             <th title="Statcast PAs at Coors, 2021–24">@ Coors K−BB%</th>
-            <th>AVG VELO</th>
-            <th>AVG IVB</th>
             <th>AVG EXT</th>
             <th>PITCHES</th>
           </tr>
@@ -453,7 +449,6 @@ function init(){
   const mPctSlSt = meanNum(allData,'pct_sl_st');
   const mGyroCount = allData.reduce((a,p)=>a+(Number(p.has_gyro_slider)||0),0);
   document.getElementById('insMeanExt').textContent = mExt==null ? '—' : `${mExt.toFixed(2)} ft`;
-  document.getElementById('insFfVaa').textContent = mFfVaa==null ? '—' : `${mFfVaa.toFixed(2)}°`;
   document.getElementById('insArmAngle').textContent = mArm==null ? '—' : `${mArm.toFixed(1)}°`;
   document.getElementById('insSlStPct').textContent = mPctSlSt==null ? '—' : `${mPctSlSt.toFixed(1)}%`;
   document.getElementById('insGyroCount').textContent = `${Math.round(mGyroCount)}/${n}`;
@@ -502,8 +497,6 @@ function renderTable(){
       <td class="metric">${fmtCoorsNum(p.coors_ra9, 2)}</td>
       <td class="metric">${fmtCoorsNum(p.coors_fip, 2)}</td>
       <td class="metric">${p.coors_k_bb_pct!=null&&!Number.isNaN(Number(p.coors_k_bb_pct))?Number(p.coors_k_bb_pct).toFixed(1)+'%':'—'}</td>
-      <td class="metric">${(p.avg_velo||0).toFixed(1)}</td>
-      <td class="metric">${(p.avg_ivb||0).toFixed(1)}</td>
       <td class="metric">${(p.avg_ext||0).toFixed(1)} ft</td>
       <td class="metric" style="color:var(--muted)">${(p.pitches||0).toLocaleString()}</td>
     </tr>`;
