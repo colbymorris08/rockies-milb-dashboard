@@ -1,9 +1,12 @@
 """
 generate_coors_stuff.py
-Generates sea-level Stuff+ and Coors-adjusted Stuff+ scores.
+Internal dual-XGBoost “Stuff-style” index: sea-level vs Coors-scaled Statcast features
+predicting pitch quality, then standardized to a 100/10 scale.
 Ranks pitchers using a performance-heavy composite built from:
-  - Stuff model scores on the existing model window (2021-2024)
+  - Model scores on the model window (2021-2024)
   - Coors performance over the last 10 Statcast seasons (2015-2024)
+Feature choices are informed by common public pitching research (movement, release,
+spin axis); not a direct port of any single external vendor model.
 Outputs JSON files for the dashboard website
 """
 
@@ -28,7 +31,9 @@ MODEL_START = "2021-01-01"
 MODEL_END = "2024-12-31"
 COORS_PERF_START = "2015-01-01"
 COORS_PERF_END = "2024-12-31"
-MIN_COORS_IP_LAST10 = 30.0
+MIN_COORS_IP_ALL = 40.0
+MIN_COORS_IP_ROCKIES = 80.0
+MIN_COORS_IP_PULL_FLOOR = min(MIN_COORS_IP_ALL, MIN_COORS_IP_ROCKIES)
 PERF_WEIGHT = 0.50
 STUFF_WEIGHT = 0.50
 
@@ -39,9 +44,7 @@ ALPHA = {
     "pfx_x_magnus":      0.82,
     "pfx_x_gyro":        0.97,
     "release_spin_rate": 0.86,
-    "log_ext":           1.18,
-    "vaa":               1.14,
-    "haa":               1.06,
+    "log_ext":           1.00,
     "delta_velo":        1.05,
     "delta_ivb":         0.79,
     "delta_hb":          0.90,
@@ -308,7 +311,7 @@ def pull_coors_last10_rates_efficient(start_year: int, end_year: int) -> pd.Data
       2) immediately filter to COL home games
       3) aggregate to PA totals and discard raw pitch table
       4) prefilter to pitchers with at least 2 Coors BF
-      5) final filter to MIN_COORS_IP_LAST10 for ranking eligibility
+      5) final filter to pull-floor IP for ranking eligibility
     """
     season_totals: list[pd.DataFrame] = []
     for year in range(start_year, end_year + 1):
@@ -339,7 +342,7 @@ def pull_coors_last10_rates_efficient(start_year: int, end_year: int) -> pd.Data
     # Early sample-size filter per your request.
     totals = totals[totals["coors_bf"] >= 2].copy()
     rates = _rates_from_totals(totals)
-    rates = rates[rates["coors_ip"] >= MIN_COORS_IP_LAST10].copy()
+    rates = rates[rates["coors_ip"] >= MIN_COORS_IP_PULL_FLOOR].copy()
     return rates
 
 
@@ -360,8 +363,38 @@ def engineer(d):
     d["delta_ivb"]     = d["pfx_z"]         - d["fb_ivb"]
     d["delta_hb"]      = d["pfx_x"]         - d["fb_hb"]
     d["log_ext"]       = np.log(d["release_extension"].clip(lower=0.1))
-    d["vaa"]           = np.degrees(np.arctan2(d["pfx_z"], 60.5))
-    d["haa"]           = np.degrees(np.arctan2(d["pfx_x"], 60.5))
+    # Vertical approach angle in degrees (prefer plate-crossing velocity terms).
+    if {"vyf", "vzf"}.issubset(d.columns):
+        vyf = pd.to_numeric(d["vyf"], errors="coerce").to_numpy(dtype=float)
+        vzf = pd.to_numeric(d["vzf"], errors="coerce").to_numpy(dtype=float)
+        d["vaa"] = np.degrees(np.arctan2(vzf, -vyf))
+    elif {"vx0", "vy0", "vz0", "ax", "ay", "az"}.issubset(d.columns):
+        y0 = pd.to_numeric(d.get("release_pos_y", 50.0), errors="coerce").fillna(50.0).to_numpy(dtype=float)
+        y_plate = 17.0 / 12.0
+        vy0 = pd.to_numeric(d["vy0"], errors="coerce").to_numpy(dtype=float)
+        ay = pd.to_numeric(d["ay"], errors="coerce").to_numpy(dtype=float)
+        c = y0 - y_plate
+        disc = (vy0 * vy0) - (2.0 * ay * c)
+        disc = np.where(disc >= 0, disc, np.nan)
+        sqrt_disc = np.sqrt(disc)
+        t1 = ((-vy0) - sqrt_disc) / ay
+        t2 = ((-vy0) + sqrt_disc) / ay
+        t_lin = np.where(vy0 != 0, -c / vy0, np.nan)
+        t_quad = np.minimum(np.where(t1 > 0, t1, np.inf), np.where(t2 > 0, t2, np.inf))
+        t_quad = np.where(np.isfinite(t_quad), t_quad, np.nan)
+        t = np.where(np.abs(ay) > 1e-8, t_quad, t_lin)
+        t = np.where(t > 0, t, np.nan)
+        vy_plate = vy0 + ay * t
+        vz0 = pd.to_numeric(d["vz0"], errors="coerce").to_numpy(dtype=float)
+        az = pd.to_numeric(d["az"], errors="coerce").to_numpy(dtype=float)
+        vz_plate = vz0 + az * t
+        d["vaa"] = np.degrees(np.arctan2(vz_plate, -vy_plate))
+    elif {"vy0", "vz0"}.issubset(d.columns):
+        vy0 = pd.to_numeric(d["vy0"], errors="coerce").to_numpy(dtype=float)
+        vz0 = pd.to_numeric(d["vz0"], errors="coerce").to_numpy(dtype=float)
+        d["vaa"] = np.degrees(np.arctan2(vz0, -vy0))
+    else:
+        d["vaa"] = np.nan
     gyro = ["SL","ST","FC","CU"]
     d["pfx_x_gyro"]   = np.where(d["pitch_type"].isin(gyro), d["pfx_x"], 0.0)
     d["pfx_x_magnus"] = np.where(~d["pitch_type"].isin(gyro), d["pfx_x"], 0.0)
@@ -377,7 +410,7 @@ FEATURES = [
     "release_spin_rate","log_ext","delta_velo","delta_ivb","delta_hb",
     "release_pos_z","release_pos_x",
     "balls","strikes","stand_enc","pitch_type_enc",
-    "vaa","haa","spin_axis",
+    "spin_axis",
 ]
 FEATURES = [f for f in FEATURES if f in df.columns]
 TARGET = "estimated_woba_using_speedangle"
@@ -433,9 +466,23 @@ def standardize(s):
 score_base["stuff_sl"]  = standardize(score_base["xRV_sl"])
 score_adj["stuff_col"]  = standardize(score_adj["xRV_col"])
 
-combined_scores = score_base[["player_name","pitch_type","game_date","release_speed",
-                               "pfx_z","pfx_x","release_spin_rate","release_extension",
-                               "vaa","haa","stuff_sl","xRV_sl"]].copy()
+_score_cols = [
+    "player_name",
+    "pitch_type",
+    "game_date",
+    "release_speed",
+    "pfx_z",
+    "pfx_x",
+    "release_spin_rate",
+    "release_extension",
+    "vaa",
+    "stuff_sl",
+    "xRV_sl",
+]
+for _opt in ("arm_angle",):
+    if _opt in score_base.columns and _opt not in _score_cols:
+        _score_cols.append(_opt)
+combined_scores = score_base[[c for c in _score_cols if c in score_base.columns]].copy()
 combined_scores["stuff_col"] = score_adj["stuff_col"].values
 combined_scores["xRV_col"]   = score_adj["xRV_col"].values
 combined_scores["stuff_delta"] = combined_scores["stuff_col"] - combined_scores["stuff_sl"]
@@ -452,29 +499,106 @@ MIN_PITCHES_ROCKIES = 1
 
 # ── 7. Pitcher-level aggregation ───────────────────────────────────────────
 def aggregate_pitchers(sub: pd.DataFrame, min_pitches: int) -> pd.DataFrame:
+    agg_spec: dict[str, Any] = {
+        "pitches": ("stuff_sl", "count"),
+        "stuff_sl": ("stuff_sl", "mean"),
+        "stuff_col": ("stuff_col", "mean"),
+        "stuff_delta": ("stuff_delta", "mean"),
+        "avg_velo": ("release_speed", "mean"),
+        "avg_ivb": ("pfx_z", "mean"),
+        "avg_hb": ("pfx_x", "mean"),
+        "avg_spin": ("release_spin_rate", "mean"),
+        "avg_ext": ("release_extension", "mean"),
+    }
+    if "arm_angle" in sub.columns:
+        agg_spec["avg_arm_angle"] = ("arm_angle", "mean")
     return (
         sub.groupby("player_name")
-        .agg(
-            pitches=("stuff_sl", "count"),
-            stuff_sl=("stuff_sl", "mean"),
-            stuff_col=("stuff_col", "mean"),
-            stuff_delta=("stuff_delta", "mean"),
-            avg_velo=("release_speed", "mean"),
-            avg_ivb=("pfx_z", "mean"),
-            avg_hb=("pfx_x", "mean"),
-            avg_spin=("release_spin_rate", "mean"),
-            avg_ext=("release_extension", "mean"),
-            avg_vaa=("vaa", "mean"),
-        )
+        .agg(**agg_spec)
         .reset_index()
         .query(f"pitches >= {min_pitches}")
         .round(2)
     )
 
 
+def merge_pitch_shape_extras(agg: pd.DataFrame, scores: pd.DataFrame) -> pd.DataFrame:
+    """Mean FF extension/VAA, slider-family share, and gyro-slider proxy flag."""
+    out = agg.copy()
+    ff = scores[scores["pitch_type"].astype(str) == "FF"]
+    if not ff.empty and "release_extension" in ff.columns:
+        ff_ext = ff.groupby("player_name")["release_extension"].mean().rename("avg_ff_ext")
+        out = out.merge(ff_ext.reset_index(), on="player_name", how="left")
+    else:
+        out["avg_ff_ext"] = np.nan
+    if not ff.empty and "vaa" in ff.columns:
+        ff_vaa = ff.groupby("player_name")["vaa"].mean().rename("avg_ff_vaa")
+        out = out.merge(ff_vaa.reset_index(), on="player_name", how="left")
+    else:
+        out["avg_ff_vaa"] = np.nan
+    _sl = scores["pitch_type"].astype(str).isin(["SL", "ST"])
+    sh = (
+        scores.assign(_slst=_sl.astype(float))
+        .groupby("player_name")["_slst"]
+        .mean()
+        .rename("pct_sl_st")
+    )
+    out = out.merge(sh.reset_index(), on="player_name", how="left")
+    # Proxy: gyro slider = throws enough SL pitches and has tighter SL horizontal break.
+    sl = scores[scores["pitch_type"].astype(str) == "SL"].copy()
+    if not sl.empty and "pfx_x" in sl.columns:
+        sl_stats = (
+            sl.assign(sl_hb_in=pd.to_numeric(sl["pfx_x"], errors="coerce").abs() * 12.0)
+            .groupby("player_name", as_index=False)
+            .agg(sl_count=("pitch_type", "count"), sl_hb_in_mean=("sl_hb_in", "mean"))
+        )
+        sl_stats["has_gyro_slider"] = (
+            (sl_stats["sl_count"] >= 20) & (sl_stats["sl_hb_in_mean"] <= 6.5)
+        ).astype(int)
+        out = out.merge(sl_stats[["player_name", "has_gyro_slider"]], on="player_name", how="left")
+    else:
+        out["has_gyro_slider"] = 0
+    if "avg_ff_ext" in out.columns:
+        out["avg_ff_ext"] = pd.to_numeric(out["avg_ff_ext"], errors="coerce").round(2)
+    if "avg_ff_vaa" in out.columns:
+        out["avg_ff_vaa"] = pd.to_numeric(out["avg_ff_vaa"], errors="coerce").round(2)
+    if "pct_sl_st" in out.columns:
+        out["pct_sl_st"] = (pd.to_numeric(out["pct_sl_st"], errors="coerce") * 100.0).round(1)
+    if "has_gyro_slider" in out.columns:
+        out["has_gyro_slider"] = pd.to_numeric(out["has_gyro_slider"], errors="coerce").fillna(0).astype(int)
+    return out
+
+
+def primary_pitch_type(scores: pd.DataFrame, name: str) -> str | None:
+    """Most-thrown pitch type in the scored Coors sample."""
+    s = scores.loc[scores["player_name"] == name, "pitch_type"].dropna().astype(str)
+    s = s[s != "nan"]
+    if s.empty:
+        return None
+    pitch = str(s.value_counts().idxmax())
+    # Display sinker-first arms explicitly as SI/2S in UI-facing outputs.
+    return "SI/2S" if pitch == "SI" else pitch
+
+
+def primary_fastball_family(scores: pd.DataFrame, name: str) -> str | None:
+    """Among FF / FC / SI only, which is thrown most; ties FF → FC → SI."""
+    sub = scores[scores["player_name"] == name]
+    m = sub[sub["pitch_type"].astype(str).isin(["FF", "FC", "SI"])].groupby("pitch_type").size()
+    if m.empty:
+        return None
+    maxn = int(m.max())
+    for t in ("FF", "FC", "SI"):
+        if t in m.index and int(m[t]) == maxn:
+            return t
+    return None
+
+
 pitcher_agg = aggregate_pitchers(combined_scores, MIN_PITCHES_ALL)
+pitcher_agg = merge_pitch_shape_extras(pitcher_agg, combined_scores)
 pitcher_agg_rockies = aggregate_pitchers(
     combined_scores[combined_scores["is_rockies_pitch"]], MIN_PITCHES_ROCKIES
+)
+pitcher_agg_rockies = merge_pitch_shape_extras(
+    pitcher_agg_rockies, combined_scores[combined_scores["is_rockies_pitch"]]
 )
 
 print("  Coors Field PA aggregates (Statcast 2021-2024 games at Coors)...")
@@ -491,16 +615,34 @@ _career_cols = [
     "career_coors_fip",
     "career_coors_k_bb_pct",
 ]
+use_cached_career = str(os.getenv("USE_CACHED_CAREER_RATES", "")).strip().lower() in {"1", "true", "yes"}
 try:
-    career_rates = pull_coors_last10_rates_efficient(2015, 2024).rename(
-        columns={
-            "coors_bf": "career_coors_bf",
-            "coors_ip": "career_coors_ip",
-            "coors_ra9": "career_coors_ra9",
-            "coors_fip": "career_coors_fip",
-            "coors_k_bb_pct": "career_coors_k_bb_pct",
-        }
-    )
+    if use_cached_career:
+        cached_frames = []
+        for _p in ("data/coors_top20.json", "data/coors_pitchers_rockies.json"):
+            if os.path.exists(_p):
+                _d = pd.read_json(_p)
+                keep = [c for c in _career_cols if c in _d.columns]
+                if keep:
+                    cached_frames.append(_d[keep].copy())
+        if not cached_frames:
+            raise RuntimeError("USE_CACHED_CAREER_RATES set but no cached files available")
+        career_rates = (
+            pd.concat(cached_frames, ignore_index=True)
+            .drop_duplicates(subset=["player_name"], keep="first")
+            .dropna(subset=["player_name"])
+        )
+        print(f"    using cached career Coors lines for {len(career_rates)} pitchers")
+    else:
+        career_rates = pull_coors_last10_rates_efficient(2015, 2024).rename(
+            columns={
+                "coors_bf": "career_coors_bf",
+                "coors_ip": "career_coors_ip",
+                "coors_ra9": "career_coors_ra9",
+                "coors_fip": "career_coors_fip",
+                "coors_k_bb_pct": "career_coors_k_bb_pct",
+            }
+        )
     pitcher_agg = pitcher_agg.merge(career_rates, on="player_name", how="left")
     pitcher_agg_rockies = pitcher_agg_rockies.merge(career_rates, on="player_name", how="left")
     print(f"    merged career Coors lines for {len(career_rates)} pitchers")
@@ -512,9 +654,9 @@ except Exception as e:
         if c not in pitcher_agg_rockies.columns:
             pitcher_agg_rockies[c] = np.nan
 
-def add_performance_composite(d: pd.DataFrame) -> pd.DataFrame:
+def add_performance_composite(d: pd.DataFrame, min_ip: float) -> pd.DataFrame:
     out = d.copy()
-    out = out[out["career_coors_ip"].fillna(0) >= MIN_COORS_IP_LAST10].copy()
+    out = out[out["career_coors_ip"].fillna(0) >= min_ip].copy()
     if out.empty:
         out["coors_composite"] = np.nan
         return out
@@ -536,19 +678,19 @@ def add_performance_composite(d: pd.DataFrame) -> pd.DataFrame:
     ).round(1)
     return out
 
-pitcher_agg = add_performance_composite(pitcher_agg)
+pitcher_agg = add_performance_composite(pitcher_agg, MIN_COORS_IP_ALL)
 pitcher_agg = pitcher_agg.sort_values("coors_composite", ascending=False)
 top20 = pitcher_agg.head(20).copy()
 
-pitcher_agg_rockies = add_performance_composite(pitcher_agg_rockies)
+pitcher_agg_rockies = add_performance_composite(pitcher_agg_rockies, MIN_COORS_IP_ROCKIES)
 pitcher_agg_rockies = pitcher_agg_rockies.sort_values("coors_composite", ascending=False)
 top20_rockies = pitcher_agg_rockies.head(20).copy()
 
-print(f"\nTop 20 Coors pitchers (all, min {MIN_COORS_IP_LAST10:.0f} Coors IP in 2015-2024):")
+print(f"\nTop 20 Coors pitchers (all, min {MIN_COORS_IP_ALL:.0f} Coors IP in 2015-2024):")
 _cols = ["player_name", "pitches", "stuff_sl", "stuff_col", "stuff_delta", "avg_velo", "avg_ivb", "coors_composite"]
 print(top20[[c for c in _cols if c in top20.columns]].to_string(index=False))
 
-print(f"\nTop Rockies pitchers at Coors (min {MIN_COORS_IP_LAST10:.0f} Coors IP in 2015-2024):")
+print(f"\nTop Rockies pitchers at Coors (min {MIN_COORS_IP_ROCKIES:.0f} Coors IP in 2015-2024):")
 print(top20_rockies[[c for c in _cols if c in top20_rockies.columns]].to_string(index=False))
 
 # ── 8. Pitch-type breakdown per top pitcher ────────────────────────────────
@@ -580,7 +722,22 @@ for row in pitch_breakdown.itertuples(index=False):
     )
 
 top20["pitches_by_type"] = top20["player_name"].map(lambda n: _pbt_by_player.get(str(n), []))
-top20_rockies["pitches_by_type"] = top20_rockies["player_name"].map(lambda n: _pbt_by_player.get(str(n), []))
+top20_rockies["pitches_by_type"] = top20_rockies["player_name"].map(
+    lambda n: _pbt_by_player.get(str(n), [])
+)
+
+top20["primary_pitch"] = top20["player_name"].map(
+    lambda n: primary_pitch_type(combined_scores, str(n))
+)
+top20_rockies["primary_pitch"] = top20_rockies["player_name"].map(
+    lambda n: primary_pitch_type(combined_scores, str(n))
+)
+top20["primary_fastball_family"] = top20["player_name"].map(
+    lambda n: primary_fastball_family(combined_scores, str(n))
+)
+top20_rockies["primary_fastball_family"] = top20_rockies["player_name"].map(
+    lambda n: primary_fastball_family(combined_scores, str(n))
+)
 
 # ── 9. Feature importance for both models ─────────────────────────────────
 def get_importance(model, label):
@@ -604,22 +761,56 @@ meta = {
     "training_years": "2021-2024",
     "career_coors_statcast_years": "2015-2024",
     "features": FEATURES,
-    "models": ["tjStuff+ v2", "FanGraphs Stuff+/PitchingBot", "aStuff+ v2"],
+    "stuff_model": {
+        "name": "Internal dual-XGBoost Coors Stuff index",
+        "summary": (
+            "Two gradient-boosted models on Statcast pitch features (estimated wOBA target): "
+            "one trained on all parks and one on Coors-adjusted (α-scaled) movement, extension, "
+            "and release context. Outputs standardized to a 100/10 scale for leaderboard use."
+        ),
+        "informed_by_public_research": (
+            "Broad pitching-analytics threads—velocity and movement decomposition, release-side "
+            "and count context, spin axis—used as conceptual inspiration only; weights, stacking, "
+            "and implementation are original to this pipeline."
+        ),
+    },
     "coors_alpha": ALPHA,
     "park_intercept": PARK_INTERCEPT,
     "min_pitches_all_pitchers": MIN_PITCHES_ALL,
     "min_pitches_rockies_at_coors": MIN_PITCHES_ROCKIES,
-    "min_coors_ip_last10y_for_ranking": MIN_COORS_IP_LAST10,
+    "min_coors_ip_last10y_for_all_pitchers": MIN_COORS_IP_ALL,
+    "min_coors_ip_last10y_for_rockies": MIN_COORS_IP_ROCKIES,
+    "min_coors_ip_last10y_pull_floor": MIN_COORS_IP_PULL_FLOOR,
     "composite_weights": {"stuff": STUFF_WEIGHT, "coors_performance": PERF_WEIGHT},
     "performance_inputs": "xFIP_if_available_else_FIP_plus_K_minus_BB_percent",
     "top20_names": top20["player_name"].tolist(),
     "rockies_top20_names": top20_rockies["player_name"].tolist(),
     "top20_key_findings": {
         "avg_stuff_delta": _safe_mean(top20["stuff_delta"]),
-        "avg_vaa": _safe_mean(top20["avg_vaa"]),
-        "avg_ivb": _safe_mean(top20["avg_ivb"]),
+        "avg_ff_ext": _safe_mean(top20["avg_ff_ext"])
+        if "avg_ff_ext" in top20.columns
+        else None,
+        "avg_ff_vaa": _safe_mean(top20["avg_ff_vaa"])
+        if "avg_ff_vaa" in top20.columns
+        else None,
+        "avg_arm_angle": _safe_mean(top20["avg_arm_angle"])
+        if "avg_arm_angle" in top20.columns
+        else None,
         "avg_ext": _safe_mean(top20["avg_ext"]),
-    }
+        "avg_pct_sl_st": _safe_mean(top20["pct_sl_st"]),
+        "gyro_slider_pitcher_count": int(
+            pd.to_numeric(top20.get("has_gyro_slider", 0), errors="coerce").fillna(0).sum()
+        ),
+        "primary_pitch_counts": {
+            str(k): int(v)
+            for k, v in top20["primary_pitch"].value_counts(dropna=True).items()
+        },
+    },
+    "mechanics_note": (
+        "avg_ff_ext is mean Statcast release_extension (ft) on four-seam (FF) pitches only; "
+        "avg_ff_vaa is plate-crossing vertical approach angle (deg) on FF; "
+        "arm_angle is Statcast release arm angle (°)."
+    ),
 }
 
 # ── 11. Export ─────────────────────────────────────────────────────────────
