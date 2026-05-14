@@ -10,6 +10,8 @@ Usage:
   python3 build_col_minors_cache_playwright.py
   python3 build_col_minors_cache_playwright.py --headed --interactive
   python3 build_col_minors_cache_playwright.py --season 2026 --out col_minors_cache.json
+
+`fetch_minor_payloads_async` is imported by build_col_minors_cache.py for automatic fallback.
 """
 
 from __future__ import annotations
@@ -53,6 +55,7 @@ REQUESTS = {
     "ba4": ("bat", 4),
 }
 
+
 def count_rows(payload: dict | list) -> int:
     if isinstance(payload, list):
         return len(payload)
@@ -89,13 +92,21 @@ async def fetch_json_via_page(page, url: str) -> dict:
         raise RuntimeError(f"Non-JSON response for {url}: {txt[:200]}") from exc
 
 
-async def run(season: int, out_path: Path, headed: bool, interactive: bool) -> None:
+async def fetch_minor_payloads_async(
+    season: int,
+    *,
+    headed: bool = False,
+    interactive: bool = False,
+) -> dict[str, dict]:
+    """
+    Return the six FanGraphs minor-league JSON payloads (keys pa1, pa2, …).
+    Caller is responsible for having Playwright + Chromium installed.
+    """
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=not headed)
         context = await browser.new_context()
         page = await context.new_page()
 
-        # Warm-up page to let any anti-bot challenge run in browser context.
         await page.goto("https://www.fangraphs.com/", wait_until="domcontentloaded")
         await page.wait_for_timeout(3000)
         if interactive:
@@ -108,12 +119,10 @@ async def run(season: int, out_path: Path, headed: bool, interactive: bool) -> N
                 "\nIf a Cloudflare check appears, complete it in the opened browser window.\n"
                 "Then press ENTER in this terminal to continue..."
             )
-            input()
+            await asyncio.to_thread(input)
 
         payloads: dict[str, dict] = {}
         for key, (stats, type_) in REQUESTS.items():
-            # FanGraphs sometimes returns 500 for certain param combos.
-            # Try a few safe variants before failing.
             candidate_urls = [
                 build_url(season, stats, type_, qual="0", include_lg=True, include_org=True),
                 build_url(season, stats, type_, qual="0", include_lg=False, include_org=True),
@@ -133,14 +142,20 @@ async def run(season: int, out_path: Path, headed: bool, interactive: bool) -> N
                 if data is not None:
                     break
             if data is None:
+                await browser.close()
                 raise RuntimeError(f"Failed {key} after retries: {last_err}")
             payloads[key] = data
             nrows = count_rows(data)
             print(f"{key}: {nrows} rows")
 
-        out_path.write_text(json.dumps({"payloads": payloads}, separators=(",", ":")))
-        print(f"Wrote: {out_path.resolve()}")
         await browser.close()
+        return payloads
+
+
+async def run(season: int, out_path: Path, headed: bool, interactive: bool) -> None:
+    payloads = await fetch_minor_payloads_async(season, headed=headed, interactive=interactive)
+    out_path.write_text(json.dumps({"payloads": payloads}, separators=(",", ":")))
+    print(f"Wrote: {out_path.resolve()}")
 
 
 def main() -> None:
